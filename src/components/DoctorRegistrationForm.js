@@ -1,9 +1,10 @@
-import { useState } from "react";
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+// Validation schema
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   specialty: yup.string().required("Specialty is required"),
@@ -23,9 +24,9 @@ const DoctorRegistrationForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    // Call API to register doctor
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
+    // Call your API or perform other actions here
   };
 
   return (
@@ -33,6 +34,8 @@ const DoctorRegistrationForm = () => {
       <Typography variant="h4" gutterBottom>
         Doctor Registration
       </Typography>
+
+      {/* Name Field */}
       <Controller
         name="name"
         control={control}
@@ -48,7 +51,60 @@ const DoctorRegistrationForm = () => {
           />
         )}
       />
-      {/* Add more fields for specialty, email, password, etc. */}
+
+      {/* Specialty Field */}
+      <Controller
+        name="specialty"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Specialty"
+            fullWidth
+            margin="normal"
+            error={!!errors.specialty}
+            helperText={errors.specialty?.message}
+          />
+        )}
+      />
+
+      {/* Email Field */}
+      <Controller
+        name="email"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Email"
+            fullWidth
+            margin="normal"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+        )}
+      />
+
+      {/* Password Field */}
+      <Controller
+        name="password"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Password"
+            type="password"
+            fullWidth
+            margin="normal"
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+        )}
+      />
+
+      {/* Submit Button */}
       <Button
         type="submit"
         variant="contained"

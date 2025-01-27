@@ -1,4 +1,4 @@
-import DoctorRegistrationForm from "../../src/components/DoctorRegistrationForm";
+import DoctorRegistrationForm from "../../components/DoctorRegistrationForm";
 
 const DoctorRegistrationPage = () => {
   return (
