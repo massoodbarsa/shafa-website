@@ -14,7 +14,6 @@ import {
   Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -87,9 +86,9 @@ const Header = () => {
               {!isLoggedIn && (
                 <MenuItem
                   component={Link}
-                  href="/doctor/register"
+                  href="/register"
                   onClick={handleMenuClose}
-                  selected={pathname === "/doctor/register"}
+                  selected={pathname === "/register"}
                 >
                   Doctor Register
                 </MenuItem>
@@ -125,7 +124,7 @@ const Header = () => {
                 </Button>
                 <Button
                   component={Link}
-                  href="/doctor/register"
+                  href="/register"
                   variant="outlined"
                   color="inherit"
                   sx={{
