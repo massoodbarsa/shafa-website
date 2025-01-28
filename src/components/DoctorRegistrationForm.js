@@ -12,6 +12,7 @@ const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   specialty: yup.string().required("Specialty is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
+  license_number: yup.string().required("License number is required"),
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -33,6 +34,7 @@ const DoctorRegistrationForm = () => {
         name: data.name,
         specialty: data.specialty,
         email: data.email,
+        license_nr: data.license_number,
         password_hash: await hashPassword(data.password), // Use bcrypt
       },
     ]);
@@ -112,6 +114,22 @@ const DoctorRegistrationForm = () => {
             margin="normal"
             error={!!errors.password}
             helperText={errors.password?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="license_number"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Medical License Number"
+            fullWidth
+            margin="normal"
+            error={!!errors.license_number}
+            helperText={errors.license_number?.message}
           />
         )}
       />

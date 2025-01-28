@@ -50,7 +50,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
+    <Container maxWidth="sm">
       <Box sx={{ textAlign: "center", mb: 4 }}>
         {userType === "doctor" ? (
           <MedicalServicesIcon
