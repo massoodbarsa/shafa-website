@@ -115,19 +115,28 @@ const Header = () => {
               </Button>
             ))}
             {!isLoggedIn && (
-              <Button
-                component={Link}
-                href="/doctors/register"
-                variant="outlined"
-                color="inherit"
-                sx={{
-                  textTransform: "none",
-                  borderWidth: 2,
-                  "&:hover": { borderWidth: 2 },
-                }}
-              >
-                Doctor Register
-              </Button>
+              <>
+                <Button
+                  color="inherit"
+                  href="/login"
+                  sx={{ textTransform: "none" }}
+                >
+                  Login
+                </Button>
+                <Button
+                  component={Link}
+                  href="/doctors/register"
+                  variant="outlined"
+                  color="inherit"
+                  sx={{
+                    textTransform: "none",
+                    borderWidth: 2,
+                    "&:hover": { borderWidth: 2 },
+                  }}
+                >
+                  SignUp
+                </Button>
+              </>
             )}
           </Box>
         )}

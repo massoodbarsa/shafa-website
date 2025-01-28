@@ -1,0 +1,189 @@
+"use client";
+
+import { useState } from "react";
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Alert,
+  ToggleButtonGroup,
+  ToggleButton,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+import { useRouter } from "next/navigation";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import PersonIcon from "@mui/icons-material/Person";
+
+const LoginPage = () => {
+  const [userType, setUserType] = useState("client");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      // Simulated API call - replace with actual endpoint
+      const response = await fetch(`/api/auth/${userType}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) throw new Error("Login failed");
+
+      const data = await response.json();
+      router.push(
+        userType === "doctor" ? "/dashboard/doctor" : "/dashboard/client"
+      );
+    } catch (err) {
+      setError(err.message || "Invalid credentials. Please try again.");
+    }
+  };
+
+  return (
+    <Container maxWidth="sm" sx={{ py: 8 }}>
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+        {userType === "doctor" ? (
+          <MedicalServicesIcon
+            sx={{ fontSize: 60, color: "primary.main", mb: 2 }}
+          />
+        ) : (
+          <PersonIcon sx={{ fontSize: 60, color: "primary.main", mb: 2 }} />
+        )}
+        <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
+          {userType === "doctor" ? "Doctor Login" : "Client Login"}
+        </Typography>
+
+        <ToggleButtonGroup
+          color="primary"
+          value={userType}
+          exclusive
+          onChange={(e, newType) => newType && setUserType(newType)}
+        >
+          <ToggleButton value="client" sx={{ textTransform: "none" }}>
+            <PersonIcon sx={{ mr: 1 }} /> I'm a Client
+          </ToggleButton>
+          <ToggleButton value="doctor" sx={{ textTransform: "none" }}>
+            <MedicalServicesIcon sx={{ mr: 1 }} /> I'm a Doctor
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          p: 4,
+          boxShadow: 3,
+          borderRadius: 4,
+          backgroundColor: "background.paper",
+        }}
+      >
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+
+        <TextField
+          fullWidth
+          label="Email Address"
+          variant="outlined"
+          margin="normal"
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <TextField
+          fullWidth
+          label="Password"
+          variant="outlined"
+          margin="normal"
+          required
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        {userType === "doctor" && (
+          <TextField
+            fullWidth
+            label="Medical License Number"
+            variant="outlined"
+            margin="normal"
+            required
+            sx={{ mt: 2 }}
+          />
+        )}
+
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="Remember me"
+          />
+          <Link
+            href="/forgot-password"
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.9rem",
+              textDecoration: "none",
+              "&:hover": { textDecoration: "underline" },
+            }}
+          >
+            Forgot Password?
+          </Link>
+        </Box>
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          size="large"
+          sx={{ mt: 3, py: 1.5, fontSize: "1.1rem" }}
+        >
+          Sign In as {userType === "doctor" ? "Doctor" : "Client"}
+        </Button>
+
+        <Box sx={{ mt: 3, textAlign: "center" }}>
+          <Typography variant="body1">
+            Don't have an account?{" "}
+            <Link
+              href={
+                userType === "doctor"
+                  ? "/doctors/register"
+                  : "/clients/register"
+              }
+              sx={{
+                color: "primary.main",
+                fontWeight: 500,
+                textDecoration: "none",
+                "&:hover": { textDecoration: "underline" },
+              }}
+            >
+              Register as {userType === "doctor" ? "Doctor" : "Client"}
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
+    </Container>
+  );
+};
+
+export default LoginPage;
