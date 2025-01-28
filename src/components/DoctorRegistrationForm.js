@@ -21,10 +21,9 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .required("Email is required")
-    .email("Invalid email address")
     .matches(
-      /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-      "Must use RFC 5322 compliant email format"
+      /^(?!.*[-_.]{2})[a-zA-Z0-9][a-zA-Z0-9-_.]{1,62}[a-zA-Z0-9]@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/,
+      "Must follow: 3-64 chars, no special chars at start/end"
     )
     .transform((value) => value.toLowerCase().trim()),
   license_number: yup
@@ -72,7 +71,7 @@ const DoctorRegistrationForm = () => {
     try {
       // Step 1: Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: "test-email@yourapp.com", // Normalize email
+        email: formData.email.trim(), // Normalize email
         password: formData.password.trim(), // Trim whitespace
         options: {
           data: {
