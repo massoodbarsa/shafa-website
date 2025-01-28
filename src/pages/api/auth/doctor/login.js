@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
   );
-
+  console.log("selam");
   try {
     const { email, password, medicalLicense } = req.body;
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       .from("doctor")
       .select("*")
       .eq("user_id", authData.user.id)
-      .eq("license_number", medicalLicense)
+      .eq("license_nr", medicalLicense)
       .single();
 
     if (doctorError || !doctorData) {

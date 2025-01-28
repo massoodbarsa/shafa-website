@@ -19,9 +19,11 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 
 const LoginPage = () => {
-  const [userType, setUserType] = useState("client");
+  const [userType, setUserType] = useState("doctor");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [medicalLicense, setMedicalLicense] = useState("");
+
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -31,11 +33,16 @@ const LoginPage = () => {
     setError("");
 
     try {
+      const body =
+        userType === "doctor"
+          ? { email, password, medicalLicense }
+          : { email, password };
+
       // Simulated API call - replace with actual endpoint
       const response = await fetch(`/api/auth/${userType}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) throw new Error("Login failed");
@@ -115,7 +122,6 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
         {userType === "doctor" && (
           <TextField
             fullWidth
@@ -123,7 +129,8 @@ const LoginPage = () => {
             variant="outlined"
             margin="normal"
             required
-            sx={{ mt: 2 }}
+            value={medicalLicense}
+            onChange={(e) => setMedicalLicense(e.target.value)}
           />
         )}
 
