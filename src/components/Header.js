@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -13,14 +15,22 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const mainPages = ["Home", "Doctors", "About", "Contact"];
+const mainPages = [
+  { name: "Home", path: "/" },
+  { name: "Doctors", path: "/doctors" },
+  { name: "About", path: "/about" },
+  { name: "Contact", path: "/contact" },
+];
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const pathname = usePathname();
 
   const handleMenuOpen = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -30,15 +40,19 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const handleAuth = (type) => {
-    setIsLoggedIn(type === "login");
-    handleMenuClose();
-  };
-
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography
+          variant="h6"
+          component={Link}
+          href="/"
+          sx={{
+            flexGrow: 1,
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
           Iranian Doctors Web App
         </Typography>
 
@@ -60,17 +74,23 @@ const Header = () => {
               transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
               {mainPages.map((page) => (
-                <MenuItem key={page} onClick={handleMenuClose}>
-                  {page}
+                <MenuItem
+                  key={page.path}
+                  component={Link}
+                  href={page.path}
+                  onClick={handleMenuClose}
+                  selected={pathname === page.path}
+                >
+                  {page.name}
                 </MenuItem>
               ))}
-              <MenuItem
-                onClick={() => handleAuth(isLoggedIn ? "logout" : "login")}
-              >
-                {isLoggedIn ? "Logout" : "Login"}
-              </MenuItem>
               {!isLoggedIn && (
-                <MenuItem onClick={() => handleAuth("login")}>
+                <MenuItem
+                  component={Link}
+                  href="/doctors/register"
+                  onClick={handleMenuClose}
+                  selected={pathname === "/doctors/register"}
+                >
                   Doctor Register
                 </MenuItem>
               )}
@@ -80,44 +100,34 @@ const Header = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {mainPages.map((page) => (
               <Button
-                key={page}
+                key={page.path}
+                component={Link}
+                href={page.path}
                 color="inherit"
-                sx={{ textTransform: "none", fontSize: "1rem" }}
+                sx={{
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  borderBottom:
+                    pathname === page.path ? "2px solid white" : "none",
+                }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
-            {isLoggedIn ? (
-              <>
-                <IconButton color="inherit">
-                  <AccountCircle />
-                </IconButton>
-                <Button
-                  color="inherit"
-                  onClick={() => handleAuth("logout")}
-                  sx={{ textTransform: "none" }}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  color="inherit"
-                  onClick={() => handleAuth("login")}
-                  sx={{ textTransform: "none" }}
-                >
-                  Login
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  sx={{ textTransform: "none", borderWidth: 2 }}
-                  onClick={() => handleAuth("login")}
-                >
-                  Doctor Register
-                </Button>
-              </>
+            {!isLoggedIn && (
+              <Button
+                component={Link}
+                href="/doctors/register"
+                variant="outlined"
+                color="inherit"
+                sx={{
+                  textTransform: "none",
+                  borderWidth: 2,
+                  "&:hover": { borderWidth: 2 },
+                }}
+              >
+                Doctor Register
+              </Button>
             )}
           </Box>
         )}
