@@ -4,6 +4,9 @@ import { TextField, Button, Box, Typography } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { supabase } from "../utils/supabase";
+import { hashPassword } from "../utils/hashPassword";
+
 // Validation schema
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -24,9 +27,18 @@ const DoctorRegistrationForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    // Call your API or perform other actions here
+  const onSubmit = async (data) => {
+    const { error } = await supabase.from("doctors").insert([
+      {
+        name: data.name,
+        specialty: data.specialty,
+        email: data.email,
+        password_hash: await hashPassword(data.password), // Use bcrypt
+      },
+    ]);
+
+    if (error) alert("Registration failed!");
+    else alert("Registration submitted for admin approval!");
   };
 
   return (
