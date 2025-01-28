@@ -28,7 +28,7 @@ const DoctorRegistrationForm = () => {
   });
 
   const onSubmit = async (data) => {
-    const { error } = await supabase.from("doctors").insert([
+    const { error } = await supabase.from("doctor").insert([
       {
         name: data.name,
         specialty: data.specialty,
