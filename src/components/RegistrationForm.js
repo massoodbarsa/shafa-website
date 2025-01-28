@@ -23,7 +23,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 // Validation schema
 const schema = yup.object().shape({
-  name: yup.string().required("Full name is required"),
+  first_name: yup.string().required("Full name is required"),
+  last_name: yup.string().required("Full name is required"),
+
   specialty: yup.string().required("Specialty is required"),
   email: yup
     .string()
@@ -64,7 +66,8 @@ const RegisterForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: "",
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
       specialty: "",
@@ -85,7 +88,8 @@ const RegisterForm = () => {
         options: {
           data: {
             user_type: "doctor",
-            name: formData.name.trim(),
+            first_name: formData.first_name.trim(),
+            last_name: formData.last_name.trim(),
           },
           emailRedirectTo: `${location.origin}/auth/callback`,
           emailConfirm: true,
@@ -128,7 +132,8 @@ const RegisterForm = () => {
       if (!existingDoctor) {
         const { error: insertError } = await supabase.from("doctor").insert({
           user_id: user.id,
-          name: formData.name,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
           specialty: formData.specialty,
           license_nr: formData.license_number,
         });
@@ -202,16 +207,32 @@ const RegisterForm = () => {
         )}
 
         <Controller
-          name="name"
+          name="first_name"
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
-              label="Full Name"
+              label="First Name"
               fullWidth
               margin="normal"
               error={!!errors.name}
-              helperText={errors.name?.message}
+              helperText={errors.first_name?.message}
+              disabled={isSubmitting}
+            />
+          )}
+        />
+
+        <Controller
+          name="last_name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Last Name"
+              fullWidth
+              margin="normal"
+              error={!!errors.name}
+              helperText={errors.last_name?.message}
               disabled={isSubmitting}
             />
           )}

@@ -45,13 +45,23 @@ const LoginPage = () => {
         body: JSON.stringify(body),
       });
 
+      const data = await response.json();
+
+      console.log(data.error);
+
+      if (data.error === "Email not confirmed") {
+        throw new Error(
+          "Please activate your account by confirming your email."
+        );
+      }
+
       if (!response.ok) throw new Error("Login failed");
 
-      const data = await response.json();
       router.push(
         userType === "doctor" ? "/dashboard/doctor" : "/dashboard/client"
       );
     } catch (err) {
+      console.log(err);
       setError(err.message || "Invalid credentials. Please try again.");
     }
   };
