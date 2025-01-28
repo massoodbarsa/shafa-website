@@ -20,7 +20,7 @@ import { usePathname } from "next/navigation";
 
 const mainPages = [
   { name: "Home", path: "/" },
-  { name: "Doctors", path: "/doctors" },
+  { name: "Doctor", path: "/doctor" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
 ];
@@ -87,9 +87,9 @@ const Header = () => {
               {!isLoggedIn && (
                 <MenuItem
                   component={Link}
-                  href="/doctors/register"
+                  href="/doctor/register"
                   onClick={handleMenuClose}
-                  selected={pathname === "/doctors/register"}
+                  selected={pathname === "/doctor/register"}
                 >
                   Doctor Register
                 </MenuItem>
@@ -125,7 +125,7 @@ const Header = () => {
                 </Button>
                 <Button
                   component={Link}
-                  href="/doctors/register"
+                  href="/doctor/register"
                   variant="outlined"
                   color="inherit"
                   sx={{
