@@ -310,7 +310,7 @@ const RegisterForm = () => {
           {isSubmitting ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            `Register as ${userType === "doctors" ? "Doctor" : "Client"}`
+            `Register as ${userType === UserRole.Doctor ? "Doctor" : "Client"}`
           )}
         </Button>
       </Box>

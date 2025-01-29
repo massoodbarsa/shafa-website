@@ -182,11 +182,7 @@ const LoginPage = () => {
           <Typography variant="body1">
             Don't have an account?{" "}
             <Link
-              href={
-                userType === "doctor"
-                  ? "/doctors/register"
-                  : "/clients/register"
-              }
+              href={userType === "doctor" ? "/register" : "/register"}
               sx={{
                 color: "primary.main",
                 fontWeight: 500,
