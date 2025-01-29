@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     // Verify doctor profile with license number
     const { data: doctorData, error: doctorError } = await supabase
-      .from("doctor")
+      .from("doctors")
       .select("*")
       .eq("user_id", authData.user.id)
       .eq("license_nr", medicalLicense)

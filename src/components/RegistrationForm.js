@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -21,34 +21,6 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-// Validation schema
-const schema = yup.object().shape({
-  first_name: yup.string().required("Full name is required"),
-  last_name: yup.string().required("Full name is required"),
-
-  specialty: yup.string().required("Specialty is required"),
-  email: yup
-    .string()
-    .required("Email is required")
-    .matches(
-      /^(?!.*[-_.]{2})[a-zA-Z0-9][a-zA-Z0-9-_.]{1,62}[a-zA-Z0-9]@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/,
-      "Must follow: 3-64 chars, no special chars at start/end"
-    )
-    .transform((value) => value.toLowerCase().trim()),
-  license_number: yup
-    .string()
-    .matches(/^[A-Za-z0-9-]+$/, "Invalid license number format")
-    .required("Medical license number is required"),
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-      "Password must contain at least one uppercase, one lowercase, and one number"
-    )
-    .required("Password is required"),
-});
-
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -57,12 +29,44 @@ const RegisterForm = () => {
   const router = useRouter();
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [userType, setUserType] = useState("doctor"); // 'client' or 'doctor'
+  const [userType, setUserType] = useState("doctors");
+
+  // Dynamic schema based on userType
+  const schema = yup.object().shape({
+    first_name: yup.string().required("First name is required"),
+    last_name: yup.string().required("Last name is required"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .matches(
+        /^(?!.*[-_.]{2})[a-zA-Z0-9][a-zA-Z0-9-_.]{1,62}[a-zA-Z0-9]@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/,
+        "Must follow: 3-64 chars, no special chars at start/end"
+      )
+      .transform((value) => value.toLowerCase().trim()),
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+        "Password must contain at least one uppercase, one lowercase, and one number"
+      )
+      .required("Password is required"),
+    ...(userType === "doctors"
+      ? {
+          specialty: yup.string().required("Specialty is required"),
+          license_number: yup
+            .string()
+            .matches(/^[A-Za-z0-9-]+$/, "Invalid license number format")
+            .required("Medical license number is required"),
+        }
+      : {}),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -72,94 +76,76 @@ const RegisterForm = () => {
       password: "",
       specialty: "",
       license_number: "",
-      userType: "doctor", // dynamic field
     },
   });
+
+  useEffect(() => {
+    reset(); // Reset form when userType changes
+  }, [userType, reset]);
 
   const onSubmit = async (formData) => {
     setServerError("");
     setSuccessMessage("");
 
     try {
-      // Step 1: Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email.trim(),
         password: formData.password.trim(),
         options: {
           data: {
-            user_type: "doctor",
+            user_type: userType,
             first_name: formData.first_name.trim(),
             last_name: formData.last_name.trim(),
           },
           emailRedirectTo: `${location.origin}/auth/callback`,
-          emailConfirm: true,
-        },
-        headers: {
-          "X-Supabase-Skip-Email-Validation": "true",
         },
       });
 
-      if (authError) {
-        console.log("Auth Error Details:", authError);
-        const errorMsg = authError.message?.toLowerCase();
-        if (errorMsg?.includes("already")) {
-          throw new Error("EMAIL_EXISTS");
-        }
-        throw authError;
-      }
+      if (authError) throw authError;
 
-      // Step 2: Ensure the user was created
       const { user } = authData;
+      if (!user?.id) throw new Error("User creation failed.");
 
-      if (!user?.id) {
-        throw new Error("User creation failed. Missing user ID.");
+      const { data: existing, error: existingError } = await supabase
+        .from(userType)
+        .select("id")
+        .eq("user_id", user.id)
+        .single();
+
+      if (existingError && existingError.code !== "PGRST116") {
+        throw existingError;
       }
 
-      // Step 3: Check for existing doctor profile
-      const { data: existingDoctor, error: existingDoctorError } =
-        await supabase
-          .from("doctor")
-          .select("id")
-          .eq("user_id", user.id)
-          .single();
-
-      if (existingDoctorError && existingDoctorError.code !== "PGRST116") {
-        // Unexpected error
-        throw existingDoctorError;
-      }
-
-      // Step 4: Insert doctor profile only if not exists
-      if (!existingDoctor) {
-        const { error: insertError } = await supabase.from("doctor").insert({
+      if (!existing) {
+        const table = userType === "doctors" ? "doctors" : "clients";
+        const insertData = {
           user_id: user.id,
           first_name: formData.first_name,
           last_name: formData.last_name,
-          specialty: formData.specialty,
-          license_nr: formData.license_number,
-        });
+        };
+
+        if (userType === "doctors") {
+          insertData.specialty = formData.specialty;
+          insertData.license_nr = formData.license_number;
+        }
+
+        const { error: insertError } = await supabase
+          .from(table)
+          .insert(insertData);
 
         if (insertError) throw insertError;
       }
 
-      // Success handling
-      setSuccessMessage(
-        "Registration successful! Please check your email to verify your account."
-      );
+      setSuccessMessage("Registration successful! Please check your email.");
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
       console.error("Registration Error:", error);
 
-      console.log(error);
-      if (error.code === "23503") {
-        setServerError("Email already registerd.");
-      }
-
-      const errorMessage =
-        error && error.code === "23503"
-          ? "Email already registerd."
-          : error.message?.includes("invalid email")
-          ? "Please use a valid email address."
-          : "Registration failed. Please try again or contact support.";
+      const errorMessage = error.message.includes("User already registered")
+        ? "Email already registered."
+        : error.message.includes("Invalid login credentials")
+        ? "Invalid email or password."
+        : "Registration failed. Please try again.";
 
       setServerError(errorMessage);
     }
@@ -169,10 +155,11 @@ const RegisterForm = () => {
     <Container maxWidth="sm">
       <Box
         component="form"
+        key={userType}
         onSubmit={handleSubmit(onSubmit)}
         sx={{ textAlign: "center", mb: 4 }}
       >
-        {userType === "doctor" ? (
+        {userType === "doctors" ? (
           <MedicalServicesIcon
             sx={{ fontSize: 60, color: "primary.main", mb: 2 }}
           />
@@ -180,7 +167,7 @@ const RegisterForm = () => {
           <PersonIcon sx={{ fontSize: 60, color: "primary.main", mb: 2 }} />
         )}
         <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
-          {userType === "doctor" ? "Register as doctor" : "Register as client"}
+          {userType === "doctors" ? "Register as Doctor" : "Register as Client"}
         </Typography>
 
         <ToggleButtonGroup
@@ -190,8 +177,8 @@ const RegisterForm = () => {
           onChange={(e, newValue) => setUserType(newValue)}
           sx={{ mb: 3 }}
         >
-          <ToggleButton value="client">Client</ToggleButton>
-          <ToggleButton value="doctor">Doctor</ToggleButton>
+          <ToggleButton value="clients">Client</ToggleButton>
+          <ToggleButton value="doctors">Doctor</ToggleButton>
         </ToggleButtonGroup>
 
         {serverError && (
@@ -215,7 +202,7 @@ const RegisterForm = () => {
               label="First Name"
               fullWidth
               margin="normal"
-              error={!!errors.name}
+              error={!!errors.first_name}
               helperText={errors.first_name?.message}
               disabled={isSubmitting}
             />
@@ -231,7 +218,7 @@ const RegisterForm = () => {
               label="Last Name"
               fullWidth
               margin="normal"
-              error={!!errors.name}
+              error={!!errors.last_name}
               helperText={errors.last_name?.message}
               disabled={isSubmitting}
             />
@@ -255,7 +242,7 @@ const RegisterForm = () => {
           )}
         />
 
-        {userType === "doctor" && (
+        {userType === "doctors" && (
           <>
             <Controller
               name="specialty"
@@ -319,7 +306,7 @@ const RegisterForm = () => {
           {isSubmitting ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            `Register as ${userType === "doctor" ? "Doctor" : "Client"}`
+            `Register as ${userType === "doctors" ? "Doctor" : "Client"}`
           )}
         </Button>
       </Box>
