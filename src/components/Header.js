@@ -16,6 +16,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useAuthStore from "../store/authStore";
+import { useRouter } from "next/navigation";
 
 const mainPages = [
   { name: "Home", path: "/" },
@@ -26,10 +28,12 @@ const mainPages = [
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const pathname = usePathname();
+  const { isLoggedIn, logout } = useAuthStore();
+  const router = useRouter();
 
   const handleMenuOpen = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,6 +41,11 @@ const Header = () => {
 
   const handleMenuClose = () => {
     setAnchorElNav(null);
+  };
+
+  const handleLogout = () => {
+    logout(); // Update Zustand store (user is logged out)
+    router.push("/login");
   };
 
   return (
@@ -56,7 +65,7 @@ const Header = () => {
         </Typography>
 
         {isMobile ? (
-          <>
+          <Box>
             <IconButton
               size="large"
               edge="start"
@@ -83,18 +92,27 @@ const Header = () => {
                   {page.name}
                 </MenuItem>
               ))}
-              {!isLoggedIn && (
-                <MenuItem
-                  component={Link}
-                  href="/register"
-                  onClick={handleMenuClose}
-                  selected={pathname === "/register"}
-                >
-                  Doctor Register
-                </MenuItem>
+              {isLoggedIn ? (
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
+              ) : (
+                <Box display="flex" flexDirection="column">
+                  <Button color="inherit" href="/login">
+                    Login
+                  </Button>
+                  <Button
+                    component={Link}
+                    href="/register"
+                    variant="outlined"
+                    color="inherit"
+                  >
+                    SignUp
+                  </Button>
+                </Box>
               )}
             </Menu>
-          </>
+          </Box>
         ) : (
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {mainPages.map((page) => (
@@ -113,13 +131,13 @@ const Header = () => {
                 {page.name}
               </Button>
             ))}
-            {!isLoggedIn && (
+            {isLoggedIn ? (
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
               <>
-                <Button
-                  color="inherit"
-                  href="/login"
-                  sx={{ textTransform: "none" }}
-                >
+                <Button color="inherit" href="/login">
                   Login
                 </Button>
                 <Button
@@ -127,11 +145,6 @@ const Header = () => {
                   href="/register"
                   variant="outlined"
                   color="inherit"
-                  sx={{
-                    textTransform: "none",
-                    borderWidth: 2,
-                    "&:hover": { borderWidth: 2 },
-                  }}
                 >
                   SignUp
                 </Button>

@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/enums/UserRole";
+import useAuthStore from "../../store/authStore";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -28,6 +29,8 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const { login } = useAuthStore(); // Import login function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,9 +64,9 @@ const LoginPage = () => {
 
       if (!response.ok) throw new Error("Login failed");
 
-      router.push(
-        userType === UserRole.Doctor ? "/dashboard/doctor" : "/dashboard/client"
-      );
+      login();
+
+      router.push(userType === UserRole.Doctor ? "/dashboard/doctor" : "/");
     } catch (err) {
       console.log(err);
       setError(err.message || "Invalid credentials. Please try again.");
