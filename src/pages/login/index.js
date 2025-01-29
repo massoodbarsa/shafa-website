@@ -17,9 +17,10 @@ import {
 import { useRouter } from "next/navigation";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
+import { UserRole } from "@/enums/UserRole";
 
 const LoginPage = () => {
-  const [userType, setUserType] = useState("doctor");
+  const [userType, setUserType] = useState(UserRole.Doctor);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [medicalLicense, setMedicalLicense] = useState("");
@@ -34,16 +35,19 @@ const LoginPage = () => {
 
     try {
       const body =
-        userType === "doctor"
+        userType === UserRole.Doctor
           ? { email, password, medicalLicense }
           : { email, password };
 
       // Simulated API call - replace with actual endpoint
-      const response = await fetch(`/api/auth/${userType}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `/api/auth/${userType.toLocaleLowerCase()}/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
 
       const data = await response.json();
 
@@ -58,7 +62,7 @@ const LoginPage = () => {
       if (!response.ok) throw new Error("Login failed");
 
       router.push(
-        userType === "doctor" ? "/dashboard/doctor" : "/dashboard/client"
+        userType === UserRole.Doctor ? "/dashboard/doctor" : "/dashboard/client"
       );
     } catch (err) {
       console.log(err);
@@ -69,7 +73,7 @@ const LoginPage = () => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ textAlign: "center", mb: 4 }}>
-        {userType === "doctor" ? (
+        {userType === UserRole.Doctor ? (
           <MedicalServicesIcon
             sx={{ fontSize: 60, color: "primary.main", mb: 2 }}
           />
@@ -77,7 +81,7 @@ const LoginPage = () => {
           <PersonIcon sx={{ fontSize: 60, color: "primary.main", mb: 2 }} />
         )}
         <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
-          {userType === "doctor" ? "Doctor Login" : "Client Login"}
+          {userType === UserRole.Doctor ? "Doctor Login" : "Client Login"}
         </Typography>
 
         <ToggleButtonGroup
@@ -86,10 +90,10 @@ const LoginPage = () => {
           exclusive
           onChange={(e, newType) => newType && setUserType(newType)}
         >
-          <ToggleButton value="client" sx={{ textTransform: "none" }}>
+          <ToggleButton value={UserRole.Client} sx={{ textTransform: "none" }}>
             <PersonIcon sx={{ mr: 1 }} /> I'm a Client
           </ToggleButton>
-          <ToggleButton value="doctor" sx={{ textTransform: "none" }}>
+          <ToggleButton value={UserRole.Doctor} sx={{ textTransform: "none" }}>
             <MedicalServicesIcon sx={{ mr: 1 }} /> I'm a Doctor
           </ToggleButton>
         </ToggleButtonGroup>
@@ -132,7 +136,7 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {userType === "doctor" && (
+        {userType === UserRole.Doctor && (
           <TextField
             fullWidth
             label="Medical License Number"
@@ -175,14 +179,14 @@ const LoginPage = () => {
           size="large"
           sx={{ mt: 3, py: 1.5, fontSize: "1.1rem" }}
         >
-          Sign In as {userType === "doctor" ? "Doctor" : "Client"}
+          Sign In as {userType === UserRole.Doctor ? "Doctor" : "Client"}
         </Button>
 
         <Box sx={{ mt: 3, textAlign: "center" }}>
           <Typography variant="body1">
             Don't have an account?{" "}
             <Link
-              href={userType === "doctor" ? "/register" : "/register"}
+              href="/register"
               sx={{
                 color: "primary.main",
                 fontWeight: 500,
@@ -190,7 +194,7 @@ const LoginPage = () => {
                 "&:hover": { textDecoration: "underline" },
               }}
             >
-              Register as {userType === "doctor" ? "Doctor" : "Client"}
+              Register here
             </Link>
           </Typography>
         </Box>
