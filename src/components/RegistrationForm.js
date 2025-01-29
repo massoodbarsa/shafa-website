@@ -21,6 +21,8 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
+import { UserRole } from "@/enums/UserRole";
+
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -29,7 +31,7 @@ const RegisterForm = () => {
   const router = useRouter();
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [userType, setUserType] = useState("doctors");
+  const [userType, setUserType] = useState(UserRole.Doctor);
 
   // Dynamic schema based on userType
   const schema = yup.object().shape({
@@ -51,7 +53,7 @@ const RegisterForm = () => {
         "Password must contain at least one uppercase, one lowercase, and one number"
       )
       .required("Password is required"),
-    ...(userType === "doctors"
+    ...(userType === UserRole.Doctor
       ? {
           specialty: yup.string().required("Specialty is required"),
           license_number: yup
@@ -93,7 +95,6 @@ const RegisterForm = () => {
         password: formData.password.trim(),
         options: {
           data: {
-            user_type: userType,
             first_name: formData.first_name.trim(),
             last_name: formData.last_name.trim(),
           },
@@ -106,8 +107,10 @@ const RegisterForm = () => {
       const { user } = authData;
       if (!user?.id) throw new Error("User creation failed.");
 
+      const table = userType === UserRole.Doctor ? "doctors" : "clients";
+
       const { data: existing, error: existingError } = await supabase
-        .from(userType)
+        .from(table)
         .select("id")
         .eq("user_id", user.id)
         .single();
@@ -117,14 +120,13 @@ const RegisterForm = () => {
       }
 
       if (!existing) {
-        const table = userType === "doctors" ? "doctors" : "clients";
         const insertData = {
           user_id: user.id,
           first_name: formData.first_name,
           last_name: formData.last_name,
         };
 
-        if (userType === "doctors") {
+        if (userType === UserRole.Doctor) {
           insertData.specialty = formData.specialty;
           insertData.license_nr = formData.license_number;
         }
@@ -159,7 +161,7 @@ const RegisterForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         sx={{ textAlign: "center", mb: 4 }}
       >
-        {userType === "doctors" ? (
+        {userType === UserRole.Doctor ? (
           <MedicalServicesIcon
             sx={{ fontSize: 60, color: "primary.main", mb: 2 }}
           />
@@ -167,7 +169,9 @@ const RegisterForm = () => {
           <PersonIcon sx={{ fontSize: 60, color: "primary.main", mb: 2 }} />
         )}
         <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
-          {userType === "doctors" ? "Register as Doctor" : "Register as Client"}
+          {userType === UserRole.Doctor
+            ? "Register as Doctor"
+            : "Register as Client"}
         </Typography>
 
         <ToggleButtonGroup
@@ -177,8 +181,8 @@ const RegisterForm = () => {
           onChange={(e, newValue) => setUserType(newValue)}
           sx={{ mb: 3 }}
         >
-          <ToggleButton value="clients">Client</ToggleButton>
-          <ToggleButton value="doctors">Doctor</ToggleButton>
+          <ToggleButton value={UserRole.Client}>Client</ToggleButton>
+          <ToggleButton value={UserRole.Doctor}>Doctor</ToggleButton>
         </ToggleButtonGroup>
 
         {serverError && (
@@ -242,7 +246,7 @@ const RegisterForm = () => {
           )}
         />
 
-        {userType === "doctors" && (
+        {userType === UserRole.Doctor && (
           <>
             <Controller
               name="specialty"
