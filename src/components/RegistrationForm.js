@@ -129,6 +129,10 @@ const RegisterForm = () => {
         if (userType === UserRole.Doctor) {
           insertData.specialty = formData.specialty;
           insertData.license_nr = formData.license_number;
+          insertData.role = UserRole.Doctor;
+        }
+        if (userType === UserRole.Client) {
+          insertData.role = UserRole.Client;
         }
 
         const { error: insertError } = await supabase
