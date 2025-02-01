@@ -17,7 +17,7 @@ import { UserRole } from "@/enums/UserRole";
 
 const DoctorProfile = () => {
   const router = useRouter();
-  const { user, setUser } = useAuthStore(); // Get doctor data from store
+  const { user, auth } = useAuthStore(); // Get doctor data from store
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
@@ -72,7 +72,7 @@ const DoctorProfile = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user.user_id === auth.id) {
       setEditable(true); // Allow editing if logged-in user is a user
     }
   }, [user]);
