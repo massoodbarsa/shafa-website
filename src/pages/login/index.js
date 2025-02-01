@@ -19,6 +19,7 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/enums/UserRole";
 import useAuthStore from "../../store/authStore";
+import { formatUserNameForURL } from "@/src/utils/formatUserNameForURL";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -70,7 +71,10 @@ const LoginPage = () => {
 
       router.push(
         userType === UserRole.Doctor
-          ? `/dashboard/doctor/${data.doctorProfile.first_name}-${data.doctorProfile.last_name}`
+          ? `/dashboard/doctor/${formatUserNameForURL(
+              data.doctorProfile.first_name,
+              data.doctorProfile.last_name
+            )}`
           : "/dashboard/client"
       );
     } catch (err) {
