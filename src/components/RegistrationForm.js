@@ -55,7 +55,7 @@ const RegisterForm = () => {
       .required("Password is required"),
     ...(userType === UserRole.Doctor
       ? {
-          specialty: yup.string().required("Specialty is required"),
+          speciality: yup.string().required("speciality is required"),
           license_number: yup
             .string()
             .matches(/^[A-Za-z0-9-]+$/, "Invalid license number format")
@@ -76,7 +76,7 @@ const RegisterForm = () => {
       last_name: "",
       email: "",
       password: "",
-      specialty: "",
+      speciality: "",
       license_number: "",
     },
   });
@@ -122,12 +122,14 @@ const RegisterForm = () => {
       if (!existing) {
         const insertData = {
           user_id: user.id,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
+          first_name: formData.first_name.toLowerCase(),
+          last_name: formData.last_name.toLowerCase(),
+          full_name:
+            `${formData.first_name} ${formData.last_name}`.toLowerCase(),
         };
 
         if (userType === UserRole.Doctor) {
-          insertData.specialty = formData.specialty;
+          insertData.speciality = formData.speciality;
           insertData.license_nr = formData.license_number;
           insertData.role = UserRole.Doctor;
         }
@@ -253,16 +255,16 @@ const RegisterForm = () => {
         {userType === UserRole.Doctor && (
           <>
             <Controller
-              name="specialty"
+              name="speciality"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Medical Specialty"
+                  label="Medical speciality"
                   fullWidth
                   margin="normal"
-                  error={!!errors.specialty}
-                  helperText={errors.specialty?.message}
+                  error={!!errors.speciality}
+                  helperText={errors.speciality?.message}
                   disabled={isSubmitting}
                 />
               )}

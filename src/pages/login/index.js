@@ -63,8 +63,6 @@ const LoginPage = () => {
 
       if (!response.ok) throw new Error("Login failed");
 
-      console.log(data);
-
       login();
       setUser(data.doctorProfile); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data

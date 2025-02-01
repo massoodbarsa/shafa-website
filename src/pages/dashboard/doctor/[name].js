@@ -1,7 +1,5 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router"; // Using next/router
 import {
   Container,
   Box,
@@ -9,22 +7,88 @@ import {
   Typography,
   Button,
   Avatar,
+  Card,
+  CardContent,
+  IconButton,
 } from "@mui/material";
-import useAuthStore from "../../../store/authStore"; // Fetch doctor info from store
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import StarIcon from "@mui/icons-material/Star";
+import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
-
-import { UserRole } from "@/enums/UserRole";
 
 const DoctorProfile = () => {
   const router = useRouter();
-  const { user, auth } = useAuthStore(); // Get doctor data from store
+  const { user, auth } = useAuthStore();
+  const { name } = router.query; // Dynamic doctorId from the URL
   const [editable, setEditable] = useState(false);
+  const [doctorData, setDoctorData] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    speciality: user?.speciality || "",
-    profileImage: user?.profileImage || "",
+    firstName: "",
+    lastName: "",
+    speciality: "",
+    profileImage: "",
+    email: "",
+    phone: "",
+    location: "",
+    description: "",
   });
+
+  useEffect(() => {
+    // Redirect to login if not logged in
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    // Fetch doctor profile data only if name exists in the URL
+    if (name) {
+      const fullName = name.split("-").join(" "); // Join parts back into a full name
+
+      console.log(fullName);
+
+      const fetchDoctorData = async () => {
+        try {
+          const { data, error } = await supabase
+            .from("doctors")
+            .select("*")
+            .eq("full_name", fullName) // Assuming full_name is the correct column
+            .single(); // Ensure we get only one result
+
+          if (error) {
+            throw new Error(error.message); // Throw error if any issue
+          }
+
+          if (data) {
+            console.log("Doctor Data:", data); // Debug the fetched data
+            setDoctorData(data);
+            setFormData({
+              firstName: data.first_name,
+              lastName: data.last_name,
+              speciality: data.speciality,
+              profileImage: data.profile_image,
+              email: data.email,
+              phone: data.phone,
+              location: data.location,
+              description: data.description,
+            });
+
+            // Check if the logged-in user is the doctor
+            if (user?.user_id === data.user_id) {
+              setEditable(true);
+            }
+          } else {
+            console.error("No doctor found for this name");
+          }
+        } catch (error) {
+          console.error("Error fetching doctor data:", error.message);
+        }
+      };
+
+      fetchDoctorData();
+    }
+  }, [name, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,45 +116,18 @@ const DoctorProfile = () => {
 
   const handleSubmit = async () => {
     console.log(formData);
-    // const { data, error } = await supabase
-    //   .from("doctors")
-    //   .update({
-    //     firstName: formData.firstName,
-    //     lastName: formData.lastName,
-    //     speciality: formData.speciality,
-    //     profileImage: formData.profileImage,
-    //   })
-    //   .eq("user_id", doctor?.user_id);
-
-    // if (error) {
-    //   console.error("Update Error:", error.message);
-    //   return;
-    // }
-
-    // setDoctor({ ...doctor, ...formData }); // Update the store with new doctor data
-    // alert("Profile updated successfully!");
+    console.log("doctorData" + doctorData);
+    // Update logic for Supabase database
   };
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, [user, router]);
-
-  useEffect(() => {
-    if (user?.user_id === auth.id) {
-      setEditable(true); // Allow editing if logged-in user is a user
-    }
-  }, [user, auth]);
-
-  if (!user) return null;
+  if (!doctorData) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
-          sx={{ width: 100, height: 100, mx: "auto", mb: 2 }}
+          sx={{ width: 120, height: 120, mx: "auto", mb: 2 }}
         />
         {editable && (
           <Button variant="contained" component="label">
@@ -100,7 +137,7 @@ const DoctorProfile = () => {
         )}
       </Box>
 
-      <Box
+      <Card
         sx={{
           p: 4,
           boxShadow: 3,
@@ -108,48 +145,60 @@ const DoctorProfile = () => {
           bgcolor: "background.paper",
         }}
       >
-        <TextField
-          fullWidth
-          label="First Name"
-          variant="outlined"
-          margin="normal"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          disabled={!editable}
-        />
-        <TextField
-          fullWidth
-          label="Last Name"
-          variant="outlined"
-          margin="normal"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          disabled={!editable}
-        />
-        <TextField
-          fullWidth
-          label="Speciality"
-          variant="outlined"
-          margin="normal"
-          name="speciality"
-          value={formData.speciality}
-          onChange={handleChange}
-          disabled={!editable}
-        />
+        <CardContent>
+          <Typography variant="h4" gutterBottom>
+            {formData.firstName} {formData.lastName}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            {formData.speciality}
+          </Typography>
 
-        {editable && (
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3 }}
-            onClick={handleSubmit}
-          >
-            Save Changes
-          </Button>
-        )}
-      </Box>
+          <Box display="flex" alignItems="center" mt={2}>
+            <EmailIcon sx={{ mr: 1 }} />
+            <Typography>{formData.email}</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" mt={1}>
+            <PhoneIcon sx={{ mr: 1 }} />
+            <Typography>{formData.phone}</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" mt={1}>
+            <LocationOnIcon sx={{ mr: 1 }} />
+            <Typography>{formData.location}</Typography>
+          </Box>
+
+          <Typography variant="body1" mt={3}>
+            {formData.description}
+          </Typography>
+
+          <Box display="flex" alignItems="center" mt={3}>
+            {[...Array(5)].map((_, index) => (
+              <StarIcon key={index} sx={{ color: "gold" }} />
+            ))}
+          </Box>
+
+          {editable && (
+            <Box mt={3}>
+              <TextField
+                fullWidth
+                label="Description"
+                multiline
+                rows={4}
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+                onClick={handleSubmit}
+              >
+                Save Changes
+              </Button>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
     </Container>
   );
 };
