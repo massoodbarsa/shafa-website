@@ -30,7 +30,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const { login } = useAuthStore(); // Import login function
+  const { login, setUser } = useAuthStore(); // Import setUser function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +54,6 @@ const LoginPage = () => {
 
       const data = await response.json();
 
-      console.log(data.error);
-
       if (data.error === "Email not confirmed") {
         throw new Error(
           "Please activate your account by confirming your email."
@@ -64,9 +62,14 @@ const LoginPage = () => {
 
       if (!response.ok) throw new Error("Login failed");
 
-      login();
+      console.log(data);
 
-      router.push(userType === UserRole.Doctor ? "/dashboard/doctor" : "/");
+      login();
+      setUser(data.doctorProfile); // Store user info
+
+      router.push(
+        userType === UserRole.Doctor ? "/dashboard/doctor" : "/dashboard/client"
+      );
     } catch (err) {
       console.log(err);
       setError(err.message || "Invalid credentials. Please try again.");
