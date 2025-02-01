@@ -26,8 +26,6 @@ const DoctorProfile = () => {
     profileImage: user?.profileImage || "",
   });
 
-  console.log(user.role === UserRole.Doctor);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

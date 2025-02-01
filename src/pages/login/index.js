@@ -30,7 +30,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const { login, setUser } = useAuthStore(); // Import setUser function
+  const { login, setUser, setAuth } = useAuthStore(); // Import setUser function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +66,7 @@ const LoginPage = () => {
 
       login();
       setUser(data.doctorProfile); // Store user info
+      setAuth({ email: data.user.email, id: data.user.id }); //store auth data
 
       router.push(
         userType === UserRole.Doctor ? "/dashboard/doctor" : "/dashboard/client"
