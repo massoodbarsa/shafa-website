@@ -36,12 +36,6 @@ const DoctorProfile = () => {
   });
 
   useEffect(() => {
-    // Redirect to login if not logged in
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
     // Fetch doctor profile data only if name exists in the URL
     if (name) {
       const fullName = name.split("-").join(" "); // Join parts back into a full name
