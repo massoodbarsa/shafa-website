@@ -10,8 +10,8 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import useAuthStore from "../../store/authStore"; // Fetch doctor info from store
-import { supabase } from "../../utils/supabase";
+import useAuthStore from "../../../store/authStore"; // Fetch doctor info from store
+import { supabase } from "../../../utils/supabase";
 
 import { UserRole } from "@/enums/UserRole";
 
@@ -72,16 +72,16 @@ const DoctorProfile = () => {
   };
 
   useEffect(() => {
-    if (user.user_id === auth.id) {
-      setEditable(true); // Allow editing if logged-in user is a user
-    }
-  }, [user]);
-
-  useEffect(() => {
     if (!user) {
       router.push("/login");
     }
   }, [user, router]);
+
+  useEffect(() => {
+    if (user?.user_id === auth.id) {
+      setEditable(true); // Allow editing if logged-in user is a user
+    }
+  }, [user, auth]);
 
   if (!user) return null;
 

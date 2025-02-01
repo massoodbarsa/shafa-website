@@ -69,7 +69,9 @@ const LoginPage = () => {
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
 
       router.push(
-        userType === UserRole.Doctor ? "/dashboard/doctor" : "/dashboard/client"
+        userType === UserRole.Doctor
+          ? `/dashboard/doctor/${data.doctorProfile.first_name}-${data.doctorProfile.last_name}`
+          : "/dashboard/client"
       );
     } catch (err) {
       console.log(err);
