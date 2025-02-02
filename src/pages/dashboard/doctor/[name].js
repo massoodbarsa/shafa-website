@@ -229,7 +229,7 @@ const DoctorProfile = () => {
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
-          sx={{ width: 120, height: 120, mx: "auto", mb: 2 }}
+          sx={{ width: 170, height: 160, mx: "auto", mb: 2 }}
         />
         {editable && (
           <Button variant="contained" component="label">
