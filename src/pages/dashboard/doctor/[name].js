@@ -125,32 +125,43 @@ const DoctorProfile = () => {
     try {
       const fileName = `doctors/${Date.now()}-${file.name}`;
 
-      // Upload image to Supabase Storage
+      // 1. Check if the doctor already has a profile image
+      const existingImageUrl = formData.profileImage;
+
+      // If there's an existing image, delete it from the storage
+      if (existingImageUrl) {
+        const existingFileName = existingImageUrl.split("/").pop(); // Extract file name from URL
+        const { error: deleteError } = await supabase.storage
+          .from("profile_pictures")
+          .remove([`doctors/${existingFileName}`]);
+
+        if (deleteError) {
+          throw deleteError;
+        }
+      }
+
+      // 2. Upload new image to Supabase Storage
       const { error: uploadError } = await supabase.storage
-        .from("profile_pictures") // Ensure this is your actual bucket name
+        .from("profile_pictures")
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
-      // Get public URL of the uploaded image
-      const { data: urlData } = supabase.storage
+      // 3. Get public URL of the uploaded image
+      const { data: publicUrlData } = supabase.storage
         .from("profile_pictures")
         .getPublicUrl(fileName);
 
-      if (!urlData.publicUrl) {
-        throw new Error("Failed to retrieve public URL");
-      }
-
-      // Update the doctor's profile in the database
+      // 4. Update the doctor's profile in the database
       const { error: updateError } = await supabase
         .from("doctors")
-        .update({ profile_image: urlData.publicUrl })
+        .update({ profile_image: publicUrlData.publicUrl })
         .eq("user_id", user.user_id);
 
       if (updateError) throw updateError;
 
-      // Update local state
-      setFormData((prev) => ({ ...prev, profileImage: urlData.publicUrl }));
+      // 5. Update local state with the new image URL
+      setFormData({ ...formData, profileImage: publicUrlData.publicUrl });
     } catch (error) {
       console.error("Error uploading image:", error.message);
     } finally {
