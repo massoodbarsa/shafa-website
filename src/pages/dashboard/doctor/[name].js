@@ -40,8 +40,6 @@ const DoctorProfile = () => {
     if (name) {
       const fullName = name.split("-").join(" "); // Join parts back into a full name
 
-      console.log(fullName);
-
       const fetchDoctorData = async () => {
         try {
           const { data, error } = await supabase
@@ -55,7 +53,6 @@ const DoctorProfile = () => {
           }
 
           if (data) {
-            console.log("Doctor Data:", data); // Debug the fetched data
             setDoctorData(data);
             setFormData({
               firstName: data.first_name,
@@ -109,9 +106,41 @@ const DoctorProfile = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
-    console.log("doctorData" + doctorData);
-    // Update logic for Supabase database
+    if (!doctorData) return;
+
+    try {
+      // Update the doctor's description in the database
+      const { error } = await supabase
+        .from("doctors")
+        .update({ description: formData.description }) // Updating description
+        .eq("user_id", doctorData.user_id);
+
+      if (error) {
+        throw new Error(error.message); // Handle any errors
+      }
+
+      // Fetch updated data after saving
+      const { data: updatedDoctor, error: fetchError } = await supabase
+        .from("doctors")
+        .select("*")
+        .eq("user_id", doctorData.user_id)
+        .single();
+
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
+
+      // Update state with new data
+      setDoctorData(updatedDoctor);
+      setFormData((prev) => ({
+        ...prev,
+        description: updatedDoctor.description,
+      }));
+
+      console.log("Updated doctor data:", updatedDoctor);
+    } catch (error) {
+      console.error("Error updating description:", error.message);
+    }
   };
 
   if (!doctorData) return <Typography>Loading...</Typography>;
@@ -161,7 +190,7 @@ const DoctorProfile = () => {
           </Box>
 
           <Typography variant="body1" mt={3}>
-            {formData.description}
+            {doctorData.description}
           </Typography>
 
           <Box display="flex" alignItems="center" mt={3}>
