@@ -189,7 +189,7 @@ const DoctorProfile = () => {
             <Typography>{formData.location}</Typography>
           </Box>
 
-          <Typography variant="body1" mt={3}>
+          <Typography variant="body1" mt={3} sx={{ whiteSpace: "pre-line" }}>
             {doctorData.description}
           </Typography>
 
