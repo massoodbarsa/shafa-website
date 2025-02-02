@@ -12,6 +12,7 @@ import {
   Autocomplete,
   Divider,
   Chip,
+  Rating,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -47,6 +48,12 @@ const DoctorProfile = () => {
     location: "",
   });
 
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({
+    rating: 1,
+    review_text: "",
+  });
+
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Check for mobile
 
   // Load country names
@@ -58,53 +65,6 @@ const DoctorProfile = () => {
       flag: `https://flagcdn.com/w40/${code.toLowerCase()}.png`, // Flags API
     })
   );
-
-  useEffect(() => {
-    // Fetch doctor profile data only if name exists in the URL
-    if (name) {
-      const fullName = name.split("-").join(" "); // Join parts back into a full name
-
-      const fetchDoctorData = async () => {
-        try {
-          const { data, error } = await supabase
-            .from("doctors")
-            .select("*")
-            .eq("full_name", fullName) // Assuming full_name is the correct column
-            .single(); // Ensure we get only one result
-
-          if (error) {
-            throw new Error(error.message); // Throw error if any issue
-          }
-
-          if (data) {
-            setDoctorData(data);
-            setFormData({
-              firstName: data.first_name,
-              lastName: data.last_name,
-              speciality: data.speciality,
-              profileImage: data.profile_image,
-              email: data.email,
-              phone: data.phone,
-              location: data.location,
-              description: data.description,
-              location: data.location,
-            });
-
-            // Check if the logged-in user is the doctor
-            if (user?.user_id === data.user_id) {
-              setEditable(true);
-            }
-          } else {
-            console.error("No doctor found for this name");
-          }
-        } catch (error) {
-          console.error("Error fetching doctor data:", error.message);
-        }
-      };
-
-      fetchDoctorData();
-    }
-  }, [name, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -217,6 +177,129 @@ const DoctorProfile = () => {
     }
   };
 
+  const fetchReviews = async () => {
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("rating, review_text, created_at, clients (full_name)")
+      .eq("doctor_id", doctorData.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching reviews:", error.message);
+    } else {
+      setReviews(data);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    if (reviews.rating === 0) {
+      alert("Please select a rating before submitting.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Check if the client has already reviewed this doctor
+      const { data: existingReview, error: checkError } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("doctor_id", doctorData.id)
+        // .eq("client_id", user.user_id)
+        .eq("client_id", "381ab999-c836-4ad5-aa23-0fa7741b9465")
+
+        .single(); // Ensure only one record is fetched
+
+      if (checkError && checkError.code !== "PGRST116") {
+        throw checkError; // Ignore "PGRST116" (no rows found), as that means no review exists
+      }
+
+      console.log(existingReview);
+
+      if (existingReview) {
+        alert("You have already submitted a review for this doctor.");
+        return;
+      }
+
+      // Insert new review
+      const { error: insertError } = await supabase.from("reviews").insert([
+        {
+          doctor_id: doctorData.id,
+          // client_id: user.user_id,
+          client_id: "381ab999-c836-4ad5-aa23-0fa7741b9465",
+
+          rating: newReview.rating,
+          review_text: newReview.review_text,
+        },
+      ]);
+
+      if (insertError) throw insertError;
+
+      // Fetch updated reviews
+      fetchReviews();
+      setReviews({ rating: 0, reviewText: "" }); // Reset form
+    } catch (error) {
+      console.error("Error submitting review:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffects
+
+  useEffect(() => {
+    // Fetch doctor profile data only if name exists in the URL
+    if (name) {
+      const fullName = name.split("-").join(" "); // Join parts back into a full name
+
+      const fetchDoctorData = async () => {
+        try {
+          const { data, error } = await supabase
+            .from("doctors")
+            .select("*")
+            .eq("full_name", fullName) // Assuming full_name is the correct column
+            .single(); // Ensure we get only one result
+
+          if (error) {
+            throw new Error(error.message); // Throw error if any issue
+          }
+
+          if (data) {
+            setDoctorData(data);
+            setFormData({
+              firstName: data.first_name,
+              lastName: data.last_name,
+              speciality: data.speciality,
+              profileImage: data.profile_image,
+              email: data.email,
+              phone: data.phone,
+              location: data.location,
+              description: data.description,
+              location: data.location,
+            });
+
+            // Check if the logged-in user is the doctor
+            if (user?.user_id === data.user_id) {
+              setEditable(true);
+            }
+          } else {
+            console.error("No doctor found for this name");
+          }
+        } catch (error) {
+          console.error("Error fetching doctor data:", error.message);
+        }
+      };
+
+      fetchDoctorData();
+    }
+  }, [name, user]);
+
+  useEffect(() => {
+    if (doctorData) {
+      fetchReviews();
+    }
+  }, [doctorData]);
+
   if (!doctorData)
     return (
       <Box sx={{ width: "100%" }}>
@@ -229,7 +312,7 @@ const DoctorProfile = () => {
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
-          sx={{ width: 170, height: 160, mx: "auto", mb: 2 }}
+          sx={{ width: 160, height: 200, mx: "auto", mb: 2 }}
         />
         {editable && (
           <Button variant="contained" component="label">
@@ -277,7 +360,7 @@ const DoctorProfile = () => {
           </Box>
           <Chip
             label={formData.speciality.toUpperCase()}
-            color="primary"
+            color="success"
             variant="outlined"
             sx={{ mt: 1 }}
           />
@@ -369,6 +452,77 @@ const DoctorProfile = () => {
                 loading={loading} // Show spinner when loading
               >
                 Save Changes
+              </LoadingButton>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+      <Card
+        sx={{
+          p: 4,
+          boxShadow: 3,
+          borderRadius: 4,
+          bgcolor: "background.paper",
+          mt: 4,
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6">Patient Reviews</Typography>
+          <Divider sx={{ my: 2 }} />
+
+          {/* Display Existing Reviews */}
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <Box
+                key={index}
+                sx={{ my: 2, p: 2, bgcolor: "grey.100", borderRadius: 2 }}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {review.clients?.name || "Anonymous"}
+                </Typography>
+                <Rating value={review.rating} readOnly />
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  {review.review_text}
+                </Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography>
+              No reviews yet. Be the first to leave a review!
+            </Typography>
+          )}
+
+          {/* Review Submission Form (Only for Logged-in Clients) */}
+          {/* {user && user.user_id !== doctorData.user_id && ( */}
+          {user && user.user_id && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6">Leave a Review</Typography>
+              <Rating
+                value={newReview.rating}
+                onChange={(event, newValue) =>
+                  setNewReview({ ...newReview, rating: newValue })
+                }
+              />
+              <TextField
+                fullWidth
+                label="Your review"
+                multiline
+                rows={3}
+                variant="outlined"
+                sx={{ mt: 2 }}
+                value={newReview.review_text}
+                onChange={(e) =>
+                  setNewReview({ ...newReview, review_text: e.target.value })
+                }
+              />
+              <LoadingButton
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+                onClick={handleSubmitReview}
+                loading={loading}
+              >
+                Submit Review
               </LoadingButton>
             </Box>
           )}
