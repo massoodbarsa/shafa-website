@@ -12,7 +12,6 @@ import {
   Autocomplete,
   Divider,
   Chip,
-  Rating,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -258,27 +257,6 @@ const DoctorProfile = () => {
   // useEffects
 
   useEffect(() => {
-    const fetchAverageRating = async () => {
-      if (!doctorData) return;
-
-      try {
-        const { data, error } = await supabase.from("reviews").select("rating");
-
-        if (error) throw error;
-
-        if (data.length > 0) {
-          const total = data.reduce((sum, review) => sum + review.rating, 0);
-          setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
-        }
-      } catch (error) {
-        console.error("Error fetching average rating:", error.message);
-      }
-    };
-
-    fetchAverageRating();
-  }, [doctorData]); // Runs when doctor data changes
-
-  useEffect(() => {
     // Fetch doctor profile data only if name exists in the URL
     if (name) {
       const fullName = name.split("-").join(" "); // Join parts back into a full name
@@ -324,6 +302,27 @@ const DoctorProfile = () => {
       fetchDoctorData();
     }
   }, [name, user]);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      if (!doctorData) return;
+
+      try {
+        const { data, error } = await supabase.from("reviews").select("rating");
+
+        if (error) throw error;
+
+        if (data.length > 0) {
+          const total = data.reduce((sum, review) => sum + review.rating, 0);
+          setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
+        }
+      } catch (error) {
+        console.error("Error fetching average rating:", error.message);
+      }
+    };
+
+    fetchAverageRating();
+  }, [doctorData]); // Runs when doctor data changes
 
   useEffect(() => {
     if (doctorData) {
