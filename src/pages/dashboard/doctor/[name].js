@@ -53,6 +53,7 @@ const DoctorProfile = () => {
     rating: 0,
     review_text: "",
   });
+  const [averageRating, setAverageRating] = useState(0);
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
@@ -256,6 +257,27 @@ const DoctorProfile = () => {
   // useEffects
 
   useEffect(() => {
+    const fetchAverageRating = async () => {
+      if (!doctorData) return;
+
+      try {
+        const { data, error } = await supabase.from("reviews").select("rating");
+
+        if (error) throw error;
+
+        if (data.length > 0) {
+          const total = data.reduce((sum, review) => sum + review.rating, 0);
+          setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
+        }
+      } catch (error) {
+        console.error("Error fetching average rating:", error.message);
+      }
+    };
+
+    fetchAverageRating();
+  }, [doctorData]); // Runs when doctor data changes
+
+  useEffect(() => {
     // Fetch doctor profile data only if name exists in the URL
     if (name) {
       const fullName = name.split("-").join(" "); // Join parts back into a full name
@@ -360,8 +382,14 @@ const DoctorProfile = () => {
               sx={{ my: isMobile ? 3 : 0 }}
             >
               {[...Array(5)].map((_, index) => (
-                <StarIcon key={index} sx={{ color: "gold" }} />
+                <StarIcon
+                  key={index}
+                  sx={{
+                    color: index < Math.round(averageRating) ? "gold" : "gray",
+                  }}
+                />
               ))}
+              <Typography sx={{ ml: 1 }}>({averageRating})</Typography>
             </Box>
 
             {/* Name */}
