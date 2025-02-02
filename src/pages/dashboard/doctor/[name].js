@@ -25,6 +25,7 @@ import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
+import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -226,7 +227,8 @@ const DoctorProfile = () => {
               gutterBottom
               sx={{ textAlign: isMobile ? "center" : "left" }}
             >
-              {formData.firstName} {formData.lastName}
+              {capitalizeFirstLetter(formData.firstName)}{" "}
+              {capitalizeFirstLetter(formData.lastName)}
             </Typography>
             <Box
               display="flex"
