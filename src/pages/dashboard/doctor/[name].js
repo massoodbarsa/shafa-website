@@ -9,7 +9,7 @@ import {
   Avatar,
   Card,
   CardContent,
-  IconButton,
+  Autocomplete,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -19,6 +19,9 @@ import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
 import LinearProgress from "@mui/material/LinearProgress";
 import { LoadingButton } from "@mui/lab"; // Import LoadingButton
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -37,7 +40,18 @@ const DoctorProfile = () => {
     phone: "",
     location: "",
     description: "",
+    location: "",
   });
+
+  // Load country names
+  countries.registerLocale(enLocale);
+  const countryList = Object.entries(countries.getNames("en")).map(
+    ([code, name]) => ({
+      code,
+      label: name,
+      flag: `https://flagcdn.com/w40/${code.toLowerCase()}.png`, // Flags API
+    })
+  );
 
   useEffect(() => {
     // Fetch doctor profile data only if name exists in the URL
@@ -67,6 +81,7 @@ const DoctorProfile = () => {
               phone: data.phone,
               location: data.location,
               description: data.description,
+              location: data.location,
             });
 
             // Check if the logged-in user is the doctor
@@ -87,6 +102,12 @@ const DoctorProfile = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLocationChange = (event, newValue) => {
+    if (newValue) {
+      setFormData({ ...formData, location: newValue.label });
+    }
   };
 
   const handleImageUpload = async (e) => {
@@ -121,6 +142,7 @@ const DoctorProfile = () => {
         .update({
           description: formData.description,
           phone: formData.phone, // Update phone number
+          location: formData.location,
         })
         .eq("user_id", doctorData.user_id);
 
@@ -145,6 +167,7 @@ const DoctorProfile = () => {
         ...prev,
         description: updatedDoctor.description,
         phone: updatedDoctor.phone,
+        location: updatedDoctor.location,
       }));
 
       console.log("Updated doctor data:", updatedDoctor);
@@ -226,11 +249,39 @@ const DoctorProfile = () => {
               <Typography>{formData.phone}</Typography>
             )}
           </Box>
-          <Box display="flex" alignItems="center" mt={1}>
-            <LocationOnIcon sx={{ mr: 1 }} />
-            <Typography>{formData.location}</Typography>
-          </Box>
 
+          {/* Editable Location Field */}
+          <Box display="flex" alignItems="center" mt={1}>
+            <AddLocationAltIcon sx={{ mr: 1 }} />
+            {editable ? (
+              <Autocomplete
+                fullWidth
+                options={countryList}
+                getOptionLabel={(option) => option.label}
+                value={
+                  countryList.find((c) => c.label === formData.location) || null
+                }
+                onChange={handleLocationChange}
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    <img
+                      loading="lazy"
+                      width="20"
+                      src={option.flag}
+                      alt={option.label}
+                      style={{ marginRight: 10 }}
+                    />
+                    {option.label}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} label="Select Country" />
+                )}
+              />
+            ) : (
+              <Typography>{formData.location}</Typography> // Display selected location
+            )}
+          </Box>
           <Typography variant="body1" mt={3} sx={{ whiteSpace: "pre-line" }}>
             {doctorData.description}
           </Typography>
