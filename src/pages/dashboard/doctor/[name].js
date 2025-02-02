@@ -17,6 +17,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -143,7 +144,12 @@ const DoctorProfile = () => {
     }
   };
 
-  if (!doctorData) return <Typography>Loading...</Typography>;
+  if (!doctorData)
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
 
   return (
     <Container maxWidth="md">
