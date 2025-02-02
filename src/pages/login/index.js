@@ -34,16 +34,33 @@ const LoginPage = () => {
   const { login, setUser, setAuth } = useAuthStore(); // Import setUser function
 
   useEffect(() => {
-    // Only access localStorage after the component has mounted
     if (typeof window !== "undefined") {
-      const storedUser = JSON.parse(localStorage.getItem("user_data"));
-      const storedAuth = JSON.parse(localStorage.getItem("auth_token"));
-      if (storedUser && storedAuth) {
-        setUser(storedUser);
-        setAuth(storedAuth);
+      const storedUser = localStorage.getItem("user_data");
+      const storedAuth = localStorage.getItem("auth_token");
+
+      // Check if stored data exists and is a valid JSON string
+      if (storedUser || storedAuth) {
+        try {
+          const parsedUser =
+            storedUser && storedUser !== "undefined"
+              ? JSON.parse(storedUser)
+              : null;
+          const parsedAuth =
+            storedAuth && storedAuth !== "undefined"
+              ? JSON.parse(storedAuth)
+              : null;
+
+          // Only update state if data is parsed successfully
+          if (parsedUser && parsedAuth) {
+            setUser(parsedUser);
+            setAuth(parsedAuth);
+          }
+        } catch (error) {
+          console.error("Error parsing stored data from localStorage:", error);
+        }
       }
     }
-  }, [setUser, setAuth]);
+  }, []); // Empty dependency array to run once on mount
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,7 +102,7 @@ const LoginPage = () => {
               data.doctorProfile.first_name,
               data.doctorProfile.last_name
             )}`
-          : "/dashboard/client"
+          : "/"
       );
     } catch (err) {
       console.log(err);

@@ -35,11 +35,21 @@ const Header = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // You may want to check if user data is already in localStorage
-    if (!user && localStorage.getItem("user_data")) {
-      // If there is user data in localStorage but not in the store, set it
-      const storedUser = JSON.parse(localStorage.getItem("user_data"));
-      useAuthStore.getState().setUser(storedUser);
+    const userData = localStorage.getItem("user_data");
+
+    // Check if user_data exists and is a non-empty string
+    if (!user && userData && userData !== "undefined" && userData !== "null") {
+      try {
+        // Attempt to parse only if it's a valid string
+        const parsedUser = JSON.parse(userData);
+
+        // Ensure parsedUser is a valid object
+        if (parsedUser && typeof parsedUser === "object") {
+          useAuthStore.getState().setUser(parsedUser);
+        }
+      } catch (e) {
+        console.error("Failed to parse user data from localStorage", e);
+      }
     }
   }, [user]);
 
