@@ -10,6 +10,7 @@ import {
   Card,
   CardContent,
   Autocomplete,
+  Divider,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -22,6 +23,7 @@ import { LoadingButton } from "@mui/lab"; // Import LoadingButton
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -42,6 +44,8 @@ const DoctorProfile = () => {
     description: "",
     location: "",
   });
+
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Check for mobile
 
   // Load country names
   countries.registerLocale(enLocale);
@@ -209,18 +213,40 @@ const DoctorProfile = () => {
         }}
       >
         <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {formData.firstName} {formData.lastName}
-          </Typography>
+          <Box
+            display="flex"
+            flexDirection={isMobile ? "column" : "row"} // Stack on mobile, row on desktop
+            alignItems="center"
+            justifyContent={isMobile ? "flex-start" : "space-between"} // Stack or space-between based on device
+          >
+            {/* Stars */}
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ textAlign: isMobile ? "center" : "left" }}
+            >
+              {formData.firstName} {formData.lastName}
+            </Typography>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{ my: isMobile ? 3 : 0 }}
+            >
+              {[...Array(5)].map((_, index) => (
+                <StarIcon key={index} sx={{ color: "gold" }} />
+              ))}
+            </Box>
+
+            {/* Name */}
+          </Box>
           <Typography variant="h6" color="textSecondary">
             {formData.speciality}
           </Typography>
-
           <Box display="flex" alignItems="center" mt={2}>
             <EmailIcon sx={{ mr: 1 }} />
             <Typography>{formData.email}</Typography>
           </Box>
-          <Box display="flex" alignItems="center" mt={1}>
+          <Box display="flex" alignItems="center" my={3}>
             <PhoneIcon sx={{ mr: 1 }} />
             {editable ? (
               <TextField
@@ -249,9 +275,8 @@ const DoctorProfile = () => {
               <Typography>{formData.phone}</Typography>
             )}
           </Box>
-
           {/* Editable Location Field */}
-          <Box display="flex" alignItems="center" mt={1}>
+          <Box display="flex" alignItems="center" my={3}>
             <AddLocationAltIcon sx={{ mr: 1 }} />
             {editable ? (
               <Autocomplete
@@ -282,16 +307,10 @@ const DoctorProfile = () => {
               <Typography>{formData.location}</Typography> // Display selected location
             )}
           </Box>
+          <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
           <Typography variant="body1" mt={3} sx={{ whiteSpace: "pre-line" }}>
             {doctorData.description}
           </Typography>
-
-          <Box display="flex" alignItems="center" mt={3}>
-            {[...Array(5)].map((_, index) => (
-              <StarIcon key={index} sx={{ color: "gold" }} />
-            ))}
-          </Box>
-
           {editable && (
             <Box mt={3}>
               <TextField
