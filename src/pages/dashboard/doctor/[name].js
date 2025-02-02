@@ -18,10 +18,13 @@ import StarIcon from "@mui/icons-material/Star";
 import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
 import LinearProgress from "@mui/material/LinearProgress";
+import { LoadingButton } from "@mui/lab"; // Import LoadingButton
 
 const DoctorProfile = () => {
   const router = useRouter();
-  const { user, auth } = useAuthStore();
+  const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false); // Loading state
+
   const { name } = router.query; // Dynamic doctorId from the URL
   const [editable, setEditable] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
@@ -109,6 +112,8 @@ const DoctorProfile = () => {
   const handleSubmit = async () => {
     if (!doctorData) return;
 
+    setLoading(true); // Start loading state
+
     try {
       // Update the doctor's description in the database
       const { error } = await supabase
@@ -141,6 +146,8 @@ const DoctorProfile = () => {
       console.log("Updated doctor data:", updatedDoctor);
     } catch (error) {
       console.error("Error updating description:", error.message);
+    } finally {
+      setLoading(false); // Stop loading state
     }
   };
 
@@ -216,14 +223,15 @@ const DoctorProfile = () => {
                 value={formData.description}
                 onChange={handleChange}
               />
-              <Button
+              <LoadingButton
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2 }}
                 onClick={handleSubmit}
+                loading={loading} // Show spinner when loading
               >
                 Save Changes
-              </Button>
+              </LoadingButton>
             </Box>
           )}
         </CardContent>
