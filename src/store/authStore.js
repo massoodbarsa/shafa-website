@@ -1,18 +1,36 @@
 import { create } from "zustand";
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   auth: null,
-  isLoggedIn: false,
-  login: () => set({ isLoggedIn: true }),
-  logout: () => set({ user: null, isLoggedIn: false }),
+
   setUser: (userData) => {
-    console.log("Storing User Data:", userData); // Debugging line
+    localStorage.setItem("user_data", JSON.stringify(userData));
     set({ user: userData });
   },
-  setAuth: (AuthData) => {
-    console.log("Storing Auth Data:", AuthData); // Debugging line
-    set({ auth: AuthData });
+
+  setAuth: (authData) => {
+    localStorage.setItem("auth_token", JSON.stringify(authData));
+    set({ auth: authData });
+  },
+
+  clearUser: () => {
+    localStorage.removeItem("user_data");
+    localStorage.removeItem("auth_token");
+    set({ user: null, auth: null });
+  },
+
+  isLoggedIn: () => !!get().user, // Check if the user is logged in
+
+  login: () => {
+    set({ user: get().user, auth: get().auth }); // Ensure user and auth are in the state
+  },
+
+  logout: () => {
+    // Clears user data from store and localStorage
+    localStorage.removeItem("user_data");
+    localStorage.removeItem("auth_token");
+    set({ user: null, auth: null });
   },
 }));
 

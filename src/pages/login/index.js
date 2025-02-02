@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -32,6 +32,18 @@ const LoginPage = () => {
   const router = useRouter();
 
   const { login, setUser, setAuth } = useAuthStore(); // Import setUser function
+
+  useEffect(() => {
+    // Only access localStorage after the component has mounted
+    if (typeof window !== "undefined") {
+      const storedUser = JSON.parse(localStorage.getItem("user_data"));
+      const storedAuth = JSON.parse(localStorage.getItem("auth_token"));
+      if (storedUser && storedAuth) {
+        setUser(storedUser);
+        setAuth(storedAuth);
+      }
+    }
+  }, [setUser, setAuth]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

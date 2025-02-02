@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -28,12 +28,20 @@ const mainPages = [
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const pathname = usePathname();
-  const { isLoggedIn, logout } = useAuthStore();
+  const { user, isLoggedIn, logout } = useAuthStore(); // Get user state from store
   const router = useRouter();
+
+  useEffect(() => {
+    // You may want to check if user data is already in localStorage
+    if (!user && localStorage.getItem("user_data")) {
+      // If there is user data in localStorage but not in the store, set it
+      const storedUser = JSON.parse(localStorage.getItem("user_data"));
+      useAuthStore.getState().setUser(storedUser);
+    }
+  }, [user]);
 
   const handleMenuOpen = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -92,7 +100,7 @@ const Header = () => {
                   {page.name}
                 </MenuItem>
               ))}
-              {isLoggedIn ? (
+              {isLoggedIn() ? (
                 <Button color="inherit" onClick={handleLogout}>
                   Logout
                 </Button>
@@ -131,7 +139,7 @@ const Header = () => {
                 {page.name}
               </Button>
             ))}
-            {isLoggedIn ? (
+            {isLoggedIn() ? (
               <Button color="inherit" onClick={handleLogout}>
                 Logout
               </Button>
