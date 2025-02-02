@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
@@ -27,6 +26,7 @@ import enLocale from "i18n-iso-countries/langs/en.json";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
+import { useSnackbar } from "notistack";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -50,9 +50,11 @@ const DoctorProfile = () => {
 
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
-    rating: 1,
+    rating: 0,
     review_text: "",
   });
+
+  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Check for mobile
 
@@ -192,8 +194,11 @@ const DoctorProfile = () => {
   };
 
   const handleSubmitReview = async () => {
-    if (reviews.rating === 0) {
-      alert("Please select a rating before submitting.");
+    console.log(newReview.rating);
+    if (newReview.rating === 0) {
+      enqueueSnackbar("Please select a rating before submitting.", {
+        variant: "warning",
+      });
       return;
     }
 
@@ -217,7 +222,10 @@ const DoctorProfile = () => {
       console.log(existingReview);
 
       if (existingReview) {
-        alert("You have already submitted a review for this doctor.");
+        enqueueSnackbar(
+          "You have already submitted a review for this doctor.",
+          { variant: "error" }
+        );
         return;
       }
 
@@ -514,7 +522,12 @@ const DoctorProfile = () => {
                 onChange={(e) =>
                   setNewReview({ ...newReview, review_text: e.target.value })
                 }
+                error={!newReview.review_text.trim()} // Show error only when submitted
+                helperText={
+                  !newReview.review_text.trim() ? "Review cannot be empty." : ""
+                }
               />
+
               <LoadingButton
                 fullWidth
                 variant="contained"
