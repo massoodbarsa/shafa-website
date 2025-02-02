@@ -11,6 +11,7 @@ import {
   CardContent,
   Autocomplete,
   Divider,
+  Chip,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -190,7 +191,7 @@ const DoctorProfile = () => {
     );
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
@@ -239,10 +240,13 @@ const DoctorProfile = () => {
 
             {/* Name */}
           </Box>
-          <Typography variant="h6" color="textSecondary">
-            {formData.speciality}
-          </Typography>
-          <Box display="flex" alignItems="center" mt={2}>
+          <Chip
+            label={formData.speciality.toUpperCase()}
+            color="primary"
+            variant="outlined"
+            sx={{ mt: 1 }}
+          />
+          <Box display="flex" alignItems="center" mt={3}>
             <EmailIcon sx={{ mr: 1 }} />
             <Typography>{formData.email}</Typography>
           </Box>
