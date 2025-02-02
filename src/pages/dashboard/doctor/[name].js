@@ -27,6 +27,7 @@ import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
+import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -493,82 +494,14 @@ const DoctorProfile = () => {
           )}
         </CardContent>
       </Card>
-      <Card
-        sx={{
-          p: 4,
-          boxShadow: 3,
-          borderRadius: 4,
-          bgcolor: "background.paper",
-          mt: 4,
-        }}
-      >
-        <CardContent>
-          <Typography variant="h6">Patient Reviews</Typography>
-          <Divider sx={{ my: 2 }} />
-
-          {/* Display Existing Reviews */}
-          {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <Box
-                key={index}
-                sx={{ my: 2, p: 2, bgcolor: "grey.100", borderRadius: 2 }}
-              >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {review.clients?.name || "Anonymous"}
-                </Typography>
-                <Rating value={review.rating} readOnly />
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  {review.review_text}
-                </Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography>
-              No reviews yet. Be the first to leave a review!
-            </Typography>
-          )}
-
-          {/* Review Submission Form (Only for Logged-in Clients) */}
-          {/* {user && user.user_id !== doctorData.user_id && ( */}
-          {user && user.user_id && (
-            <Box sx={{ mt: 4 }}>
-              <Typography variant="h6">Leave a Review</Typography>
-              <Rating
-                value={newReview.rating}
-                onChange={(event, newValue) =>
-                  setNewReview({ ...newReview, rating: newValue })
-                }
-              />
-              <TextField
-                fullWidth
-                label="Your review"
-                multiline
-                rows={3}
-                variant="outlined"
-                sx={{ mt: 2 }}
-                value={newReview.review_text}
-                onChange={(e) =>
-                  setNewReview({ ...newReview, review_text: e.target.value })
-                }
-                error={!newReview.review_text.trim()} // Show error only when submitted
-                helperText={
-                  !newReview.review_text.trim() ? "Review cannot be empty." : ""
-                }
-              />
-
-              <LoadingButton
-                fullWidth
-                variant="contained"
-                sx={{ mt: 2 }}
-                onClick={handleSubmitReview}
-                loading={loading}
-              >
-                Submit Review
-              </LoadingButton>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
+      <ReviewSubmitCard
+        newReview={newReview}
+        setNewReview={setNewReview}
+        handleSubmitReview={handleSubmitReview}
+        loading={loading}
+        reviews={reviews}
+        user={user}
+      />
     </Container>
   );
 };
