@@ -120,20 +120,42 @@ const DoctorProfile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const fileName = `doctors/${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage
-      .from("profile_pictures")
-      .upload(fileName, file);
+    setLoading(true); // Start loading state
 
-    if (error) {
-      console.error("Image Upload Error:", error.message);
-      return;
+    try {
+      const fileName = `doctors/${Date.now()}-${file.name}`;
+
+      // Upload image to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from("profile_pictures") // Ensure this is your actual bucket name
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL of the uploaded image
+      const { data: urlData } = supabase.storage
+        .from("profile_pictures")
+        .getPublicUrl(fileName);
+
+      if (!urlData.publicUrl) {
+        throw new Error("Failed to retrieve public URL");
+      }
+
+      // Update the doctor's profile in the database
+      const { error: updateError } = await supabase
+        .from("doctors")
+        .update({ profile_image: urlData.publicUrl })
+        .eq("user_id", user.user_id);
+
+      if (updateError) throw updateError;
+
+      // Update local state
+      setFormData((prev) => ({ ...prev, profileImage: urlData.publicUrl }));
+    } catch (error) {
+      console.error("Error uploading image:", error.message);
+    } finally {
+      setLoading(false); // Stop loading state
     }
-
-    const publicUrl = supabase.storage
-      .from("profile_pictures")
-      .getPublicUrl(fileName);
-    setFormData({ ...formData, profileImage: publicUrl.publicUrl });
   };
 
   const handleSubmit = async () => {
