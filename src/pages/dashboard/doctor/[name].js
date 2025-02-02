@@ -118,7 +118,10 @@ const DoctorProfile = () => {
       // Update the doctor's description in the database
       const { error } = await supabase
         .from("doctors")
-        .update({ description: formData.description }) // Updating description
+        .update({
+          description: formData.description,
+          phone: formData.phone, // Update phone number
+        })
         .eq("user_id", doctorData.user_id);
 
       if (error) {
@@ -141,6 +144,7 @@ const DoctorProfile = () => {
       setFormData((prev) => ({
         ...prev,
         description: updatedDoctor.description,
+        phone: updatedDoctor.phone,
       }));
 
       console.log("Updated doctor data:", updatedDoctor);
@@ -195,7 +199,32 @@ const DoctorProfile = () => {
           </Box>
           <Box display="flex" alignItems="center" mt={1}>
             <PhoneIcon sx={{ mr: 1 }} />
-            <Typography>{formData.phone}</Typography>
+            {editable ? (
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={(e) => {
+                  const input = e.target.value;
+                  // Allow only numbers, spaces, dashes, parentheses, and +
+                  if (/^[0-9+\-\s()]*$/.test(input)) {
+                    setFormData({ ...formData, phone: input });
+                  }
+                }}
+                error={
+                  formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)
+                }
+                helperText={
+                  formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)
+                    ? "Invalid phone number format"
+                    : ""
+                }
+              />
+            ) : (
+              <Typography>{formData.phone}</Typography>
+            )}
           </Box>
           <Box display="flex" alignItems="center" mt={1}>
             <LocationOnIcon sx={{ mr: 1 }} />
