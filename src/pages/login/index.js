@@ -30,8 +30,23 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
 
-  const { login, setUser, setAuth } = useAuthStore(); // Import setUser function
+  const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
+
+  console.log(isLoggedIn());
+
+  useEffect(() => {
+    // If the user is already logged in, redirect them
+    if (user && isLoggedIn) {
+      const dashboardPath = user.license_nr // Check if user is a doctor
+        ? `/dashboard/doctor/${user.first_name}-${user.last_name}`
+        : `/dashboard/client`;
+      router.push(dashboardPath);
+    } else {
+      setIsChecking(false); // Allow login page to render if not authenticated
+    }
+  }, [router, isLoggedIn, user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -84,8 +99,6 @@ const LoginPage = () => {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.error === "Email not confirmed") {
         throw new Error(
           "Please activate your account by confirming your email."
@@ -94,9 +107,24 @@ const LoginPage = () => {
 
       if (!response.ok) throw new Error("Login failed");
 
+      const userData =
+        userType === UserRole.Doctor ? data.doctorProfile : data.clientData;
+
+      if (!userData) {
+        throw new Error("Invalid user data received");
+      }
+
+      console.log(userData);
+
       login();
-      setUser(data.doctorProfile); // Store user info
+      setUser(data.userData); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
+
+      localStorage.setItem("user_data", JSON.stringify(userData));
+      localStorage.setItem(
+        "auth_token",
+        JSON.stringify({ email: data.user.email, id: data.user.id })
+      );
 
       router.push(
         userType === UserRole.Doctor
@@ -111,6 +139,8 @@ const LoginPage = () => {
       setError(err.message || "Invalid credentials. Please try again.");
     }
   };
+
+  if (isChecking) return null; // Prevent flashing the login form
 
   return (
     <Container maxWidth="sm">
