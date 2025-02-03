@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
   );
-  console.log("selam");
+
   try {
     const { email, password, medicalLicense } = req.body;
 
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       .single();
 
     if (doctorError || !doctorData) {
-      return res.status(403).json({ error: "Invalid medical license number" });
+      return res.status(403).json({ error: "login failed" });
     }
 
     // Return success response

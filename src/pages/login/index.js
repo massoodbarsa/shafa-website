@@ -84,6 +84,8 @@ const LoginPage = () => {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (data.error === "Email not confirmed") {
         throw new Error(
           "Please activate your account by confirming your email."

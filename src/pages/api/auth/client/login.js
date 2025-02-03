@@ -8,7 +8,6 @@ export default async function handler(req, res) {
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
   );
-  console.log("selam");
   try {
     const { email, password } = req.body;
 
@@ -28,10 +27,14 @@ export default async function handler(req, res) {
 
     // Verify doctor profile with license number
     const { data: clientData, error: clientError } = await supabase
-      .from("client")
+      .from("clients")
       .select("*")
       .eq("user_id", authData.user.id)
       .single();
+
+    if (clientError || !clientData) {
+      return res.status(403).json({ error: "login failed" });
+    }
 
     // Return success response
     res.status(200).json({
