@@ -305,7 +305,10 @@ const DoctorProfile = () => {
       if (!doctorData) return;
 
       try {
-        const { data, error } = await supabase.from("reviews").select("rating");
+        const { data, error } = await supabase
+          .from("reviews")
+          .select("rating")
+          .eq("doctor_id", doctorData.id); // Ensure we're filtering by doctor ID
 
         if (error) throw error;
 
