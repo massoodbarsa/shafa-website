@@ -15,35 +15,23 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
-import { useRouter } from "next/navigation";
-
-const mainPages = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
-  { name: "MyProfile", path: "/doctor" },
-];
+import { formatUserNameForURL } from "../utils/formatUserNameForURL";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const pathname = usePathname();
-  const { user, isLoggedIn, logout } = useAuthStore(); // Get user state from store
   const router = useRouter();
+  const { user, isLoggedIn, logout } = useAuthStore();
 
   useEffect(() => {
     const userData = localStorage.getItem("user_data");
-
-    // Check if user_data exists and is a non-empty string
     if (!user && userData && userData !== "undefined" && userData !== "null") {
       try {
-        // Attempt to parse only if it's a valid string
         const parsedUser = JSON.parse(userData);
-
-        // Ensure parsedUser is a valid object
         if (parsedUser && typeof parsedUser === "object") {
           useAuthStore.getState().setUser(parsedUser);
         }
@@ -53,18 +41,62 @@ const Header = () => {
     }
   }, [user]);
 
-  const handleMenuOpen = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorElNav(null);
-  };
-
+  const handleMenuOpen = (event) => setAnchorElNav(event.currentTarget);
+  const handleMenuClose = () => setAnchorElNav(null);
   const handleLogout = () => {
-    logout(); // Update Zustand store (user is logged out)
+    logout();
     router.push("/login");
   };
+
+  const getProfilePath = () =>
+    user?.first_name && user?.last_name
+      ? `/dashboard/doctor/${formatUserNameForURL(
+          user.first_name,
+          user.last_name
+        )}`
+      : "/doctor";
+
+  const renderMenuItems = () => (
+    <>
+      {mainPages.map(({ name, path }) => (
+        <MenuItem
+          key={path}
+          component={Link}
+          href={path}
+          onClick={handleMenuClose}
+        >
+          {name}
+        </MenuItem>
+      ))}
+      {isLoggedIn() ? (
+        <>
+          <MenuItem
+            component={Link}
+            href={getProfilePath()}
+            onClick={handleMenuClose}
+          >
+            MyProfile
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </>
+      ) : (
+        <>
+          <MenuItem component={Link} href="/login">
+            Login
+          </MenuItem>
+          <MenuItem component={Link} href="/register">
+            SignUp
+          </MenuItem>
+        </>
+      )}
+    </>
+  );
+
+  const mainPages = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
@@ -73,23 +105,14 @@ const Header = () => {
           variant="h6"
           component={Link}
           href="/"
-          sx={{
-            flexGrow: 1,
-            textDecoration: "none",
-            color: "inherit",
-          }}
+          sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
         >
           Iranian Doctors Web App
         </Typography>
 
         {isMobile ? (
           <Box>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              onClick={handleMenuOpen}
-            >
+            <IconButton size="large" color="inherit" onClick={handleMenuOpen}>
               <MenuIcon />
             </IconButton>
             <Menu
@@ -99,60 +122,39 @@ const Header = () => {
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-              {mainPages.map((page) => (
-                <MenuItem
-                  key={page.path}
-                  component={Link}
-                  href={page.path}
-                  onClick={handleMenuClose}
-                  selected={pathname === page.path}
-                >
-                  {page.name}
-                </MenuItem>
-              ))}
-              {isLoggedIn() ? (
-                <Button color="inherit" onClick={handleLogout}>
-                  Logout
-                </Button>
-              ) : (
-                <Box display="flex" flexDirection="column">
-                  <Button color="inherit" href="/login">
-                    Login
-                  </Button>
-                  <Button
-                    component={Link}
-                    href="/register"
-                    variant="outlined"
-                    color="inherit"
-                  >
-                    SignUp
-                  </Button>
-                </Box>
-              )}
+              {renderMenuItems()}
             </Menu>
           </Box>
         ) : (
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {mainPages.map((page) => (
+            {mainPages.map(({ name, path }) => (
               <Button
-                key={page.path}
+                key={path}
                 component={Link}
-                href={page.path}
+                href={path}
                 color="inherit"
                 sx={{
                   textTransform: "none",
                   fontSize: "1rem",
-                  borderBottom:
-                    pathname === page.path ? "2px solid white" : "none",
+                  borderBottom: pathname === path ? "2px solid white" : "none",
                 }}
               >
-                {page.name}
+                {name}
               </Button>
             ))}
             {isLoggedIn() ? (
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
+              <>
+                <Button
+                  component={Link}
+                  href={getProfilePath()}
+                  color="inherit"
+                >
+                  MyProfile
+                </Button>
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
             ) : (
               <>
                 <Button color="inherit" href="/login">
