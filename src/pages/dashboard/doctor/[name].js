@@ -211,8 +211,7 @@ const DoctorProfile = () => {
         .from("reviews")
         .select("id")
         .eq("doctor_id", doctorData.id)
-        // .eq("client_id", user.user_id)
-        .eq("client_id", "381ab999-c836-4ad5-aa23-0fa7741b9465")
+        .eq("client_id", user.id)
 
         .single(); // Ensure only one record is fetched
 
@@ -234,9 +233,7 @@ const DoctorProfile = () => {
       const { error: insertError } = await supabase.from("reviews").insert([
         {
           doctor_id: doctorData.id,
-          // client_id: user.user_id,
-          client_id: "381ab999-c836-4ad5-aa23-0fa7741b9465",
-
+          client_id: user.id,
           rating: newReview.rating,
           review_text: newReview.review_text,
         },

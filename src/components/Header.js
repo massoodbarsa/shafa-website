@@ -21,9 +21,9 @@ import { useRouter } from "next/navigation";
 
 const mainPages = [
   { name: "Home", path: "/" },
-  { name: "Doctor", path: "/doctor" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
+  { name: "MyProfile", path: "/doctor" },
 ];
 
 const Header = () => {

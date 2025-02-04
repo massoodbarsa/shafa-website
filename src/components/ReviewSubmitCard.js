@@ -56,7 +56,7 @@ const ReviewSubmitCard = ({
               sx={{ my: 2, p: 2, bgcolor: "grey.100", borderRadius: 2 }}
             >
               <Typography variant="subtitle1" fontWeight="bold">
-                {review.clients?.name || "Anonymous"}
+                {review.clients?.full_name || "Anonymous"}
               </Typography>
               <Rating value={review.rating} readOnly />
               <Typography variant="body2" sx={{ mt: 1 }}>
