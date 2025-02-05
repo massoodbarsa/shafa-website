@@ -4,11 +4,12 @@ import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
+import useAuthStore from "../store/authStore";
 
 const DeleteProfileButton = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+  const { logout } = useAuthStore();
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const handleDeleteProfile = async () => {
@@ -48,6 +49,7 @@ const DeleteProfileButton = ({ user }) => {
 
       // 4. Sign out and redirect
       await supabase.auth.signOut();
+      logout();
       enqueueSnackbar("Profile deleted successfully.", { variant: "success" });
       router.push("/register");
     } catch (error) {
