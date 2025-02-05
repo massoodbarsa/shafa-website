@@ -219,7 +219,12 @@ const DoctorProfile = () => {
         throw checkError; // Ignore "PGRST116" (no rows found), as that means no review exists
       }
 
-      console.log(existingReview);
+      if (user?.id === doctorData?.id) {
+        enqueueSnackbar("You cannot review your own profile.", {
+          variant: "error",
+        });
+        return;
+      }
 
       if (existingReview) {
         enqueueSnackbar(
@@ -500,6 +505,7 @@ const DoctorProfile = () => {
         loading={loading}
         reviews={reviews}
         user={user}
+        disableReviewForm={user?.id === doctorData?.id} // Disable review form if the user is the doctor
       />
     </Container>
   );

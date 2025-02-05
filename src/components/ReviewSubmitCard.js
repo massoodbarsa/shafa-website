@@ -18,6 +18,7 @@ const ReviewSubmitCard = ({
   loading,
   reviews,
   user,
+  disableReviewForm,
 }) => {
   const [submitted, setSubmitted] = useState(false); // Track if the form has been submitted
 
@@ -72,37 +73,39 @@ const ReviewSubmitCard = ({
 
         {/* Review Submission Form (Only for Logged-in Clients) */}
         {/* {user && user.user_id !== doctorData.user_id && ( */}
-        {user && user.user_id && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6">Leave a Review</Typography>
-            <Rating value={newReview.rating} onChange={handleRatingChange} />
-            <TextField
-              fullWidth
-              label="Your review"
-              multiline
-              rows={3}
-              variant="outlined"
-              sx={{ mt: 2 }}
-              value={newReview.review_text}
-              onChange={handleReviewTextChange}
-              error={submitted && !newReview.review_text.trim()} // Show error only when submitted
-              helperText={
-                submitted && !newReview.review_text.trim()
-                  ? "Review cannot be empty."
-                  : ""
-              }
-            />
-            <LoadingButton
-              fullWidth
-              variant="contained"
-              sx={{ mt: 2 }}
-              onClick={handleSubmit}
-              loading={loading}
-            >
-              Submit Review
-            </LoadingButton>
-          </Box>
-        )}
+        {user &&
+          user.user_id &&
+          !disableReviewForm && ( // Disable form based on the condition
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6">Leave a Review</Typography>
+              <Rating value={newReview.rating} onChange={handleRatingChange} />
+              <TextField
+                fullWidth
+                label="Your review"
+                multiline
+                rows={3}
+                variant="outlined"
+                sx={{ mt: 2 }}
+                value={newReview.review_text}
+                onChange={handleReviewTextChange}
+                error={submitted && !newReview.review_text.trim()} // Show error only when submitted
+                helperText={
+                  submitted && !newReview.review_text.trim()
+                    ? "Review cannot be empty."
+                    : ""
+                }
+              />
+              <LoadingButton
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+                onClick={handleSubmit}
+                loading={loading}
+              >
+                Submit Review
+              </LoadingButton>
+            </Box>
+          )}
       </CardContent>
     </Card>
   );

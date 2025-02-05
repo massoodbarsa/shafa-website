@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { UserRole } from "@/enums/UserRole";
+import SpecialitySelect from "./SpecialitySelect";
 
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
@@ -255,20 +256,10 @@ const RegisterForm = () => {
 
         {userType === UserRole.Doctor && (
           <>
-            <Controller
-              name="speciality"
+            <SpecialitySelect
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Medical speciality"
-                  fullWidth
-                  margin="normal"
-                  error={!!errors.speciality}
-                  helperText={errors.speciality?.message}
-                  disabled={isSubmitting}
-                />
-              )}
+              errors={errors}
+              disabled={isSubmitting}
             />
 
             <Controller

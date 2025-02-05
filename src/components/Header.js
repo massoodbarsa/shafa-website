@@ -147,7 +147,8 @@ const Header = () => {
                 <Button
                   component={Link}
                   href={getProfilePath()}
-                  color="inherit"
+                  variant="text"
+                  color="warning"
                 >
                   MyProfile
                 </Button>
