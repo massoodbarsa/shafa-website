@@ -27,6 +27,7 @@ import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
+import DeleteProfileButton from "@/src/components/DeleteProfileButton";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -195,7 +196,6 @@ const DoctorProfile = () => {
   };
 
   const handleSubmitReview = async () => {
-    console.log(newReview.rating);
     if (newReview.rating === 0) {
       enqueueSnackbar("Please select a rating before submitting.", {
         variant: "warning",
@@ -344,6 +344,9 @@ const DoctorProfile = () => {
 
   return (
     <Container maxWidth="lg">
+      <Box>
+        <DeleteProfileButton user={user} />
+      </Box>
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}

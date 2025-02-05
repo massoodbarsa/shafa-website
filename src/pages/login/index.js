@@ -34,8 +34,6 @@ const LoginPage = () => {
 
   const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
 
-  console.log(isLoggedIn());
-
   useEffect(() => {
     // If the user is already logged in, redirect them
     if (user && isLoggedIn) {
