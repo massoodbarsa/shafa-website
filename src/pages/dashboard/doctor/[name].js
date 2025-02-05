@@ -342,10 +342,13 @@ const DoctorProfile = () => {
       </Box>
     );
 
+  console.log(doctorData);
+  console.log(user);
+
   return (
     <Container maxWidth="lg">
       <Box>
-        <DeleteProfileButton user={user} />
+        <DeleteProfileButton user={doctorData} />
       </Box>
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar

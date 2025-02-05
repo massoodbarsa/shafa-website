@@ -15,10 +15,12 @@ const DeleteProfileButton = ({ user }) => {
   const handleDeleteProfile = async () => {
     setLoading(true);
 
+    console.log(user);
+
     try {
       // 1. Delete profile image from storage
       if (user.profile_image) {
-        const fileName = user.profile_image.split("/").pop();
+        const fileName = user.profile_image.split("/").slice(7).join("/");
         const { error: deleteImageError } = await supabase.storage
           .from("profile_pictures")
           .remove([`doctors/${fileName}`]);
