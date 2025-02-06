@@ -57,9 +57,9 @@ const Header = () => {
         )}`
       : "/doctor";
 
-  const renderMenuItems = () => (
-    <>
-      {mainPages.map(({ name, path }) => (
+  const renderMenuItems = () => {
+    const items = [
+      ...mainPages.map(({ name, path }) => (
         <MenuItem
           key={path}
           component={Link}
@@ -68,30 +68,37 @@ const Header = () => {
         >
           {name}
         </MenuItem>
-      ))}
-      {isLoggedIn() ? (
-        <>
-          <MenuItem
-            component={Link}
-            href={getProfilePath()}
-            onClick={handleMenuClose}
-          >
-            MyProfile
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </>
-      ) : (
-        <>
-          <MenuItem component={Link} href="/login">
-            Login
-          </MenuItem>
-          <MenuItem component={Link} href="/register">
-            SignUp
-          </MenuItem>
-        </>
-      )}
-    </>
-  );
+      )),
+    ];
+
+    if (isLoggedIn()) {
+      items.push(
+        <MenuItem
+          key="profile"
+          component={Link}
+          href={getProfilePath()}
+          onClick={handleMenuClose}
+          sx={{ color: "#EB6C08 " }}
+        >
+          MyProfile
+        </MenuItem>,
+        <MenuItem key="logout" onClick={handleLogout}>
+          Logout
+        </MenuItem>
+      );
+    } else {
+      items.push(
+        <MenuItem key="login" component={Link} href="/login">
+          Login
+        </MenuItem>,
+        <MenuItem key="signup" component={Link} href="/register">
+          SignUp
+        </MenuItem>
+      );
+    }
+
+    return items;
+  };
 
   const mainPages = [
     { name: "Home", path: "/" },
