@@ -12,6 +12,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Container,
+  LinearProgress,
 } from "@mui/material";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
@@ -20,6 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSnackbar } from "notistack";
 
 import { UserRole } from "@/enums/UserRole";
 import SpecialitySelect from "./SpecialitySelect";
@@ -33,6 +35,9 @@ const RegisterForm = () => {
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [userType, setUserType] = useState(UserRole.Doctor);
+  const [loading, setLoading] = useState(false); // Loading state
+
+  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   // Dynamic schema based on userType
   const schema = yup.object().shape({
@@ -89,6 +94,7 @@ const RegisterForm = () => {
   const onSubmit = async (formData) => {
     setServerError("");
     setSuccessMessage("");
+    setLoading(true);
 
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -147,7 +153,11 @@ const RegisterForm = () => {
       }
 
       setSuccessMessage("Registration successful! Please check your email.");
-      setTimeout(() => router.push("/login"), 3000);
+
+      setTimeout(() => {
+        router.push("/login");
+        setLoading(false); // Stop loading once the redirect happens
+      }, 1000); // Redirect after 3 seconds
     } catch (error) {
       console.error("Registration Error:", error);
 
@@ -163,6 +173,12 @@ const RegisterForm = () => {
 
   return (
     <Container maxWidth="sm">
+      {loading && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
+
       <Box
         component="form"
         key={userType}

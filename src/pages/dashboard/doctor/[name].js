@@ -342,9 +342,6 @@ const DoctorProfile = () => {
       </Box>
     );
 
-  console.log(doctorData);
-  console.log(user);
-
   return (
     <Container maxWidth="lg">
       <Box>
