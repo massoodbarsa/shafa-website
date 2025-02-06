@@ -47,6 +47,7 @@ const DoctorProfile = () => {
     location: "",
     description: "",
     location: "",
+    locationFlag: "",
   });
 
   const [reviews, setReviews] = useState([]);
@@ -70,13 +71,20 @@ const DoctorProfile = () => {
     })
   );
 
+  console.log(formData);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleLocationChange = (event, newValue) => {
+    console.log(newValue);
     if (newValue) {
-      setFormData({ ...formData, location: newValue.label });
+      setFormData({
+        ...formData,
+        location: newValue.label,
+        locationFlag: newValue.flag,
+      });
     }
   };
 
@@ -146,6 +154,7 @@ const DoctorProfile = () => {
           description: formData.description,
           phone: formData.phone, // Update phone number
           location: formData.location,
+          location_flag: formData.locationFlag,
         })
         .eq("user_id", doctorData.user_id);
 
@@ -171,6 +180,7 @@ const DoctorProfile = () => {
         description: updatedDoctor.description,
         phone: updatedDoctor.phone,
         location: updatedDoctor.location,
+        location_flag: formData.locationFlag,
       }));
 
       console.log("Updated doctor data:", updatedDoctor);
@@ -287,6 +297,7 @@ const DoctorProfile = () => {
               location: data.location,
               description: data.description,
               location: data.location,
+              locationCode: data.location_code,
             });
 
             // Check if the logged-in user is the doctor
