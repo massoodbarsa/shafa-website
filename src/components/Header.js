@@ -18,6 +18,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
 import { formatUserNameForURL } from "../utils/formatUserNameForURL";
+import { UserRole } from "@/enums/UserRole";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -144,14 +145,16 @@ const Header = () => {
             ))}
             {isLoggedIn() ? (
               <>
-                <Button
-                  component={Link}
-                  href={getProfilePath()}
-                  variant="text"
-                  color="warning"
-                >
-                  MyProfile
-                </Button>
+                {user.role === UserRole.Doctor && (
+                  <Button
+                    component={Link}
+                    href={getProfilePath()}
+                    variant="text"
+                    color="warning"
+                  >
+                    MyProfile
+                  </Button>
+                )}
                 <Button color="inherit" onClick={handleLogout}>
                   Logout
                 </Button>
