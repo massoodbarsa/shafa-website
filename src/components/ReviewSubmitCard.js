@@ -46,7 +46,10 @@ const ReviewSubmitCard = ({
       }}
     >
       <CardContent>
-        <Typography variant="h6">Patient Reviews</Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <Typography variant="h6">Patient Reviews</Typography>
+          <Typography variant="caption">(Log in to place review)</Typography>
+        </Box>
         <Divider sx={{ my: 2 }} />
 
         {/* Display Existing Reviews */}

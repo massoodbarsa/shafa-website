@@ -14,15 +14,18 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
+import StarIcon from "@mui/icons-material/Star";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const [selectedRating, setSelectedRating] = useState("");
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -45,18 +48,28 @@ export default function Home() {
   ];
   const uniqueSpecialties = [...new Set(doctors.map((d) => d.speciality))];
 
+  console.log(doctors);
+
   // Filter doctors based on selection
   const filteredDoctors = doctors.filter(
     (doctor) =>
       (!selectedCountry || doctor.location === selectedCountry) &&
-      (!selectedSpecialty || doctor.speciality === selectedSpecialty)
+      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
+      (!selectedRating || doctor.avg_rating >= selectedRating)
   );
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
       {/* Filter Toolbar */}
       <Toolbar
-        sx={{ display: "flex", gap: 2, mb: 6, bgcolor: "ButtonFace", p: 3 }}
+        sx={{
+          display: "flex",
+          gap: 3,
+          mb: 6,
+          bgcolor: "ButtonFace",
+          p: 3,
+          justifyContent: "space-around",
+        }}
       >
         {/* Country Filter */}
         <FormControl sx={{ minWidth: 150 }}>
@@ -105,6 +118,35 @@ export default function Home() {
             ))}
           </Select>
         </FormControl>
+
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body2">Rating: </Typography>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <StarIcon
+              key={index}
+              sx={{
+                cursor: "pointer",
+                color: index < Math.round(selectedRating) ? "gold" : "gray",
+              }}
+              onClick={() => setSelectedRating(index + 1)} // Set the selected rating to the star clicked
+            />
+          ))}
+          <Button
+            onClick={() => setSelectedRating(null)} // Reset the filter
+            sx={{ ml: 2 }}
+            variant="outlined"
+            size="small"
+          >
+            Reset
+          </Button>
+        </Box>
       </Toolbar>
 
       {/* Doctors Grid */}
@@ -125,6 +167,20 @@ export default function Home() {
           filteredDoctors.map((doctor) => (
             <Grid item xs={12} sm={6} md={4} key={doctor.id}>
               <Card>
+                <Box p={1}>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <StarIcon
+                      key={index}
+                      sx={{
+                        cursor: "pointer",
+                        color:
+                          index < Math.round(doctor.avg_rating)
+                            ? "gold"
+                            : "gray",
+                      }}
+                    />
+                  ))}
+                </Box>
                 <CardMedia
                   component="img"
                   height="200"
