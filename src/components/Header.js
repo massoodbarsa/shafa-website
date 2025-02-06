@@ -17,7 +17,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
-import { formatUserNameForURL } from "../utils/formatUserNameForURL";
 import { UserRole } from "@/enums/UserRole";
 
 const Header = () => {
