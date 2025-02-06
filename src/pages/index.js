@@ -16,11 +16,13 @@ import {
   InputLabel,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 import NoRecords from "../components/NoRecords";
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -28,6 +30,42 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
+  const [userLocationCode, setUserLocationCode] = useState(null);
+
+  countries.registerLocale(enLocale);
+
+  // Get unique countries and specialties from doctors
+  const uniqueCountries = [
+    ...new Set(doctors.map((d) => d.location && d.location_flag && d.location)),
+  ];
+  const uniqueSpecialties = [...new Set(doctors.map((d) => d.speciality))];
+
+  // console.log(userLocation);
+
+  // Filter doctors based on selection
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      (!selectedCountry || doctor.location === selectedCountry) &&
+      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
+      (!selectedRating || doctor.avg_rating >= selectedRating)
+  );
+
+  const getUserCountry = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "https://ipinfo.io/json?token=3c9c12f932e280"
+      );
+      const data = await response.json();
+      return data.country; // Returns country code (e.g., "US", "IN")
+    } catch (error) {
+      console.error("Error fetching IP info:", error);
+      return null;
+    }
+  }, []);
+
+  console.log(selectedCountry);
+
+  //UseEffects
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -44,22 +82,26 @@ export default function Home() {
     fetchDoctors();
   }, []);
 
-  // Get unique countries and specialties from doctors
-  const uniqueCountries = [
-    ...new Set(doctors.map((d) => d.location && d.location_flag && d.location)),
-  ];
-  const uniqueSpecialties = [...new Set(doctors.map((d) => d.speciality))];
+  useEffect(() => {
+    async function fetchData() {
+      const userCountryCode = await getUserCountry(); // Get country code (e.g., "US", "IN")
+      if (userCountryCode) {
+        setUserLocationCode(userCountryCode);
 
-  console.log(doctors);
+        console.log(userCountryCode);
 
-  // Filter doctors based on selection
-  const filteredDoctors = doctors.filter(
-    (doctor) =>
-      (!selectedCountry || doctor.location === selectedCountry) &&
-      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
-      (!selectedRating || doctor.avg_rating >= selectedRating)
-  );
+        // Convert country code to full country name
+        const countryName = countries.getName(userCountryCode, "en");
+        console.log(countryName);
 
+        // Check if the country exists in doctors' locations
+        if (countryName && doctors.some((d) => d.location === countryName)) {
+          setSelectedCountry(countryName); // Auto-select country if found
+        }
+      }
+    }
+    fetchData();
+  }, [getUserCountry, doctors]); // Runs when doctors data is available
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
       {/* Filter Toolbar */}
@@ -186,11 +228,12 @@ export default function Home() {
                   </Box>
                   <CardMedia
                     component="img"
-                    height="150"
+                    height="200"
                     image={
                       doctor.profile_image || "https://via.placeholder.com/200"
                     }
                     alt={`${doctor.first_name} ${doctor.last_name}`}
+                    sx={{ objectFit: "cover", objectPosition: "top" }}
                   />
                   <CardContent>
                     <Typography variant="h6">
