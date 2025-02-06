@@ -15,6 +15,9 @@ import {
   FormControl,
   InputLabel,
   Button,
+  Autocomplete,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../utils/supabase";
@@ -108,57 +111,77 @@ export default function Home() {
           justifyContent: "space-around",
         }}
       >
-        {/* Country Filter */}
-        <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel shrink={true}>Country</InputLabel>
-          <Select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            displayEmpty
-          >
-            <MenuItem value="">All Countries</MenuItem>
-            {uniqueCountries.map((location) => {
+        <FormControl sx={{ width: 200 }}>
+          <Autocomplete
+            options={uniqueCountries.map((location) => {
               const doctorWithFlag = doctors.find(
                 (d) => d.location === location
               );
-              return (
-                <MenuItem key={location} value={location}>
-                  {doctorWithFlag?.location_flag && (
-                    <img
-                      src={doctorWithFlag.location_flag}
-                      alt={location}
-                      width="20"
-                      height="14"
-                      style={{ marginRight: 8 }}
-                    />
-                  )}
-                  {location}
-                </MenuItem>
-              );
+              return { label: location, flag: doctorWithFlag?.location_flag };
             })}
-          </Select>
+            value={
+              selectedCountry
+                ? {
+                    label: selectedCountry,
+                    flag:
+                      doctors.find((d) => d.location === selectedCountry)
+                        ?.location_flag || "",
+                  }
+                : null
+            }
+            onChange={(event, newValue) =>
+              setSelectedCountry(newValue ? newValue.label : "")
+            }
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <li {...props}>
+                {option.flag && (
+                  <img
+                    src={option.flag}
+                    alt={option.label}
+                    style={{ width: 20, height: 14, marginRight: 8 }}
+                  />
+                )}
+                {option.label}
+              </li>
+            )}
+            slotProps={{
+              input: {
+                startAdornment: selectedCountry && (
+                  <InputAdornment position="start">
+                    <img
+                      src={
+                        doctors.find((d) => d.location === selectedCountry)
+                          ?.location_flag || ""
+                      }
+                      alt={selectedCountry}
+                      style={{ width: 20, height: 14, marginRight: 8 }}
+                    />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Country" variant="outlined" />
+            )}
+          />
         </FormControl>
 
         {/* Specialty Filter */}
-        <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel shrink={true}>Specialty</InputLabel>
-          <Select
-            value={selectedSpecialty}
-            onChange={(e) => setSelectedSpecialty(e.target.value)}
-            displayEmpty
-          >
-            <MenuItem value="">All Specialties</MenuItem>
-            {uniqueSpecialties.map((specialty) => (
-              <MenuItem key={specialty} value={specialty}>
-                {specialty}
-              </MenuItem>
-            ))}
-          </Select>
+
+        <FormControl sx={{ width: 250 }}>
+          <Autocomplete
+            options={uniqueSpecialties}
+            value={selectedSpecialty || null}
+            onChange={(event, newValue) => setSelectedSpecialty(newValue || "")}
+            renderInput={(params) => (
+              <TextField {...params} label="Specialty" variant="outlined" />
+            )}
+          />
         </FormControl>
 
         <Box
           sx={{
-            display: "flex",
             gap: 1,
             display: "flex",
             alignItems: "center",
