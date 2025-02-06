@@ -159,6 +159,8 @@ const RegisterForm = () => {
         setLoading(false); // Stop loading once the redirect happens
       }, 1000); // Redirect after 3 seconds
     } catch (error) {
+      setLoading(false); // Stop loading once error
+
       console.error("Registration Error:", error);
 
       const errorMessage = error.message.includes("User already registered")

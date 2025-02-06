@@ -344,9 +344,11 @@ const DoctorProfile = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box>
-        <DeleteProfileButton user={doctorData} />
-      </Box>
+      {user?.id === doctorData?.id && (
+        <Box>
+          <DeleteProfileButton user={doctorData} />
+        </Box>
+      )}
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
