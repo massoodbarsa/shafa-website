@@ -30,7 +30,6 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
-  const [userLocationCode, setUserLocationCode] = useState(null);
 
   countries.registerLocale(enLocale);
 
@@ -63,8 +62,6 @@ export default function Home() {
     }
   }, []);
 
-  console.log(selectedCountry);
-
   //UseEffects
 
   useEffect(() => {
@@ -86,13 +83,8 @@ export default function Home() {
     async function fetchData() {
       const userCountryCode = await getUserCountry(); // Get country code (e.g., "US", "IN")
       if (userCountryCode) {
-        setUserLocationCode(userCountryCode);
-
-        console.log(userCountryCode);
-
         // Convert country code to full country name
         const countryName = countries.getName(userCountryCode, "en");
-        console.log(countryName);
 
         // Check if the country exists in doctors' locations
         if (countryName && doctors.some((d) => d.location === countryName)) {
@@ -102,6 +94,7 @@ export default function Home() {
     }
     fetchData();
   }, [getUserCountry, doctors]); // Runs when doctors data is available
+
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
       {/* Filter Toolbar */}
