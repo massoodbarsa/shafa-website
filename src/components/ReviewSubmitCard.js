@@ -10,6 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import useAuthStore from "../store/authStore";
 
 const ReviewSubmitCard = ({
   newReview,
@@ -21,6 +22,7 @@ const ReviewSubmitCard = ({
   disableReviewForm,
 }) => {
   const [submitted, setSubmitted] = useState(false); // Track if the form has been submitted
+  const { isLoggedIn } = useAuthStore();
 
   const handleRatingChange = (event, newValue) => {
     setNewReview({ ...newReview, rating: newValue });
@@ -48,7 +50,9 @@ const ReviewSubmitCard = ({
       <CardContent>
         <Box display="flex" alignItems="center" gap={1}>
           <Typography variant="h6">Patient Reviews</Typography>
-          <Typography variant="caption">(Log in to place review)</Typography>
+          {!isLoggedIn && (
+            <Typography variant="caption">(Log in to place review)</Typography>
+          )}
         </Box>
         <Divider sx={{ my: 2 }} />
 
