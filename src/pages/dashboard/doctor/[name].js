@@ -48,6 +48,7 @@ const DoctorProfile = () => {
     description: "",
     location: "",
     locationFlag: "",
+    averageRating: null,
   });
 
   const [reviews, setReviews] = useState([]);
@@ -55,7 +56,9 @@ const DoctorProfile = () => {
     rating: 0,
     review_text: "",
   });
-  const [averageRating, setAverageRating] = useState(0);
+  // const [averageRating, setAverageRating] = useState(0);
+
+  console.log(doctorData);
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
@@ -298,6 +301,7 @@ const DoctorProfile = () => {
               description: data.description,
               location: data.location,
               locationCode: data.location_code,
+              averageRating: data.avg_rating,
             });
 
             // Check if the logged-in user is the doctor
@@ -316,29 +320,29 @@ const DoctorProfile = () => {
     }
   }, [name, user]);
 
-  useEffect(() => {
-    const fetchAverageRating = async () => {
-      if (!doctorData) return;
+  // useEffect(() => {
+  //   const fetchAverageRating = async () => {
+  //     if (!doctorData) return;
 
-      try {
-        const { data, error } = await supabase
-          .from("reviews")
-          .select("rating")
-          .eq("doctor_id", doctorData.id); // Ensure we're filtering by doctor ID
+  //     try {
+  //       const { data, error } = await supabase
+  //         .from("reviews")
+  //         .select("rating")
+  //         .eq("doctor_id", doctorData.id); // Ensure we're filtering by doctor ID
 
-        if (error) throw error;
+  //       if (error) throw error;
 
-        if (data.length > 0) {
-          const total = data.reduce((sum, review) => sum + review.rating, 0);
-          setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
-        }
-      } catch (error) {
-        console.error("Error fetching average rating:", error.message);
-      }
-    };
+  //       if (data.length > 0) {
+  //         const total = data.reduce((sum, review) => sum + review.rating, 0);
+  //         setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching average rating:", error.message);
+  //     }
+  //   };
 
-    fetchAverageRating();
-  }, [doctorData]); // Runs when doctor data changes
+  //   fetchAverageRating();
+  // }, [doctorData]); // Runs when doctor data changes
 
   useEffect(() => {
     if (doctorData) {
@@ -406,11 +410,14 @@ const DoctorProfile = () => {
                 <StarIcon
                   key={index}
                   sx={{
-                    color: index < Math.round(averageRating) ? "gold" : "gray",
+                    color:
+                      index < Math.round(formData.averageRating)
+                        ? "gold"
+                        : "gray",
                   }}
                 />
               ))}
-              <Typography sx={{ ml: 1 }}>({averageRating})</Typography>
+              <Typography sx={{ ml: 1 }}>({formData.averageRating})</Typography>
             </Box>
 
             {/* Name */}
