@@ -74,7 +74,8 @@ const ReviewSubmitCard = ({
           ))
         ) : (
           <Typography>
-            No reviews yet. Be the first to leave a review!
+            No reviews yet.{" "}
+            {!disableReviewForm && "Be the first to leave a review"}
           </Typography>
         )}
 
