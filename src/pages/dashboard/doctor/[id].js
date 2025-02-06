@@ -56,9 +56,6 @@ const DoctorProfile = () => {
     rating: 0,
     review_text: "",
   });
-  // const [averageRating, setAverageRating] = useState(0);
-
-  console.log(doctorData);
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
@@ -272,7 +269,6 @@ const DoctorProfile = () => {
   // useEffects
 
   useEffect(() => {
-    // Fetch doctor profile data only if name exists in the URL
     if (id) {
       const fetchDoctorData = async () => {
         try {
