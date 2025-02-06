@@ -71,7 +71,7 @@ const DoctorProfile = () => {
     })
   );
 
-  console.log(formData);
+  console.log(doctorData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -312,7 +312,7 @@ const DoctorProfile = () => {
 
       fetchDoctorData();
     }
-  }, [name, user]);
+  }, [id, user]);
 
   // useEffect(() => {
   //   const fetchAverageRating = async () => {
@@ -484,7 +484,18 @@ const DoctorProfile = () => {
                 )}
               />
             ) : (
-              <Typography>{formData.location}</Typography> // Display selected location
+              <Typography display="flex" alignItems="center" gap={1}>
+                {formData.location}{" "}
+                {doctorData.location_flag && (
+                  <img
+                    src={doctorData.location_flag}
+                    alt={doctorData.location}
+                    width="20"
+                    height="14"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
+              </Typography> // Display selected location
             )}
           </Box>
           <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
