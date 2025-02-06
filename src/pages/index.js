@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
+import Link from "next/link";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -166,50 +167,52 @@ export default function Home() {
         ) : filteredDoctors.length > 0 ? (
           filteredDoctors.map((doctor) => (
             <Grid item xs={12} sm={6} md={4} key={doctor.id}>
-              <Card>
-                <Box p={1}>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <StarIcon
-                      key={index}
-                      sx={{
-                        cursor: "pointer",
-                        color:
-                          index < Math.round(doctor.avg_rating)
-                            ? "gold"
-                            : "gray",
-                      }}
-                    />
-                  ))}
-                </Box>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={
-                    doctor.profile_image || "https://via.placeholder.com/200"
-                  }
-                  alt={`${doctor.first_name} ${doctor.last_name}`}
-                />
-                <CardContent>
-                  <Typography variant="h6">
-                    {doctor.first_name} {doctor.last_name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {doctor.speciality || "Specialty not available"}
-                  </Typography>
-                  <Box display="flex" alignItems="center" mt={2}>
-                    {doctor.location_flag && (
-                      <img
-                        src={doctor.location_flag}
-                        alt={doctor.location}
-                        width="20"
-                        height="14"
-                        style={{ marginRight: 8 }}
+              <Link href={`/dashboard/doctor/${doctor.id}`} passHref>
+                <Card>
+                  <Box p={1}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <StarIcon
+                        key={index}
+                        sx={{
+                          cursor: "pointer",
+                          color:
+                            index < Math.round(doctor.avg_rating)
+                              ? "gold"
+                              : "gray",
+                        }}
                       />
-                    )}
-                    <Typography variant="body2">{doctor.location}</Typography>
+                    ))}
                   </Box>
-                </CardContent>
-              </Card>
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image={
+                      doctor.profile_image || "https://via.placeholder.com/200"
+                    }
+                    alt={`${doctor.first_name} ${doctor.last_name}`}
+                  />
+                  <CardContent>
+                    <Typography variant="h6">
+                      {doctor.first_name} {doctor.last_name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {doctor.speciality || "Specialty not available"}
+                    </Typography>
+                    <Box display="flex" alignItems="center" mt={2}>
+                      {doctor.location_flag && (
+                        <img
+                          src={doctor.location_flag}
+                          alt={doctor.location}
+                          width="20"
+                          height="14"
+                          style={{ marginRight: 8 }}
+                        />
+                      )}
+                      <Typography variant="body2">{doctor.location}</Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Link>
             </Grid>
           ))
         ) : (

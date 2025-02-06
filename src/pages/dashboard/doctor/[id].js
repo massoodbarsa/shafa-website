@@ -34,7 +34,7 @@ const DoctorProfile = () => {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false); // Loading state
 
-  const { name } = router.query; // Dynamic doctorId from the URL
+  const { id } = router.query; // Dynamic doctorId from the URL
   const [editable, setEditable] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
   const [formData, setFormData] = useState({
@@ -273,15 +273,13 @@ const DoctorProfile = () => {
 
   useEffect(() => {
     // Fetch doctor profile data only if name exists in the URL
-    if (name) {
-      const fullName = name.split("-").join(" "); // Join parts back into a full name
-
+    if (id) {
       const fetchDoctorData = async () => {
         try {
           const { data, error } = await supabase
             .from("doctors")
             .select("*")
-            .eq("full_name", fullName) // Assuming full_name is the correct column
+            .eq("id", id) // Assuming full_name is the correct column
             .single(); // Ensure we get only one result
 
           if (error) {

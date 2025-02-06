@@ -38,8 +38,8 @@ const LoginPage = () => {
     // If the user is already logged in, redirect them
     if (user && isLoggedIn) {
       const dashboardPath = user.license_nr // Check if user is a doctor
-        ? `/dashboard/doctor/${user.first_name}-${user.last_name}`
-        : `/dashboard/client`;
+        ? `/dashboard/doctor/${user.id}`
+        : `/`;
       router.push(dashboardPath);
     } else {
       setIsChecking(false); // Allow login page to render if not authenticated
@@ -125,12 +125,7 @@ const LoginPage = () => {
       );
 
       router.push(
-        userType === UserRole.Doctor
-          ? `/dashboard/doctor/${formatUserNameForURL(
-              data.doctorProfile.first_name,
-              data.doctorProfile.last_name
-            )}`
-          : "/"
+        userType === UserRole.Doctor ? `/dashboard/doctor/${userData.id}` : "/"
       );
     } catch (err) {
       console.log(err);
