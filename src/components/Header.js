@@ -49,13 +49,7 @@ const Header = () => {
     router.push("/login");
   };
 
-  const getProfilePath = () =>
-    user?.first_name && user?.last_name
-      ? `/dashboard/doctor/${formatUserNameForURL(
-          user.first_name,
-          user.last_name
-        )}`
-      : "/doctor";
+  const getProfilePath = () => (user ? `/dashboard/doctor/${user.id}` : "/");
 
   const renderMenuItems = () => {
     const items = [

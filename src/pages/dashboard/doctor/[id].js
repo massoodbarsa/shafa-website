@@ -34,7 +34,6 @@ const DoctorProfile = () => {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false); // Loading state
 
-  const { id } = router.query; // Dynamic doctorId from the URL
   const [editable, setEditable] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
   const [formData, setFormData] = useState({
@@ -56,6 +55,8 @@ const DoctorProfile = () => {
     rating: 0,
     review_text: "",
   });
+
+  const { id } = router.query; // Dynamic doctorId from the URL
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
