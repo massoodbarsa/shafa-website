@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
+import NoRecords from "../components/NoRecords";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -216,7 +217,9 @@ export default function Home() {
             </Grid>
           ))
         ) : (
-          <Typography>No doctors found.</Typography>
+          <Box width="100%">
+            <NoRecords />
+          </Box>
         )}
       </Grid>
     </Container>
