@@ -249,7 +249,7 @@ export default function Home() {
                       doctor.profile_image || "https://via.placeholder.com/200"
                     }
                     alt={`${doctor.first_name} ${doctor.last_name}`}
-                    sx={{ objectFit: "cover", objectPosition: "top" }}
+                    sx={{ objectFit: "contain", objectPosition: "top" }}
                   />
                   <CardContent>
                     <Typography variant="h6">
