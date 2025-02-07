@@ -13,6 +13,11 @@ import {
   Box,
 } from "@mui/material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 const packages = [
   { id: "1month", label: "1 Month", price: "$10" },
@@ -22,8 +27,31 @@ const packages = [
 
 const UpgradeProfileDialog = ({ open, onClose }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const isMobile = useBreakpointDown();
+
+  const handleConfirm = async () => {
+    if (!selectedPackage) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packageId: selectedPackage, currency: "eur" }),
+      });
+
+      const { sessionId } = await res.json();
+
+      const stripe = await stripePromise;
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.error("Payment error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog
@@ -72,12 +100,12 @@ const UpgradeProfileDialog = ({ open, onClose }) => {
           Cancel
         </Button>
         <Button
-          onClick={() => onConfirm(selectedPackage)}
+          onClick={handleConfirm}
           color="primary"
           variant="contained"
           disabled={!selectedPackage}
         >
-          Confirm
+          {loading ? "Processing..." : "Confirm"}
         </Button>
       </DialogActions>
     </Dialog>
