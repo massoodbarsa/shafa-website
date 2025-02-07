@@ -15,8 +15,13 @@ import {
   TextField,
   InputAdornment,
   Grid2,
+  Drawer,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { supabase } from "../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
@@ -30,6 +35,10 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   countries.registerLocale(enLocale);
 
@@ -38,8 +47,6 @@ export default function Home() {
     ...new Set(doctors.map((d) => d.location && d.location_flag && d.location)),
   ];
   const uniqueSpecialties = [...new Set(doctors.map((d) => d.speciality))];
-
-  // console.log(userLocation);
 
   // Filter doctors based on selection
   const filteredDoctors = doctors.filter(
@@ -62,8 +69,7 @@ export default function Home() {
     }
   }, []);
 
-  //UseEffects
-
+  // Fetch doctors from Supabase
   useEffect(() => {
     const fetchDoctors = async () => {
       const { data, error } = await supabase.from("doctors").select("*");
@@ -79,21 +85,126 @@ export default function Home() {
     fetchDoctors();
   }, []);
 
+  // Auto-select user country if available in the doctors list
   useEffect(() => {
     async function fetchData() {
-      const userCountryCode = await getUserCountry(); // Get country code (e.g., "US", "IN")
+      const userCountryCode = await getUserCountry(); // e.g., "US", "IN"
       if (userCountryCode) {
-        // Convert country code to full country name
         const countryName = countries.getName(userCountryCode, "en");
-
-        // Check if the country exists in doctors' locations
         if (countryName && doctors.some((d) => d.location === countryName)) {
-          setSelectedCountry(countryName); // Auto-select country if found
+          setSelectedCountry(countryName);
         }
       }
     }
     fetchData();
-  }, [getUserCountry, doctors]); // Runs when doctors data is available
+  }, [getUserCountry, doctors]);
+
+  // Extract filter content into a variable for reuse in toolbar and drawer
+  const filterContent = (
+    <Grid2 container gap={5} justifyContent="space-around" alignItems="center">
+      <Grid2 item sm={4} xs={12}>
+        <FormControl sx={{ width: 200 }}>
+          <Autocomplete
+            options={uniqueCountries.map((location) => {
+              const doctorWithFlag = doctors.find(
+                (d) => d.location === location
+              );
+              return {
+                label: location,
+                flag: doctorWithFlag?.location_flag,
+              };
+            })}
+            value={
+              selectedCountry
+                ? {
+                    label: selectedCountry,
+                    flag:
+                      doctors.find((d) => d.location === selectedCountry)
+                        ?.location_flag || "",
+                  }
+                : null
+            }
+            onChange={(event, newValue) =>
+              setSelectedCountry(newValue ? newValue.label : "")
+            }
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <li {...props}>
+                {option.flag && (
+                  <img
+                    src={option.flag}
+                    alt={option.label}
+                    style={{ width: 20, height: 14, marginRight: 8 }}
+                  />
+                )}
+                {option.label}
+              </li>
+            )}
+            slotProps={{
+              input: {
+                startAdornment: selectedCountry && (
+                  <InputAdornment position="start">
+                    <img
+                      src={
+                        doctors.find((d) => d.location === selectedCountry)
+                          ?.location_flag || ""
+                      }
+                      alt={selectedCountry}
+                      style={{ width: 20, height: 14, marginRight: 8 }}
+                    />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Country" variant="outlined" />
+            )}
+          />
+        </FormControl>
+      </Grid2>
+      <Grid2 item sm={4} xs={12}>
+        <FormControl sx={{ width: 250 }}>
+          <Autocomplete
+            options={uniqueSpecialties}
+            value={selectedSpecialty || null}
+            onChange={(event, newValue) => setSelectedSpecialty(newValue || "")}
+            renderInput={(params) => (
+              <TextField {...params} label="Specialty" variant="outlined" />
+            )}
+          />
+        </FormControl>
+      </Grid2>
+      <Grid2 item sm={4} xs={12}>
+        <Box
+          sx={{
+            gap: 1,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body2">Rating: </Typography>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <StarIcon
+              key={index}
+              sx={{
+                cursor: "pointer",
+                color: index < Math.round(selectedRating) ? "gold" : "gray",
+              }}
+              onClick={() => setSelectedRating(index + 1)}
+            />
+          ))}
+          <Button
+            onClick={() => setSelectedRating(null)}
+            sx={{ ml: 2 }}
+            variant="outlined"
+            size="small"
+          >
+            Reset
+          </Button>
+        </Box>
+      </Grid2>
+    </Grid2>
+  );
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
@@ -108,121 +219,44 @@ export default function Home() {
           justifyContent: "space-around",
         }}
       >
-        <Grid2
-          container
-          gap={5}
-          justifyContent="space-around"
-          alignItems="center"
-        >
-          <Grid2 item sm={4} xs={12}>
-            <FormControl sx={{ width: 200 }}>
-              <Autocomplete
-                options={uniqueCountries.map((location) => {
-                  const doctorWithFlag = doctors.find(
-                    (d) => d.location === location
-                  );
-                  return {
-                    label: location,
-                    flag: doctorWithFlag?.location_flag,
-                  };
-                })}
-                value={
-                  selectedCountry
-                    ? {
-                        label: selectedCountry,
-                        flag:
-                          doctors.find((d) => d.location === selectedCountry)
-                            ?.location_flag || "",
-                      }
-                    : null
-                }
-                onChange={(event, newValue) =>
-                  setSelectedCountry(newValue ? newValue.label : "")
-                }
-                getOptionLabel={(option) => option.label}
-                renderOption={(props, option) => (
-                  <li {...props}>
-                    {option.flag && (
-                      <img
-                        src={option.flag}
-                        alt={option.label}
-                        style={{ width: 20, height: 14, marginRight: 8 }}
-                      />
-                    )}
-                    {option.label}
-                  </li>
-                )}
-                slotProps={{
-                  input: {
-                    startAdornment: selectedCountry && (
-                      <InputAdornment position="start">
-                        <img
-                          src={
-                            doctors.find((d) => d.location === selectedCountry)
-                              ?.location_flag || ""
-                          }
-                          alt={selectedCountry}
-                          style={{ width: 20, height: 14, marginRight: 8 }}
-                        />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Country" variant="outlined" />
-                )}
-              />
-            </FormControl>
-          </Grid2>
-          <Grid2 item sm={4} xs={12}>
-            {/* Specialty Filter */}
-            <FormControl sx={{ width: 250 }}>
-              <Autocomplete
-                options={uniqueSpecialties}
-                value={selectedSpecialty || null}
-                onChange={(event, newValue) =>
-                  setSelectedSpecialty(newValue || "")
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="Specialty" variant="outlined" />
-                )}
-              />
-            </FormControl>
-          </Grid2>
-          <Grid2 item sm={4} xs={12}>
-            <Box
-              sx={{
-                gap: 1,
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="body2">Rating: </Typography>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <StarIcon
-                  key={index}
-                  sx={{
-                    cursor: "pointer",
-                    color: index < Math.round(selectedRating) ? "gold" : "gray",
-                  }}
-                  onClick={() => setSelectedRating(index + 1)} // Set the selected rating to the star clicked
-                />
-              ))}
-              <Button
-                onClick={() => setSelectedRating(null)} // Reset the filter
-                sx={{ ml: 2 }}
-                variant="outlined"
-                size="small"
-              >
-                Reset
-              </Button>
-            </Box>
-          </Grid2>
-        </Grid2>
+        {isMobile ? (
+          <IconButton
+            onClick={() => setMobileFiltersOpen(true)}
+            aria-label="open filters"
+            color="primary"
+            size="large"
+          >
+            <FilterListIcon />
+          </IconButton>
+        ) : (
+          filterContent
+        )}
       </Toolbar>
 
+      {/* Mobile Filter Drawer */}
+      {isMobile && (
+        <Drawer
+          anchor="bottom"
+          open={mobileFiltersOpen}
+          onClose={() => setMobileFiltersOpen(false)}
+        >
+          <Box sx={{ p: 2 }}>
+            {filterContent}
+            <Button
+              onClick={() => setMobileFiltersOpen(false)}
+              variant="contained"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              Apply Filters
+            </Button>
+          </Box>
+        </Drawer>
+      )}
+
       {/* Doctors Grid */}
-      <Grid2 container spacing={3}>
+
+      <Grid2 container spacing={5} justifyContent="center">
         {loading ? (
           <Box
             sx={{
@@ -239,7 +273,7 @@ export default function Home() {
           filteredDoctors.map((doctor) => (
             <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
               <Link href={`/dashboard/doctor/${doctor.id}`} passHref>
-                <Card>
+                <Card sx={{ maxWidth: "250px", width: "250px" }}>
                   <Box p={1}>
                     {Array.from({ length: 5 }).map((_, index) => (
                       <StarIcon
@@ -261,10 +295,13 @@ export default function Home() {
                       doctor.profile_image || "https://via.placeholder.com/200"
                     }
                     alt={`${doctor.first_name} ${doctor.last_name}`}
-                    sx={{ objectFit: "contain", objectPosition: "top" }}
+                    sx={{
+                      objectFit: "contain",
+                      objectPosition: "top",
+                    }}
                   />
                   <CardContent>
-                    <Typography variant="h6">
+                    <Typography variant="body1">
                       {doctor.first_name} {doctor.last_name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
