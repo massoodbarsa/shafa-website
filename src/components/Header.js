@@ -9,8 +9,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  useMediaQuery,
-  useTheme,
   Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -18,11 +16,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
 import { UserRole } from "@/enums/UserRole";
+import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useBreakpointDown();
   const pathname = usePathname();
   const router = useRouter();
   const { user, isLoggedIn, logout } = useAuthStore();
@@ -110,7 +108,7 @@ const Header = () => {
           href="/"
           sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
         >
-          Iranian Doctors Web App
+          Iranian Health Bridge
         </Typography>
 
         {isMobile ? (

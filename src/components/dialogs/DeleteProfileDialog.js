@@ -73,7 +73,7 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullScreen={isMobile}>
+    <Dialog open={open} onClose={onClose} fullScreen={isMobile} fullWidth>
       <DialogTitle>Confirm Deletion</DialogTitle>
       <DialogContent sx={{ p: 2 }}>
         <DialogContentText>

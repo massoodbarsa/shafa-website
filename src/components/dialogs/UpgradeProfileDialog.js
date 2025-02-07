@@ -12,6 +12,7 @@ import {
   CardContent,
   Box,
 } from "@mui/material";
+import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 
 const packages = [
   { id: "1month", label: "1 Month", price: "$10" },
@@ -22,8 +23,16 @@ const packages = [
 const UpgradeProfileDialog = ({ open, onClose }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
 
+  const isMobile = useBreakpointDown();
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullScreen={isMobile}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Select a Package</DialogTitle>
       <DialogContent sx={{ p: 5 }}>
         <Grid container spacing={2} my={5}>
