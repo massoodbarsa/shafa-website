@@ -109,6 +109,7 @@ const ReviewSubmitCard = ({
                 sx={{ mt: 2 }}
                 onClick={handleSubmit}
                 loading={loading}
+                disabled={!newReview.review_text.trim()}
               >
                 Submit Review
               </LoadingButton>
