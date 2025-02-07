@@ -95,7 +95,7 @@ const Header = () => {
 
   const mainPages = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
+    { name: "About", path: "/about/aboutUs" },
     { name: "Contact", path: "/contact" },
   ];
 

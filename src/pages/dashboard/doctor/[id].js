@@ -212,6 +212,10 @@ const DoctorProfile = () => {
         address: updatedDoctor.address,
       }));
 
+      enqueueSnackbar("Your data is updated.", {
+        variant: "success",
+      });
+
       console.log("Updated doctor data:", updatedDoctor);
     } catch (error) {
       console.error("Error updating description:", error.message);
