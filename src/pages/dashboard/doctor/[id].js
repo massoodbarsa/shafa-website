@@ -29,6 +29,7 @@ import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
 import DeleteProfileButton from "@/src/components/DeleteProfileButton";
 import HomeIcon from "@mui/icons-material/Home";
+import { UserRole } from "@/enums/UserRole";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -564,7 +565,9 @@ const DoctorProfile = () => {
         loading={loading}
         reviews={reviews}
         user={user}
-        disableReviewForm={user?.id === doctorData?.id} // Disable review form if the user is the doctor
+        disableReviewForm={
+          user?.id === doctorData?.id || user?.role === UserRole.Doctor
+        } // Disable review form if the user is the doctor
       />
     </Container>
   );
