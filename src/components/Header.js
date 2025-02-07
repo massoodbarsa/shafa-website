@@ -50,6 +50,12 @@ const Header = () => {
 
   const getProfilePath = () => (user ? `/dashboard/doctor/${user.id}` : "/");
 
+  const mainPages = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about/aboutUs" },
+    { name: "Contact", path: "/contact/contactUs" },
+  ];
+
   const renderMenuItems = () => {
     const items = [
       ...mainPages.map(({ name, path }) => (
@@ -92,12 +98,6 @@ const Header = () => {
 
     return items;
   };
-
-  const mainPages = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about/aboutUs" },
-    { name: "Contact", path: "/contact" },
-  ];
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
