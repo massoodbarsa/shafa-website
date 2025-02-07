@@ -18,7 +18,7 @@ import {
   Drawer,
   IconButton,
 } from "@mui/material";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -43,11 +43,15 @@ export default function Home() {
   countries.registerLocale(enLocale);
 
   // Get unique countries and specialties from doctors
-  const uniqueCountries = [
-    ...new Set(doctors.map((d) => d.location && d.location_flag && d.location)),
-  ];
-  const uniqueSpecialties = [...new Set(doctors.map((d) => d.speciality))];
+  const uniqueCountries = useMemo(
+    () => [...new Set(doctors.map((d) => d.location))],
+    [doctors]
+  );
 
+  const uniqueSpecialties = useMemo(
+    () => [...new Set(doctors.map((d) => d.speciality))],
+    [doctors]
+  );
   // Filter doctors based on selection
   const filteredDoctors = doctors.filter(
     (doctor) =>
@@ -105,15 +109,17 @@ export default function Home() {
       <Grid2 item sm={4} xs={12}>
         <FormControl sx={{ width: 200 }}>
           <Autocomplete
-            options={uniqueCountries.map((location) => {
-              const doctorWithFlag = doctors.find(
-                (d) => d.location === location
-              );
-              return {
-                label: location,
-                flag: doctorWithFlag?.location_flag,
-              };
-            })}
+            options={uniqueCountries
+              .filter((location) => location) // Filter out null or undefined countries
+              .map((location) => {
+                const doctorWithFlag = doctors.find(
+                  (d) => d.location === location
+                );
+                return {
+                  label: location,
+                  flag: doctorWithFlag?.location_flag || "",
+                };
+              })}
             value={
               selectedCountry
                 ? {
@@ -127,7 +133,7 @@ export default function Home() {
             onChange={(event, newValue) =>
               setSelectedCountry(newValue ? newValue.label : "")
             }
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.label || ""}
             renderOption={(props, option) => (
               <li {...props}>
                 {option.flag && (
