@@ -21,8 +21,7 @@ import {
   Pagination,
 } from "@mui/material";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { supabase } from "../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
@@ -30,6 +29,7 @@ import Link from "next/link";
 import NoRecords from "../components/NoRecords";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -42,9 +42,7 @@ export default function Home() {
 
   const itemsPerPage = 6; // 6 items per page
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const isMobile = useBreakpointDown();
   countries.registerLocale(enLocale);
 
   // Get unique countries and specialties from doctors

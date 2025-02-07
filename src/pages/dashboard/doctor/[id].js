@@ -23,14 +23,13 @@ import { LoadingButton } from "@mui/lab"; // Import LoadingButton
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
-import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
-import DeleteProfileButton from "@/src/components/dialogs/DeleteProfileDialog";
 import HomeIcon from "@mui/icons-material/Home";
 import { UserRole } from "@/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
+import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -66,8 +65,7 @@ const DoctorProfile = () => {
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Check for mobile
-
+  const isMobile = useBreakpointDown();
   // Load country names
   countries.registerLocale(enLocale);
   const countryList = Object.entries(countries.getNames("en")).map(
