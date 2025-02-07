@@ -17,6 +17,7 @@ import {
   Grid2,
   Drawer,
   IconButton,
+  Avatar,
 } from "@mui/material";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -279,7 +280,14 @@ export default function Home() {
           filteredDoctors.map((doctor) => (
             <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
               <Link href={`/dashboard/doctor/${doctor.id}`} passHref>
-                <Card sx={{ maxWidth: "250px", width: "250px" }}>
+                <Card
+                  sx={{
+                    width: 250, // Fixed width
+                    height: 400, // Fixed height
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   <Box p={1}>
                     {Array.from({ length: 5 }).map((_, index) => (
                       <StarIcon
@@ -294,19 +302,30 @@ export default function Home() {
                       />
                     ))}
                   </Box>
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={
-                      doctor.profile_image || "https://via.placeholder.com/200"
-                    }
-                    alt={`${doctor.first_name} ${doctor.last_name}`}
-                    sx={{
-                      objectFit: "contain",
-                      objectPosition: "top",
-                    }}
-                  />
-                  <CardContent>
+
+                  {doctor.profile_image ? (
+                    <CardMedia
+                      component="img"
+                      height="200" // Fixed height for image
+                      image={doctor.profile_image}
+                      alt={`${doctor.first_name} ${doctor.last_name}`}
+                      sx={{
+                        objectFit: "contain",
+                        objectPosition: "top",
+                      }}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{
+                        width: 170,
+                        height: 200,
+                        mx: "auto",
+                        mb: 2,
+                      }}
+                    />
+                  )}
+
+                  <CardContent sx={{ flexGrow: 1 }}>
                     <Typography variant="body1">
                       {doctor.first_name} {doctor.last_name}
                     </Typography>
