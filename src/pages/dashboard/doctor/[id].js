@@ -27,9 +27,10 @@ import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
-import DeleteProfileButton from "@/src/components/DeleteProfileButton";
+import DeleteProfileButton from "@/src/components/DeleteProfileDialog";
 import HomeIcon from "@mui/icons-material/Home";
 import { UserRole } from "@/enums/UserRole";
+import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -365,8 +366,8 @@ const DoctorProfile = () => {
   return (
     <Container maxWidth="lg">
       {user?.id === doctorData?.id && (
-        <Box>
-          <DeleteProfileButton user={doctorData} />
+        <Box position="relative">
+          <OpenIconSpeedDial doctorData={doctorData} />
         </Box>
       )}
       <Box sx={{ textAlign: "center", my: 4 }}>

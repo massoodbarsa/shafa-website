@@ -1,21 +1,30 @@
 import { useState } from "react";
-import { LoadingButton } from "@mui/lab";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-import { Box } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { useSnackbar } from "notistack";
 import useAuthStore from "../store/authStore";
+import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 
-const DeleteProfileButton = ({ user }) => {
+const DeleteProfileDialog = ({ user, open, onClose }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { logout } = useAuthStore();
-  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
+  const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useBreakpointDown();
 
   const handleDeleteProfile = async () => {
     setLoading(true);
 
-    console.log(user);
+    console.log(isMobile);
 
     try {
       // 1. Delete profile image from storage
@@ -51,11 +60,14 @@ const DeleteProfileButton = ({ user }) => {
 
       // 4. Sign out and redirect
       await supabase.auth.signOut();
+
+      onClose(true);
       logout();
       enqueueSnackbar("Profile deleted successfully.", { variant: "success" });
       router.push("/register");
     } catch (error) {
       enqueueSnackbar(error.message, { variant: "error" });
+      onClose(true);
       console.error("Error deleting profile:", error);
     } finally {
       setLoading(false);
@@ -63,17 +75,29 @@ const DeleteProfileButton = ({ user }) => {
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <LoadingButton
-        variant="contained"
-        color="secondary"
-        onClick={handleDeleteProfile}
-        loading={loading}
-      >
-        Delete Profile
-      </LoadingButton>
-    </Box>
+    <Dialog open={open} onClose={onClose} fullScreen={isMobile}>
+      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Are you sure you want to delete your profile? This action cannot be
+          undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary" disabled={loading}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleDeleteProfile}
+          color="error"
+          variant="contained"
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : "Delete"}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
-export default DeleteProfileButton;
+export default DeleteProfileDialog;
