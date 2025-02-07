@@ -354,7 +354,7 @@ const DoctorProfile = () => {
     }
   }, [doctorData]);
 
-  if (!doctorData)
+  if (!user || !doctorData)
     return (
       <Box sx={{ width: "100%" }}>
         <LinearProgress />
@@ -426,7 +426,9 @@ const DoctorProfile = () => {
                   }}
                 />
               ))}
-              <Typography sx={{ ml: 1 }}>({formData.averageRating})</Typography>
+              <Typography sx={{ ml: 1 }}>
+                ({formData.averageRating || 0})
+              </Typography>
             </Box>
 
             {/* Name */}
