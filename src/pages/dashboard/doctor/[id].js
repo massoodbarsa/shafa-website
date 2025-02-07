@@ -27,7 +27,7 @@ import { useMediaQuery } from "@mui/material"; // Import useMediaQuery
 import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
-import DeleteProfileButton from "@/src/components/DeleteProfileDialog";
+import DeleteProfileButton from "@/src/components/dialogs/DeleteProfileDialog";
 import HomeIcon from "@mui/icons-material/Home";
 import { UserRole } from "@/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";

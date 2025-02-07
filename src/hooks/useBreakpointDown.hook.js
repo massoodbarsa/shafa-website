@@ -1,5 +1,4 @@
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Breakpoint } from "@mui/system";
 import useTheme from "@mui/system/useTheme";
 
 export default function useBreakpointDown(key = "md", defaultMatches = true) {

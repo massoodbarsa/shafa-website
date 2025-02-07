@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import {
   Dialog,
@@ -11,8 +11,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import useAuthStore from "../store/authStore";
-import useBreakpointDown from "../hooks/useBreakpointDown.hook";
+import useAuthStore from "../../store/authStore";
+import useBreakpointDown from "../../hooks/useBreakpointDown.hook";
 
 const DeleteProfileDialog = ({ user, open, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -23,8 +23,6 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
 
   const handleDeleteProfile = async () => {
     setLoading(true);
-
-    console.log(isMobile);
 
     try {
       // 1. Delete profile image from storage
@@ -77,13 +75,13 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose} fullScreen={isMobile}>
       <DialogTitle>Confirm Deletion</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ p: 2 }}>
         <DialogContentText>
           Are you sure you want to delete your profile? This action cannot be
           undone.
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} color="primary" disabled={loading}>
           Cancel
         </Button>
