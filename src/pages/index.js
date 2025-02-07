@@ -18,6 +18,7 @@ import {
   Drawer,
   IconButton,
   Avatar,
+  Pagination,
 } from "@mui/material";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -37,6 +38,9 @@ export default function Home() {
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 6; // 6 items per page
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -61,6 +65,11 @@ export default function Home() {
       (!selectedRating || doctor.avg_rating >= selectedRating)
   );
 
+  const paginatedDoctors = filteredDoctors.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const getUserCountry = useCallback(async () => {
     try {
       const response = await fetch(
@@ -73,6 +82,10 @@ export default function Home() {
       return null;
     }
   }, []);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   // Fetch doctors from Supabase
   useEffect(() => {
@@ -276,8 +289,8 @@ export default function Home() {
           >
             <CircularProgress />
           </Box>
-        ) : filteredDoctors.length > 0 ? (
-          filteredDoctors.map((doctor) => (
+        ) : paginatedDoctors.length > 0 ? (
+          paginatedDoctors.map((doctor) => (
             <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
               <Link href={`/dashboard/doctor/${doctor.id}`} passHref>
                 <Card
@@ -355,6 +368,15 @@ export default function Home() {
           </Box>
         )}
       </Grid2>
+      {Math.ceil(filteredDoctors.length / itemsPerPage) > 1 && (
+        <Pagination
+          count={Math.ceil(filteredDoctors.length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+          sx={{ mt: 5, display: "flex", justifyContent: "center" }}
+        />
+      )}
     </Container>
   );
 }
