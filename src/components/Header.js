@@ -72,15 +72,17 @@ const Header = () => {
 
     if (isLoggedIn()) {
       items.push(
-        <MenuItem
-          key="profile"
-          component={Link}
-          href={getProfilePath()}
-          onClick={handleMenuClose}
-          sx={{ color: "#EB6C08 " }}
-        >
-          MyProfile
-        </MenuItem>,
+        user.role === UserRole.Doctor && (
+          <MenuItem
+            key="profile"
+            component={Link}
+            href={getProfilePath()}
+            onClick={handleMenuClose}
+            sx={{ color: "#EB6C08 " }}
+          >
+            MyProfile
+          </MenuItem>
+        ),
         <MenuItem key="logout" onClick={handleLogout}>
           Logout
         </MenuItem>
