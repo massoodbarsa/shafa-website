@@ -28,6 +28,7 @@ import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
 import DeleteProfileButton from "@/src/components/DeleteProfileButton";
+import HomeIcon from "@mui/icons-material/Home";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -43,12 +44,15 @@ const DoctorProfile = () => {
     profileImage: "",
     email: "",
     phone: "",
-    location: "",
     description: "",
     location: "",
     locationFlag: "",
     averageRating: null,
+    address: "",
   });
+
+  const [phoneError, setPhoneError] = useState("");
+  const [addressError, setAddressError] = useState("");
 
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -72,7 +76,27 @@ const DoctorProfile = () => {
     })
   );
 
-  console.log(doctorData);
+  const validateFields = () => {
+    let isValid = true;
+
+    if (!formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)) {
+      setPhoneError("Enter a valid phone number.");
+      isValid = false;
+    } else {
+      setPhoneError("");
+    }
+
+    if (!formData.address || formData.address < 6) {
+      setAddressError(
+        "Address could not be empty and must be at least 6 characters."
+      );
+      isValid = false;
+    } else {
+      setAddressError("");
+    }
+
+    return isValid;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -145,6 +169,8 @@ const DoctorProfile = () => {
   const handleSubmit = async () => {
     if (!doctorData) return;
 
+    if (!validateFields()) return;
+
     setLoading(true); // Start loading state
 
     try {
@@ -156,6 +182,7 @@ const DoctorProfile = () => {
           phone: formData.phone, // Update phone number
           location: formData.location,
           location_flag: formData.locationFlag,
+          address: formData.address,
         })
         .eq("user_id", doctorData.user_id);
 
@@ -181,7 +208,8 @@ const DoctorProfile = () => {
         description: updatedDoctor.description,
         phone: updatedDoctor.phone,
         location: updatedDoctor.location,
-        location_flag: formData.locationFlag,
+        location_flag: updatedDoctor.locationFlag,
+        address: updatedDoctor.address,
       }));
 
       console.log("Updated doctor data:", updatedDoctor);
@@ -297,6 +325,7 @@ const DoctorProfile = () => {
               location: data.location,
               locationCode: data.location_code,
               averageRating: data.avg_rating,
+              address: data.address,
             });
 
             // Check if the logged-in user is the doctor
@@ -314,30 +343,6 @@ const DoctorProfile = () => {
       fetchDoctorData();
     }
   }, [id, user]);
-
-  // useEffect(() => {
-  //   const fetchAverageRating = async () => {
-  //     if (!doctorData) return;
-
-  //     try {
-  //       const { data, error } = await supabase
-  //         .from("reviews")
-  //         .select("rating")
-  //         .eq("doctor_id", doctorData.id); // Ensure we're filtering by doctor ID
-
-  //       if (error) throw error;
-
-  //       if (data.length > 0) {
-  //         const total = data.reduce((sum, review) => sum + review.rating, 0);
-  //         setAverageRating((total / data.length).toFixed(1)); // Round to 1 decimal
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching average rating:", error.message);
-  //     }
-  //   };
-
-  //   fetchAverageRating();
-  // }, [doctorData]); // Runs when doctor data changes
 
   useEffect(() => {
     if (doctorData) {
@@ -448,14 +453,8 @@ const DoctorProfile = () => {
                     setFormData({ ...formData, phone: input });
                   }
                 }}
-                error={
-                  formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)
-                }
-                helperText={
-                  formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)
-                    ? "Invalid phone number format"
-                    : ""
-                }
+                error={!!phoneError}
+                helperText={phoneError}
               />
             ) : (
               <Typography>{formData.phone}</Typography>
@@ -504,6 +503,27 @@ const DoctorProfile = () => {
               </Typography> // Display selected location
             )}
           </Box>
+          <Box display="flex" alignItems="center" my={3}>
+            <HomeIcon sx={{ mr: 1 }} />
+            {editable ? (
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Address"
+                name="address"
+                value={formData.address}
+                required
+                onChange={(e) => {
+                  const input = e.target.value;
+                  setFormData({ ...formData, address: input });
+                }}
+                error={!!addressError}
+                helperText={addressError}
+              />
+            ) : (
+              <Typography>{formData.phone}</Typography>
+            )}
+          </Box>
           <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
           <Typography variant="body1" mt={3} sx={{ whiteSpace: "pre-line" }}>
             {doctorData.description}
@@ -520,6 +540,7 @@ const DoctorProfile = () => {
                 onChange={handleChange}
               />
               <LoadingButton
+                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2 }}
