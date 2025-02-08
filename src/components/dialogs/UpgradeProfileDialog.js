@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { loadStripe } from "@stripe/stripe-js";
-import { PackageTypes } from "@/enums/PackageTypes";
+import { PackageTypes, Status } from "@/enums/PackageTypes";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -66,8 +66,14 @@ const UpgradeProfileDialog = ({ open, onClose, user }) => {
       maxWidth="sm"
       fullWidth
     >
-      <DialogTitle color="primary">Select a Package</DialogTitle>
+      <DialogTitle color="primary">Select a Package </DialogTitle>
       <DialogContent sx={{ p: 5 }}>
+        {user.status === Status.ACTIVE && (
+          <Typography variant="body2" color="warning">
+            Your status is still active, the duration will be added to your
+            subscription
+          </Typography>
+        )}
         <Grid container spacing={2} my={5}>
           {packages.map((pkg) => (
             <Grid item xs={12} sm={4} key={pkg.id}>
