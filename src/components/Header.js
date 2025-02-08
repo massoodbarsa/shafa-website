@@ -46,7 +46,10 @@ const Header = () => {
     router.push("/login");
   };
 
-  const getProfilePath = () => (user ? `/dashboard/doctor/${user.id}` : "/");
+  const getProfilePath = () =>
+    user.role === UserRole.Doctor
+      ? `/dashboard/doctor/${user.id}`
+      : "/dashboard/admin";
 
   const mainPages = [
     { name: "Home", path: "/" },
@@ -79,6 +82,17 @@ const Header = () => {
             sx={{ color: "#EB6C08 " }}
           >
             MyProfile
+          </MenuItem>
+        ),
+        user.role === UserRole.Admin && (
+          <MenuItem
+            key="profile"
+            component={Link}
+            href={getProfilePath()}
+            onClick={handleMenuClose}
+            sx={{ color: "#EB6C08 " }}
+          >
+            Admin
           </MenuItem>
         ),
         <MenuItem key="logout" onClick={handleLogout}>
@@ -153,6 +167,16 @@ const Header = () => {
                     color="warning"
                   >
                     MyProfile
+                  </Button>
+                )}
+                {user.role === UserRole.Admin && (
+                  <Button
+                    component={Link}
+                    href={getProfilePath()}
+                    variant="text"
+                    color="warning"
+                  >
+                    Admin
                   </Button>
                 )}
                 <Button color="inherit" onClick={handleLogout}>
