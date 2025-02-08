@@ -2,6 +2,8 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+import { PackageTypes } from "../../../enums/PackageTypes";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
@@ -11,9 +13,9 @@ export default async function handler(req, res) {
     const { packageId, currency = "eur" } = req.body;
 
     const packages = {
-      "1 month": { price: 10, name: "1 Month Subscription" },
-      "3 months": { price: 25, name: "3 Months Subscription" },
-      "1 year": { price: 90, name: "1 Year Subscription" },
+      [PackageTypes.ONE_MONTH]: { price: 10, name: "1 Month Subscription" },
+      [PackageTypes.THREE_MONTHS]: { price: 25, name: "3 Months Subscription" },
+      [PackageTypes.ONE_YEAR]: { price: 90, name: "1 Year Subscription" },
     };
 
     if (!packages[packageId]) {

@@ -1,6 +1,7 @@
 import { buffer } from "micro";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { PackageTypes } from "@/enums/PackageTypes";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
@@ -43,35 +44,91 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing userId or packageId" });
     }
 
-    // Calculate subscription dates
+    // Set the start date to the current date
     const startDate = new Date();
-    let endDate = new Date();
-    if (packageId === "1month") endDate.setMonth(endDate.getMonth() + 1);
-    if (packageId === "3months") endDate.setMonth(endDate.getMonth() + 3);
-    if (packageId === "1year") endDate.setFullYear(endDate.getFullYear() + 1);
+
+    // Create a new Date object for the end date to ensure it's independent of the start date
+    let endDate = new Date(startDate); // Create a new Date object to avoid modifying the start date
+
+    // Calculate the end date based on the packageId
+    if (packageId === PackageTypes.ONE_MONTH)
+      endDate.setMonth(endDate.getMonth() + 1);
+    if (packageId === PackageTypes.THREE_MONTHS)
+      endDate.setMonth(endDate.getMonth() + 3);
+    if (packageId === PackageTypes.ONE_YEAR)
+      endDate.setFullYear(endDate.getFullYear() + 1);
 
     console.log("📅 Subscription Start:", startDate);
     console.log("📅 Subscription End:", endDate);
 
-    // Insert into Supabase
-    const { error } = await supabase.from("subscriptions").insert([
-      {
-        user_id: userId,
-        stripe_subscription_id: session.subscription,
-        stripe_customer_id: session.customer,
-        package: packageId,
-        status: "active",
-        start_date: startDate,
-        end_date: endDate,
-      },
-    ]);
+    // Check if the user already has an active subscription
+    const { data: existingSubscriptions, error: fetchError } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("status", "active");
 
-    if (error) {
-      console.error("❌ Supabase Insert Error:", error);
-      return res.status(500).json({ error: "Failed to save subscription" });
+    if (fetchError) {
+      console.error("❌ Error fetching existing subscription:", fetchError);
+      return res
+        .status(500)
+        .json({ error: "Error fetching existing subscription" });
     }
 
-    console.log("✅ Subscription inserted successfully");
+    if (existingSubscriptions.length > 0) {
+      // There's an active subscription, so we update the end date
+      const existingSubscription = existingSubscriptions[0]; // Get the first active subscription
+
+      const updatedEndDate = new Date(existingSubscription.end_date);
+      // Extend the subscription based on the new package
+      if (packageId === PackageTypes.ONE_MONTH)
+        updatedEndDate.setMonth(updatedEndDate.getMonth() + 1);
+      if (packageId === PackageTypes.THREE_MONTHS)
+        updatedEndDate.setMonth(updatedEndDate.getMonth() + 3);
+      if (packageId === PackageTypes.ONE_YEAR)
+        updatedEndDate.setFullYear(updatedEndDate.getFullYear() + 1);
+
+      // Update subscription in the database
+      const { error: updateError } = await supabase
+        .from("subscriptions")
+        .update({
+          stripe_subscription_id: session.subscription,
+          stripe_customer_id: session.customer,
+          last_package: packageId,
+          status: "active",
+          end_date: updatedEndDate.toISOString(),
+        })
+        .eq("user_id", userId);
+
+      if (updateError) {
+        console.error("❌ Error updating subscription:", updateError);
+        return res.status(500).json({ error: "Failed to update subscription" });
+      }
+
+      console.log("✅ Subscription updated successfully");
+    } else {
+      // Insert a new subscription record if none exists
+      const { error: insertError } = await supabase
+        .from("subscriptions")
+        .insert([
+          {
+            user_id: userId,
+            stripe_subscription_id: session.subscription,
+            stripe_customer_id: session.customer,
+            last_package: packageId,
+            status: "active",
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+          },
+        ]);
+
+      if (insertError) {
+        console.error("❌ Supabase Insert Error:", insertError);
+        return res.status(500).json({ error: "Failed to save subscription" });
+      }
+
+      console.log("✅ Subscription inserted successfully");
+    }
   }
 
   res.json({ received: true });

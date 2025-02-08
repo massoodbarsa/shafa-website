@@ -14,15 +14,16 @@ import {
 } from "@mui/material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { loadStripe } from "@stripe/stripe-js";
+import { PackageTypes } from "@/enums/PackageTypes";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 const packages = [
-  { id: "1 month", label: "1 Month", price: "$10" },
-  { id: "3 months", label: "3 Months", price: "$25" },
-  { id: "1 year", label: "1 Year", price: "$90" },
+  { id: PackageTypes.ONE_MONTH, label: "1 Month", price: "$10" },
+  { id: PackageTypes.THREE_MONTHS, label: "3 Months", price: "$25" },
+  { id: PackageTypes.ONE_YEAR, label: "1 Year", price: "$90" },
 ];
 
 const UpgradeProfileDialog = ({ open, onClose, user }) => {
