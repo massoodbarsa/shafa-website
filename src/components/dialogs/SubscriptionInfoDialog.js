@@ -9,9 +9,20 @@ import {
   Grid,
   Paper,
   Divider,
+  Chip,
 } from "@mui/material";
 
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import { Status } from "@/enums/PackageTypes";
+
+// Define status colors
+const statusColors = {
+  [Status.ACTIVE]: "success",
+  [Status.EXPIRED]: "warning",
+  [Status.CANCELLED]: "error",
+  [Status.PENDING]: "default",
+  [Status.TRIAL]: "info",
+};
 
 const calculateDuration = (startDate, endDate) => {
   const start = new Date(startDate);
@@ -40,7 +51,7 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
       fullWidth
       fullScreen={isMobile}
     >
-      <DialogTitle color="success">Subscription Information</DialogTitle>
+      <DialogTitle color="primary">Subscription Information</DialogTitle>
       <DialogContent>
         {user ? (
           <Grid container spacing={3}>
@@ -63,8 +74,16 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                     : `${duration.diffDays} days`}
                 </Typography>
                 <Divider sx={{ marginBottom: 2 }} />
-                <Typography variant="body1">
-                  <strong>Status:</strong> {user.status}
+                <Typography
+                  variant="body1"
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
+                  <Chip
+                    label={user.status}
+                    color={statusColors[user.status]}
+                    // color="default"
+                    variant="filled"
+                  />
                 </Typography>
                 <Typography variant="body1">
                   <strong>Start Date:</strong>{" "}

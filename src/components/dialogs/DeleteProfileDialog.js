@@ -74,7 +74,7 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullScreen={isMobile} fullWidth>
-      <DialogTitle color="success">Confirm Deletion</DialogTitle>
+      <DialogTitle color="primary">Confirm Deletion</DialogTitle>
       <DialogContent sx={{ p: 2 }}>
         <DialogContentText>
           Are you sure you want to delete your profile? This action cannot be
