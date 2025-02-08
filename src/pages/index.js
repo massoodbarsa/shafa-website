@@ -30,6 +30,8 @@ import NoRecords from "../components/NoRecords";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
+import useAuthStore from "../store/authStore";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -39,6 +41,9 @@ export default function Home() {
   const [selectedRating, setSelectedRating] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { user } = useAuthStore();
+  const router = useRouter();
 
   const itemsPerPage = 6; // 6 items per page
 
@@ -290,74 +295,80 @@ export default function Home() {
         ) : paginatedDoctors.length > 0 ? (
           paginatedDoctors.map((doctor) => (
             <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
-              <Link href={`/dashboard/doctor/${doctor.id}`} passHref>
-                <Card
-                  sx={{
-                    width: 250, // Fixed width
-                    height: 400, // Fixed height
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Box p={1}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <StarIcon
-                        key={index}
-                        sx={{
-                          cursor: "pointer",
-                          color:
-                            index < Math.round(doctor.avg_rating)
-                              ? "gold"
-                              : "gray",
-                        }}
+              {/* <Link href={`/dashboard/doctor/${doctor.id}`} passHref> */}
+              <Card
+                sx={{
+                  width: 250, // Fixed width
+                  height: 400, // Fixed height
+                  display: "flex",
+                  flexDirection: "column",
+                  cursor: "pointer",
+                }}
+                onClick={
+                  user
+                    ? () => router.push(`/dashboard/doctor/${doctor.id}`)
+                    : undefined
+                } // Use router.push for navigation
+              >
+                <Box p={1}>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <StarIcon
+                      key={index}
+                      sx={{
+                        cursor: "pointer",
+                        color:
+                          index < Math.round(doctor.avg_rating)
+                            ? "gold"
+                            : "gray",
+                      }}
+                    />
+                  ))}
+                </Box>
+
+                {doctor.profile_image ? (
+                  <CardMedia
+                    component="img"
+                    height="200" // Fixed height for image
+                    image={doctor.profile_image}
+                    alt={`${doctor.first_name} ${doctor.last_name}`}
+                    sx={{
+                      objectFit: "contain",
+                      objectPosition: "top",
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    sx={{
+                      width: 170,
+                      height: 200,
+                      mx: "auto",
+                      mb: 2,
+                    }}
+                  />
+                )}
+
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="body1">
+                    {doctor.first_name} {doctor.last_name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {doctor.speciality || "Specialty not available"}
+                  </Typography>
+                  <Box display="flex" alignItems="center" mt={2}>
+                    {doctor.location_flag && (
+                      <img
+                        src={doctor.location_flag}
+                        alt={doctor.location}
+                        width="20"
+                        height="14"
+                        style={{ marginRight: 8 }}
                       />
-                    ))}
+                    )}
+                    <Typography variant="body2">{doctor.location}</Typography>
                   </Box>
-
-                  {doctor.profile_image ? (
-                    <CardMedia
-                      component="img"
-                      height="200" // Fixed height for image
-                      image={doctor.profile_image}
-                      alt={`${doctor.first_name} ${doctor.last_name}`}
-                      sx={{
-                        objectFit: "contain",
-                        objectPosition: "top",
-                      }}
-                    />
-                  ) : (
-                    <Avatar
-                      sx={{
-                        width: 170,
-                        height: 200,
-                        mx: "auto",
-                        mb: 2,
-                      }}
-                    />
-                  )}
-
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="body1">
-                      {doctor.first_name} {doctor.last_name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {doctor.speciality || "Specialty not available"}
-                    </Typography>
-                    <Box display="flex" alignItems="center" mt={2}>
-                      {doctor.location_flag && (
-                        <img
-                          src={doctor.location_flag}
-                          alt={doctor.location}
-                          width="20"
-                          height="14"
-                          style={{ marginRight: 8 }}
-                        />
-                      )}
-                      <Typography variant="body2">{doctor.location}</Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Link>
+                </CardContent>
+              </Card>
+              {/* </Link> */}
             </Grid2>
           ))
         ) : (
