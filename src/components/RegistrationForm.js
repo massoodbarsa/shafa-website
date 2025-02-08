@@ -26,6 +26,7 @@ import { useSnackbar } from "notistack";
 import { UserRole } from "@/enums/UserRole";
 import SpecialitySelect from "./SpecialitySelect";
 import { Status } from "@/enums/PackageTypes";
+import { formatDate } from "../utils/formatDate";
 
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
@@ -136,6 +137,7 @@ const RegisterForm = () => {
             `${formData.first_name} ${formData.last_name}`.toLowerCase(),
           email: formData.email.trim(),
           status: "",
+          start_date: "",
         };
 
         if (userType === UserRole.Doctor) {
@@ -143,6 +145,7 @@ const RegisterForm = () => {
           insertData.license_nr = formData.license_number;
           insertData.role = UserRole.Doctor;
           insertData.status = Status.FREE;
+          insertData.start_date = formatDate(new Date());
         }
         if (userType === UserRole.Client) {
           insertData.role = UserRole.Client;

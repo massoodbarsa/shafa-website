@@ -65,14 +65,16 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                   gap: 2,
                 }}
               >
-                <Typography variant="body1">
-                  <strong>Duration:</strong>{" "}
-                  {duration.diffYears > 0
-                    ? `${duration.diffYears} years and ${duration.diffMonths} months and ${duration.diffDays} days`
-                    : duration.diffMonths > 0
-                    ? `${duration.diffMonths} months and ${duration.diffDays} days`
-                    : `${duration.diffDays} days`}
-                </Typography>
+                {!user.status === Status.FREE && (
+                  <Typography variant="body1">
+                    <strong>Duration:</strong>{" "}
+                    {duration.diffYears > 0
+                      ? `${duration.diffYears} years and ${duration.diffMonths} months and ${duration.diffDays} days`
+                      : duration.diffMonths > 0
+                      ? `${duration.diffMonths} months and ${duration.diffDays} days`
+                      : `${duration.diffDays} days`}
+                  </Typography>
+                )}
                 <Divider sx={{ marginBottom: 2 }} />
                 <Typography
                   variant="body1"
@@ -89,10 +91,12 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                   <strong>Start Date:</strong>{" "}
                   {new Date(user.start_date).toLocaleDateString()}
                 </Typography>
-                <Typography variant="body1">
-                  <strong>End Date:</strong>{" "}
-                  {new Date(user.end_date).toLocaleDateString()}
-                </Typography>
+                {!user.status === Status.FREE && (
+                  <Typography variant="body1">
+                    <strong>End Date:</strong>{" "}
+                    {new Date(user.end_date).toLocaleDateString()}
+                  </Typography>
+                )}
               </Paper>
             </Grid>
           </Grid>
