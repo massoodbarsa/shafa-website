@@ -135,13 +135,14 @@ const RegisterForm = () => {
           full_name:
             `${formData.first_name} ${formData.last_name}`.toLowerCase(),
           email: formData.email.trim(),
+          status: "",
         };
 
         if (userType === UserRole.Doctor) {
           insertData.speciality = formData.speciality;
           insertData.license_nr = formData.license_number;
           insertData.role = UserRole.Doctor;
-          status: Status.TRIAL;
+          insertData.status = Status.FREE;
         }
         if (userType === UserRole.Client) {
           insertData.role = UserRole.Client;

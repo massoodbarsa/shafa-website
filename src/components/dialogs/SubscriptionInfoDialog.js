@@ -21,7 +21,7 @@ const statusColors = {
   [Status.EXPIRED]: "warning",
   [Status.CANCELLED]: "error",
   [Status.PENDING]: "default",
-  [Status.TRIAL]: "info",
+  [Status.FREE]: "info",
 };
 
 const calculateDuration = (startDate, endDate) => {

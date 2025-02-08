@@ -11,5 +11,5 @@ export const Status = Object.freeze({
   EXPIRED: "Expired",
   PENDING: "Pending",
   CANCELLED: "Cancelled",
-  TRIAL: "Trial",
+  FREE: "Free",
 });
