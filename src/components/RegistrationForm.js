@@ -25,6 +25,7 @@ import { useSnackbar } from "notistack";
 
 import { UserRole } from "@/enums/UserRole";
 import SpecialitySelect from "./SpecialitySelect";
+import { Status } from "@/enums/PackageTypes";
 
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
@@ -140,6 +141,7 @@ const RegisterForm = () => {
           insertData.speciality = formData.speciality;
           insertData.license_nr = formData.license_number;
           insertData.role = UserRole.Doctor;
+          status: Status.TRIAL;
         }
         if (userType === UserRole.Client) {
           insertData.role = UserRole.Client;
