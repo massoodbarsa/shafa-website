@@ -30,10 +30,29 @@ const calculateDuration = (startDate, endDate) => {
 
   const diffTime = Math.abs(end - start);
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert to days
-  const diffMonths = Math.floor(diffDays / 30); // Approximate months
-  const diffYears = Math.floor(diffDays / 365); // Approximate years
 
-  return { diffDays, diffMonths, diffYears };
+  // Calculate years and months
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
+
+  // Adjust if days are negative (crossing month boundary)
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  // Adjust if months are negative (crossing year boundary)
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Ensure days are non-negative
+  if (days < 0) days = 0;
+
+  return { diffDays, years, months, days };
 };
 
 export default function SubscriptionInfoDialog({ open, onClose, user }) {
@@ -42,6 +61,8 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
   const [duration] = useState(
     calculateDuration(user.start_date, user.end_date)
   );
+
+  console.log(user.status);
 
   return (
     <Dialog
@@ -65,16 +86,19 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                   gap: 2,
                 }}
               >
-                {!user.status === Status.FREE && (
+                {user.status !== Status.FREE && (
                   <Typography variant="body1">
                     <strong>Duration:</strong>{" "}
-                    {duration.diffYears > 0
-                      ? `${duration.diffYears} years and ${duration.diffMonths} months and ${duration.diffDays} days`
-                      : duration.diffMonths > 0
-                      ? `${duration.diffMonths} months and ${duration.diffDays} days`
-                      : `${duration.diffDays} days`}
+                    {duration.years > 0
+                      ? `${duration.years} year${duration.years > 1 ? "s" : ""}`
+                      : duration.months > 0
+                      ? `${duration.months} month${
+                          duration.months > 1 ? "s" : ""
+                        }`
+                      : `${duration.days} day${duration.days > 1 ? "s" : ""}`}
                   </Typography>
                 )}
+
                 <Divider sx={{ marginBottom: 2 }} />
                 <Typography
                   variant="body1"
@@ -91,7 +115,7 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                   <strong>Start Date:</strong>{" "}
                   {new Date(user.start_date).toLocaleDateString()}
                 </Typography>
-                {!user.status === Status.FREE && (
+                {user.status !== Status.FREE && (
                   <Typography variant="body1">
                     <strong>End Date:</strong>{" "}
                     {new Date(user.end_date).toLocaleDateString()}
