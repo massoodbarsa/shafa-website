@@ -38,6 +38,10 @@ export default async function handler(req, res) {
       ],
       success_url: `${req.headers.origin}/success`,
       cancel_url: `${req.headers.origin}/cancel`,
+      metadata: {
+        userId: req.body.userId, // ✅ Ensure userId is passed from frontend
+        packageId: packageId, // ✅ Ensure packageId is included
+      },
     });
 
     res.status(200).json({ sessionId: session.id });

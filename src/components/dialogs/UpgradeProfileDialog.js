@@ -25,7 +25,7 @@ const packages = [
   { id: "1year", label: "1 Year", price: "$90" },
 ];
 
-const UpgradeProfileDialog = ({ open, onClose }) => {
+const UpgradeProfileDialog = ({ open, onClose, user }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +39,11 @@ const UpgradeProfileDialog = ({ open, onClose }) => {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId: selectedPackage, currency: "eur" }),
+        body: JSON.stringify({
+          userId: user.id,
+          packageId: selectedPackage,
+          currency: "eur",
+        }),
       });
 
       const { sessionId } = await res.json();

@@ -42,6 +42,7 @@ export default function OpenIconSpeedDial({ doctorData }) {
       <UpgradeProfileDialog
         open={openUpgradeProfileDialog}
         onClose={() => setOpenUpgradeProfileDialog(false)}
+        user={doctorData}
       />
     </Box>
   );
