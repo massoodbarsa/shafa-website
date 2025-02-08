@@ -20,9 +20,9 @@ const stripePromise = loadStripe(
 );
 
 const packages = [
-  { id: "1month", label: "1 Month", price: "$10" },
-  { id: "3months", label: "3 Months", price: "$25" },
-  { id: "1year", label: "1 Year", price: "$90" },
+  { id: "1 month", label: "1 Month", price: "$10" },
+  { id: "3 months", label: "3 Months", price: "$25" },
+  { id: "1 year", label: "1 Year", price: "$90" },
 ];
 
 const UpgradeProfileDialog = ({ open, onClose, user }) => {
