@@ -10,7 +10,6 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Box,
 } from "@mui/material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { loadStripe } from "@stripe/stripe-js";

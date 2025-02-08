@@ -32,6 +32,7 @@ import enLocale from "i18n-iso-countries/langs/en.json";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import useAuthStore from "../store/authStore";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -46,6 +47,7 @@ export default function Home() {
   const router = useRouter();
 
   const itemsPerPage = 6; // 6 items per page
+  const { enqueueSnackbar } = useSnackbar();
 
   const isMobile = useBreakpointDown();
   countries.registerLocale(enLocale);
@@ -88,6 +90,16 @@ export default function Home() {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+
+  const handleRouteToProfile = (doctorId) => {
+    if (!user) {
+      enqueueSnackbar("Register to see doctor page.", {
+        variant: "warning",
+      });
+      return;
+    }
+    router.push(`/dashboard/doctor/${doctorId}`);
   };
 
   // Fetch doctors from Supabase
@@ -304,11 +316,7 @@ export default function Home() {
                   flexDirection: "column",
                   cursor: "pointer",
                 }}
-                onClick={
-                  user
-                    ? () => router.push(`/dashboard/doctor/${doctor.id}`)
-                    : undefined
-                } // Use router.push for navigation
+                onClick={() => handleRouteToProfile(doctor.id)} // Use router.push for navigation
               >
                 <Box p={1}>
                   {Array.from({ length: 5 }).map((_, index) => (
