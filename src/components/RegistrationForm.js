@@ -136,8 +136,6 @@ const RegisterForm = () => {
           full_name:
             `${formData.first_name} ${formData.last_name}`.toLowerCase(),
           email: formData.email.trim(),
-          status: "",
-          start_date: "",
         };
 
         if (userType === UserRole.Doctor) {

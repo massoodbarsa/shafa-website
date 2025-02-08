@@ -97,6 +97,8 @@ const LoginPage = () => {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (data.error === "Email not confirmed") {
         throw new Error(
           "Please activate your account by confirming your email."
@@ -125,7 +127,11 @@ const LoginPage = () => {
       );
 
       router.push(
-        userType === UserRole.Doctor ? `/dashboard/doctor/${userData.id}` : "/"
+        userData.role === UserRole.Doctor
+          ? `/dashboard/doctor/${userData.id}`
+          : userData.role === UserRole.Admin
+          ? "/dashboard/admin"
+          : "/"
       );
     } catch (err) {
       console.log(err);
