@@ -66,7 +66,7 @@ const UpgradeProfileDialog = ({ open, onClose, user }) => {
       maxWidth="sm"
       fullWidth
     >
-      <DialogTitle>Select a Package</DialogTitle>
+      <DialogTitle color="success">Select a Package</DialogTitle>
       <DialogContent sx={{ p: 5 }}>
         <Grid container spacing={2} my={5}>
           {packages.map((pkg) => (

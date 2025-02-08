@@ -1,7 +1,7 @@
 import { buffer } from "micro";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
-import { PackageTypes } from "@/enums/PackageTypes";
+import { PackageTypes, Status } from "@/enums/PackageTypes";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
@@ -44,13 +44,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing userId or packageId" });
     }
 
-    // Set the start date to the current date
+    // Fetch the doctor by user_id
+    const { data: doctor, error: doctorFetchError } = await supabase
+      .from("doctors")
+      .select("id, end_date, last_package")
+      .eq("id", userId)
+      .single();
+
+    if (doctorFetchError || !doctor) {
+      console.error("❌ Doctor not found:", doctorFetchError);
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
     const startDate = new Date();
+    let endDate = new Date(doctor.end_date || startDate);
 
-    // Create a new Date object for the end date to ensure it's independent of the start date
-    let endDate = new Date(startDate); // Create a new Date object to avoid modifying the start date
-
-    // Calculate the end date based on the packageId
     if (packageId === PackageTypes.ONE_MONTH)
       endDate.setMonth(endDate.getMonth() + 1);
     if (packageId === PackageTypes.THREE_MONTHS)
@@ -61,74 +69,23 @@ export default async function handler(req, res) {
     console.log("📅 Subscription Start:", startDate);
     console.log("📅 Subscription End:", endDate);
 
-    // Check if the user already has an active subscription
-    const { data: existingSubscriptions, error: fetchError } = await supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("status", "active");
+    // Update the existing doctor's subscription
+    const { error: updateError } = await supabase
+      .from("doctors")
+      .update({
+        last_package: packageId,
+        status: Status.ACTIVE,
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString(),
+      })
+      .eq("id", doctor.id);
 
-    if (fetchError) {
-      console.error("❌ Error fetching existing subscription:", fetchError);
-      return res
-        .status(500)
-        .json({ error: "Error fetching existing subscription" });
+    if (updateError) {
+      console.error("❌ Error updating subscription:", updateError);
+      return res.status(500).json({ error: "Failed to update subscription" });
     }
 
-    if (existingSubscriptions.length > 0) {
-      // There's an active subscription, so we update the end date
-      const existingSubscription = existingSubscriptions[0]; // Get the first active subscription
-
-      const updatedEndDate = new Date(existingSubscription.end_date);
-      // Extend the subscription based on the new package
-      if (packageId === PackageTypes.ONE_MONTH)
-        updatedEndDate.setMonth(updatedEndDate.getMonth() + 1);
-      if (packageId === PackageTypes.THREE_MONTHS)
-        updatedEndDate.setMonth(updatedEndDate.getMonth() + 3);
-      if (packageId === PackageTypes.ONE_YEAR)
-        updatedEndDate.setFullYear(updatedEndDate.getFullYear() + 1);
-
-      // Update subscription in the database
-      const { error: updateError } = await supabase
-        .from("subscriptions")
-        .update({
-          stripe_subscription_id: session.subscription,
-          stripe_customer_id: session.customer,
-          last_package: packageId,
-          status: "active",
-          end_date: updatedEndDate.toISOString(),
-        })
-        .eq("user_id", userId);
-
-      if (updateError) {
-        console.error("❌ Error updating subscription:", updateError);
-        return res.status(500).json({ error: "Failed to update subscription" });
-      }
-
-      console.log("✅ Subscription updated successfully");
-    } else {
-      // Insert a new subscription record if none exists
-      const { error: insertError } = await supabase
-        .from("subscriptions")
-        .insert([
-          {
-            user_id: userId,
-            stripe_subscription_id: session.subscription,
-            stripe_customer_id: session.customer,
-            last_package: packageId,
-            status: "active",
-            start_date: startDate.toISOString(),
-            end_date: endDate.toISOString(),
-          },
-        ]);
-
-      if (insertError) {
-        console.error("❌ Supabase Insert Error:", insertError);
-        return res.status(500).json({ error: "Failed to save subscription" });
-      }
-
-      console.log("✅ Subscription inserted successfully");
-    }
+    console.log("✅ Subscription updated successfully");
   }
 
   res.json({ received: true });
