@@ -10,7 +10,7 @@ import DoctorTable from "@/src/components/admin-components/DoctorTable";
 
 export default function AdminDashboard() {
   return (
-    <Tabs defaultValue={1}>
+    <Tabs defaultValue={2}>
       <TabsList>
         <Tab value={1}>CLIENTS</Tab>
         <Tab value={2}>DOCTORS</Tab>
@@ -18,7 +18,7 @@ export default function AdminDashboard() {
       <TabPanel value={1}>
         <ClientTable />
       </TabPanel>
-      <TabPanel>
+      <TabPanel value={2}>
         <DoctorTable />
       </TabPanel>
     </Tabs>
