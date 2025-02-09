@@ -203,7 +203,7 @@ const ClientTable = () => {
         <DialogContent sx={{ p: 5 }}>
           Are you sure you want to delete {clientToDelete?.full_name}?
         </DialogContent>
-        <DialogActions sx={{ pb: 2 }}>
+        <DialogActions sx={{ pb: 2, mb: 2 }}>
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Cancel
           </Button>
@@ -252,7 +252,7 @@ const ClientTable = () => {
             </FormControl>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ pb: 2 }}>
+        <DialogActions sx={{ pb: 2, mb: 2 }}>
           <Button onClick={() => setOpenEditDialog(false)} color="primary">
             Cancel
           </Button>

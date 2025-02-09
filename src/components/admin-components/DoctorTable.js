@@ -301,7 +301,7 @@ const DoctorTable = () => {
       >
         <DialogTitle>Edit Doctor</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={3}>
+          <Box display="flex" flexDirection="column" gap={3} sx={{ p: 3 }}>
             <TextField
               label="First Name"
               value={editedFirstName}
@@ -365,7 +365,7 @@ const DoctorTable = () => {
             />
           </Box>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ p: 3, mb: 2 }}>
           <Button onClick={() => setOpenEditDialog(false)} color="primary">
             Cancel
           </Button>
@@ -389,7 +389,7 @@ const DoctorTable = () => {
           Are you sure you want to delete {doctorToDelete?.first_name}{" "}
           {doctorToDelete?.last_name}?
         </DialogContent>
-        <DialogActions sx={{ pb: 2 }}>
+        <DialogActions sx={{ pb: 2, mb: 2 }}>
           <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
             Cancel
           </Button>
