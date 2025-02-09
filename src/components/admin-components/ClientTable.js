@@ -42,7 +42,7 @@ const ClientTable = () => {
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const statusOptions = Object.values(Status).filter(
-    (value) => value !== Status.FREE
+    (value) => value !== Status.FREE && value !== Status.EXPIRED
   );
 
   // Open delete confirmation dialog
@@ -229,7 +229,6 @@ const ClientTable = () => {
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
               fullWidth
-              ß
             />
             <TextField
               label="Email"
