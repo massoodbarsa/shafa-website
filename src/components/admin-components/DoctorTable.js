@@ -38,6 +38,9 @@ const DoctorTable = () => {
   const [editedStartDate, setEditedStartDate] = useState("");
   const [editedEndDate, setEditedEndDate] = useState("");
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [doctorToDelete, setDoctorToDelete] = useState(null);
+
   const isMobile = useBreakpointDown();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -159,6 +162,39 @@ const DoctorTable = () => {
     }
   };
 
+  //Delete functions
+
+  const handleOpenDeleteDialog = (doctor) => {
+    setDoctorToDelete(doctor);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleDelete = async () => {
+    if (!doctorToDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from("doctors")
+        .delete()
+        .eq("id", doctorToDelete.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // Remove the doctor from the local state
+      setDoctors((prevDoctors) =>
+        prevDoctors.filter((doctor) => doctor.id !== doctorToDelete.id)
+      );
+
+      enqueueSnackbar("Doctor deleted successfully.", { variant: "success" });
+      setOpenDeleteDialog(false); // Close the delete confirmation dialog
+    } catch (error) {
+      enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
+    }
+  };
+
+  //UseEffects
   useEffect(() => {
     const fetchDoctors = async () => {
       const { data, error } = await supabase.from("doctors").select("*");
@@ -208,6 +244,12 @@ const DoctorTable = () => {
                   color="primary"
                 >
                   <Edit />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleOpenDeleteDialog(doctor)}
+                  color="error"
+                >
+                  <Delete />
                 </IconButton>
               </TableCell>
             </TableRow>
@@ -289,6 +331,26 @@ const DoctorTable = () => {
             disabled={!isFormValid} // Disable the button if the form is invalid
           >
             Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        fullScreen={isMobile}
+        fullWidth
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent sx={{ p: 5 }}>
+          Are you sure you want to delete {doctorToDelete?.first_name}{" "}
+          {doctorToDelete?.last_name}?
+        </DialogContent>
+        <DialogActions sx={{ pb: 2 }}>
+          <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
