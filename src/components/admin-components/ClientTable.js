@@ -33,7 +33,7 @@ const ClientTable = () => {
 
   const [clientToEdit, setClientToEdit] = useState(null);
   const [editedName, setEditedName] = useState("");
-  const [editedEmail, setEditedEmail] = useState("");
+
   const [editedStatus, setEditedStatus] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
@@ -61,7 +61,7 @@ const ClientTable = () => {
   const handleOpenEditDialog = (client) => {
     setClientToEdit(client);
     setEditedName(client.full_name);
-    setEditedEmail(client.email);
+
     setEditedStatus(client.status);
     setOpenEditDialog(true);
   };
@@ -81,8 +81,6 @@ const ClientTable = () => {
           userId: clientToDelete.user_id,
         }),
       });
-
-      console.log(clientToDelete.user_id);
 
       const data = await response.json();
 
@@ -115,7 +113,6 @@ const ClientTable = () => {
         .from("clients")
         .update({
           full_name: editedName,
-          email: editedEmail,
           status: editedStatus,
         })
         .eq("id", clientToEdit.id);
@@ -133,7 +130,6 @@ const ClientTable = () => {
             ? {
                 ...client,
                 full_name: editedName,
-                email: editedEmail,
                 status: editedStatus,
               }
             : client
@@ -170,7 +166,6 @@ const ClientTable = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
@@ -179,7 +174,6 @@ const ClientTable = () => {
           {clients.map((client) => (
             <TableRow key={client.id}>
               <TableCell>{client.full_name}</TableCell>
-              <TableCell>{client.email}</TableCell>
               <TableCell>{client.status}</TableCell>
               <TableCell>
                 <IconButton
@@ -238,12 +232,6 @@ const ClientTable = () => {
               label="Name"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              value={editedEmail}
-              onChange={(e) => setEditedEmail(e.target.value)}
               fullWidth
             />
 

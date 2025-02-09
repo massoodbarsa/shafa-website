@@ -12,7 +12,8 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline /> {/* Normalize CSS */}
       <SnackbarProvider
         maxSnack={3}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={1000}
       >
         <Layout>
           <Component {...pageProps} /> {/* Render the current page */}
