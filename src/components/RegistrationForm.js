@@ -161,6 +161,9 @@ const RegisterForm = () => {
       setTimeout(() => {
         router.push("/login");
         setLoading(false); // Stop loading once the redirect happens
+        enqueueSnackbar("You are successfully registerd.", {
+          variant: "success",
+        });
       }, 1000); // Redirect after 3 seconds
     } catch (error) {
       setLoading(false); // Stop loading once error
