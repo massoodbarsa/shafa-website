@@ -7,7 +7,13 @@ const AdminDashboard = () => {
   const [tab, setTab] = useState(0);
 
   return (
-    <Container>
+    <Container
+      maxWidth="xl"
+      sx={{
+        padding: 0, // Remove any default padding
+        // overflowX: "auto", // Allow horizontal scrolling if content overflows
+      }}
+    >
       <Tabs value={tab} onChange={(e, newVal) => setTab(newVal)}>
         <Tab label="Doctors" />
         <Tab label="Clients" />

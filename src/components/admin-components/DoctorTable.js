@@ -17,6 +17,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Avatar,
 } from "@mui/material";
 
 import { Edit, Delete } from "@mui/icons-material";
@@ -26,6 +27,8 @@ import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { UserRole } from "@/enums/UserRole";
 import { Status } from "@/enums/PackageTypes";
 import { formatDate } from "../../utils/formatDate";
+import SpecialitySelect from "../SpecialitySelect";
+import AdminSpecialitySelect from "./AdminSpecialitySelect";
 
 const DoctorTable = () => {
   const [doctors, setDoctors] = useState([]);
@@ -37,6 +40,7 @@ const DoctorTable = () => {
   const [editedStatus, setEditedStatus] = useState("");
   const [editedStartDate, setEditedStartDate] = useState("");
   const [editedEndDate, setEditedEndDate] = useState("");
+  const [editedSpeciality, setEditedSpeciality] = useState("");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState(null);
@@ -127,6 +131,10 @@ const DoctorTable = () => {
         }),
         ...(editedRole !== doctorToEdit.role && { role: editedRole }),
         ...(editedStatus !== doctorToEdit.status && { status: editedStatus }),
+        ...(editedSpeciality !== doctorToEdit.editedSpeciality && {
+          speciality: editedSpeciality,
+        }),
+
         ...(formattedStartDate !== doctorToEdit.start_date && {
           start_date: formattedStartDate,
         }),
@@ -212,8 +220,13 @@ const DoctorTable = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
+            <TableCell>Photo</TableCell>
+            <TableCell sx={{ minWidth: 110 }}>First Name</TableCell>
+            <TableCell sx={{ minWidth: 110 }}>Last Name</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Address</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Speciality</TableCell> {/* New column for Speciality */}
             <TableCell>Role</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Start Date</TableCell>
@@ -221,23 +234,39 @@ const DoctorTable = () => {
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {doctors.map((doctor) => (
             <TableRow key={doctor.id}>
+              <TableCell>
+                {doctor.profile_image ? (
+                  <Avatar
+                    src={doctor.profile_image}
+                    alt="Doctor's Photo"
+                    sx={{ width: 40, height: 40 }}
+                  />
+                ) : (
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      mx: "auto",
+                      mb: 2,
+                    }}
+                  />
+                )}
+              </TableCell>{" "}
+              {/* First column for Photo */}
               <TableCell>{doctor.first_name}</TableCell>
               <TableCell>{doctor.last_name}</TableCell>
+              <TableCell>{doctor.email}</TableCell>
+              <TableCell>{doctor.address}</TableCell>
+              <TableCell>{doctor.location}</TableCell>
+              <TableCell>{doctor.speciality}</TableCell>{" "}
               <TableCell>{doctor.role}</TableCell>
               <TableCell>{doctor.status}</TableCell>
-              <TableCell>
-                {doctor.start_date &&
-                  new Date(doctor.start_date).toISOString().split("T")[0]}
-              </TableCell>{" "}
-              {/* For table display */}
-              <TableCell>
-                {doctor.end_date &&
-                  new Date(doctor.end_date).toISOString().split("T")[0]}
-              </TableCell>{" "}
-              {/* For table display */}
+              <TableCell>{doctor.start_date}</TableCell>
+              <TableCell>{doctor.end_date}</TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => handleOpenEditDialog(doctor)}
@@ -303,6 +332,13 @@ const DoctorTable = () => {
                 ))}
               </Select>
             </FormControl>
+
+            <AdminSpecialitySelect
+              value={editedSpeciality} // Bind the selected speciality to state
+              onChange={(e) => setEditedSpeciality(e.target.value)} // Update the state on change
+              disabled={false} // Disable while submitting
+            />
+
             <TextField
               label="Start Date"
               type="date"
