@@ -27,7 +27,6 @@ import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { UserRole } from "@/enums/UserRole";
 import { Status } from "@/enums/PackageTypes";
 import { formatDate } from "../../utils/formatDate";
-import SpecialitySelect from "../SpecialitySelect";
 import AdminSpecialitySelect from "./AdminSpecialitySelect";
 
 const DoctorTable = () => {
@@ -266,8 +265,16 @@ const DoctorTable = () => {
               <TableCell>{doctor.speciality}</TableCell>{" "}
               <TableCell>{doctor.role}</TableCell>
               <TableCell>{doctor.status}</TableCell>
-              <TableCell>{doctor.start_date}</TableCell>
-              <TableCell>{doctor.end_date}</TableCell>
+              <TableCell>
+                {doctor.start_date &&
+                  new Date(doctor.start_date).toISOString().split("T")[0]}
+              </TableCell>{" "}
+              {/* For table display */}
+              <TableCell>
+                {doctor.end_date &&
+                  new Date(doctor.end_date).toISOString().split("T")[0]}
+              </TableCell>{" "}
+              {/* For table display */}
               <TableCell>
                 <IconButton
                   onClick={() => handleOpenEditDialog(doctor)}
