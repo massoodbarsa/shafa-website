@@ -19,7 +19,6 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/enums/UserRole";
 import useAuthStore from "../../store/authStore";
-import { formatUserNameForURL } from "@/src/utils/formatUserNameForURL";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -30,21 +29,21 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const [isChecking, setIsChecking] = useState(true);
+  // const [isChecking, setIsChecking] = useState(true);
 
   const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
 
-  useEffect(() => {
-    // If the user is already logged in, redirect them
-    if (user && isLoggedIn) {
-      const dashboardPath = user.license_nr // Check if user is a doctor
-        ? `/dashboard/doctor/${user.id}`
-        : `/`;
-      router.push(dashboardPath);
-    } else {
-      setIsChecking(false); // Allow login page to render if not authenticated
-    }
-  }, [router, isLoggedIn, user]);
+  // useEffect(() => {
+  //   // If the user is already logged in, redirect them
+  //   if (user && isLoggedIn) {
+  //     const dashboardPath = user.license_nr // Check if user is a doctor
+  //       ? `/dashboard/doctor/${user.id}`
+  //       : `/`;
+  //     router.push(dashboardPath);
+  //   } else {
+  //     setIsChecking(false); // Allow login page to render if not authenticated
+  //   }
+  // }, [router, isLoggedIn, user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -138,7 +137,7 @@ const LoginPage = () => {
     }
   };
 
-  if (isChecking) return null; // Prevent flashing the login form
+  // if (isChecking) return null; // Prevent flashing the login form
 
   return (
     <Container maxWidth="sm">
