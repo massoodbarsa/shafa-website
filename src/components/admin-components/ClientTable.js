@@ -37,6 +37,8 @@ const ClientTable = () => {
   const [editedStatus, setEditedStatus] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const isMobile = useBreakpointDown();
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
@@ -67,6 +69,8 @@ const ClientTable = () => {
   const handleDelete = async () => {
     if (!clientToDelete) return;
 
+    setDeleteLoading(true);
+
     try {
       const response = await fetch("/api/delete-user/deleteUser", {
         method: "POST", // You may want to use POST depending on your API design
@@ -92,9 +96,11 @@ const ClientTable = () => {
       } else {
         throw new Error(data.error || "Unknown error");
       }
+      setDeleteLoading(false);
 
       setOpenDialog(false); // Close the confirmation dialog
     } catch (error) {
+      setDeleteLoading(false);
       enqueueSnackbar(`Error: ${error.message}`, {
         variant: "error",
       });
@@ -207,7 +213,11 @@ const ClientTable = () => {
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button
+            onClick={handleDelete}
+            color="secondary"
+            loading={deleteLoading}
+          >
             Delete
           </Button>
         </DialogActions>
