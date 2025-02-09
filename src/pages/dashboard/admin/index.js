@@ -7,21 +7,29 @@ import { buttonClasses } from "@mui/base/Button";
 import { Tab as BaseTab, tabClasses } from "@mui/base/Tab";
 import ClientTable from "@/src/components/admin-components/ClientTable";
 import DoctorTable from "@/src/components/admin-components/DoctorTable";
+import useAuthStore from "@/src/store/authStore";
+import { UserRole } from "@/enums/UserRole";
 
 export default function AdminDashboard() {
+  const { user } = useAuthStore();
+
+  console.log(user);
+
   return (
-    <Tabs defaultValue={2}>
-      <TabsList>
-        <Tab value={1}>CLIENTS</Tab>
-        <Tab value={2}>DOCTORS</Tab>
-      </TabsList>
-      <TabPanel value={1}>
-        <ClientTable />
-      </TabPanel>
-      <TabPanel value={2}>
-        <DoctorTable />
-      </TabPanel>
-    </Tabs>
+    user?.role === UserRole.Admin && (
+      <Tabs defaultValue={2}>
+        <TabsList>
+          <Tab value={1}>CLIENTS</Tab>
+          <Tab value={2}>DOCTORS</Tab>
+        </TabsList>
+        <TabPanel value={1}>
+          <ClientTable />
+        </TabPanel>
+        <TabPanel value={2}>
+          <DoctorTable />
+        </TabPanel>
+      </Tabs>
+    )
   );
 }
 
