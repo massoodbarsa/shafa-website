@@ -66,6 +66,7 @@ const DoctorTable = () => {
         ? new Date(doctor.end_date).toISOString().split("T")[0]
         : ""
     );
+    setEditedSpeciality(doctor.speciality || "");
 
     setOpenEditDialog(true);
   };

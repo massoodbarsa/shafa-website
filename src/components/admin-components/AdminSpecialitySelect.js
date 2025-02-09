@@ -10,7 +10,6 @@ import {
 import { supabase } from "../../utils/supabase"; // Import your Supabase client
 
 const AdminSpecialitySelect = ({ value, onChange, disabled }) => {
-  console.log(value);
   const [specialities, setSpecialities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
