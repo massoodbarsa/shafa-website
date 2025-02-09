@@ -44,7 +44,7 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
       if (deleteProfileError) throw deleteProfileError;
 
       // 3. Delete auth user via API
-      const response = await fetch("/api/delete-user/delete-user", {
+      const response = await fetch("/api/delete-user/deleteMyProfile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
