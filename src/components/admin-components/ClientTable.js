@@ -6,45 +6,62 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  Snackbar,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Button,
+  TextField,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import { Edit, Delete } from "@mui/icons-material";
 import { supabase } from "../../utils/supabase"; // Import your Supabase client
 import { useSnackbar } from "notistack";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import { UserRole } from "@/enums/UserRole";
+import { Status } from "@/enums/PackageTypes";
 
 const ClientTable = () => {
   const [clients, setClients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
+
+  const [clientToEdit, setClientToEdit] = useState(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editedStatus, setEditedStatus] = useState("");
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
   const isMobile = useBreakpointDown();
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      const { data, error } = await supabase.from("clients").select("*");
-      if (error) {
-        console.error(error);
-      } else {
-        setClients(data);
-      }
-    };
-
-    fetchClients();
-  }, []);
+  const statusOptions = Object.values(Status).filter(
+    (value) => value !== Status.FREE
+  );
 
   // Open delete confirmation dialog
   const handleOPenDelteDialog = (client) => {
     console.log(client);
     setClientToDelete(client);
     setOpenDialog(true);
+  };
+
+  const handleStatusChange = (event) => {
+    setEditedStatus(event.target.value);
+  };
+
+  const handleOpenEditDialog = (client) => {
+    setClientToEdit(client);
+    setEditedName(client.full_name);
+    setEditedEmail(client.email);
+    setEditedStatus(client.status);
+    setOpenEditDialog(true);
   };
 
   const handleDelete = async () => {
@@ -84,6 +101,63 @@ const ClientTable = () => {
     }
   };
 
+  const handleEdit = async () => {
+    if (!clientToEdit) return;
+
+    try {
+      const { error, data } = await supabase
+        .from("clients")
+        .update({
+          full_name: editedName,
+          email: editedEmail,
+          status: editedStatus,
+        })
+        .eq("id", clientToEdit.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      console.log(data);
+
+      // Update the client in the local state
+      setClients((prevClients) =>
+        prevClients.map((client) =>
+          client.id === clientToEdit.id
+            ? {
+                ...client,
+                full_name: editedName,
+                email: editedEmail,
+                status: editedStatus,
+              }
+            : client
+        )
+      );
+
+      enqueueSnackbar("Client updated successfully.", { variant: "success" });
+      setOpenEditDialog(false); // Close the edit dialog
+    } catch (error) {
+      enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
+    }
+  };
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      const { data, error } = await supabase.from("clients").select("*");
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(data);
+        // Filter out clients with the role 'admin'
+        const nonAdminClients = data.filter(
+          (client) => client.role !== UserRole.Admin
+        );
+        setClients(nonAdminClients);
+      }
+    };
+    fetchClients();
+  }, []);
+
   return (
     <>
       <Table>
@@ -91,6 +165,7 @@ const ClientTable = () => {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Email</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -99,11 +174,18 @@ const ClientTable = () => {
             <TableRow key={client.id}>
               <TableCell>{client.full_name}</TableCell>
               <TableCell>{client.email}</TableCell>
+              <TableCell>{client.status}</TableCell>
               <TableCell>
-                <IconButton onClick={handleDelete}>
+                <IconButton
+                  onClick={() => handleOpenEditDialog(client)}
+                  color="primary"
+                >
                   <Edit />
                 </IconButton>
-                <IconButton onClick={() => handleOPenDelteDialog(client)}>
+                <IconButton
+                  onClick={() => handleOPenDelteDialog(client)}
+                  color="error"
+                >
                   <Delete />
                 </IconButton>
               </TableCell>
@@ -127,6 +209,58 @@ const ClientTable = () => {
           </Button>
           <Button onClick={handleDelete} color="secondary">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Edit Client Dialog */}
+      <Dialog
+        open={openEditDialog}
+        onClose={() => setOpenEditDialog(false)}
+        fullScreen={isMobile}
+        fullWidth
+      >
+        <DialogTitle sx={{ p: 3 }} color="primary">
+          Edit Client
+        </DialogTitle>
+        <DialogContent sx={{ p: 5 }}>
+          <Box mt={3} display="flex" flexDirection="column" gap={3}>
+            <TextField
+              label="Name"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              fullWidth
+              ß
+            />
+            <TextField
+              label="Email"
+              value={editedEmail}
+              onChange={(e) => setEditedEmail(e.target.value)}
+              fullWidth
+            />
+
+            <FormControl fullWidth variant="outlined">
+              <InputLabel id="status-select-label">Status</InputLabel>
+              <Select
+                labelId="status-select-label"
+                value={editedStatus}
+                onChange={handleStatusChange}
+                label="Status"
+              >
+                {statusOptions.map((value) => (
+                  <MenuItem key={value} value={value}>
+                    {value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ pb: 2 }}>
+          <Button onClick={() => setOpenEditDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEdit} color="secondary">
+            Save Changes
           </Button>
         </DialogActions>
       </Dialog>
