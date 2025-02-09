@@ -114,8 +114,6 @@ const LoginPage = () => {
         throw new Error("Invalid user data received");
       }
 
-      console.log(userData);
-
       login();
       setUser(data.userData); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
@@ -126,6 +124,7 @@ const LoginPage = () => {
         JSON.stringify({ email: data.user.email, id: data.user.id })
       );
 
+      console.log("User Role:", userData.role, UserRole.Admin); // Debugging
       router.push(
         userData.role === UserRole.Doctor
           ? `/dashboard/doctor/${userData.id}`

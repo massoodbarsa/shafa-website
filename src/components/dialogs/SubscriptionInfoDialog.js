@@ -62,8 +62,6 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
     calculateDuration(user.start_date, user.end_date)
   );
 
-  console.log(user.status);
-
   return (
     <Dialog
       open={open}

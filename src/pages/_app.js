@@ -11,10 +11,8 @@ import { UserRole } from "@/enums/UserRole";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-
   const { user } = useAuthStore();
 
-  console.log(router);
   //Protect admin route
   useEffect(() => {
     const checkUserRole = async () => {

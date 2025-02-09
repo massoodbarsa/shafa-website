@@ -13,8 +13,6 @@ import { UserRole } from "@/enums/UserRole";
 export default function AdminDashboard() {
   const { user } = useAuthStore();
 
-  console.log(user);
-
   return (
     user?.role === UserRole.Admin && (
       <Tabs defaultValue={2}>
