@@ -44,6 +44,8 @@ const DoctorTable = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState(null);
 
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const isMobile = useBreakpointDown();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -180,28 +182,43 @@ const DoctorTable = () => {
   const handleDelete = async () => {
     if (!doctorToDelete) return;
 
+    setDeleteLoading(true);
+
     try {
-      const { error } = await supabase
-        .from("doctors")
-        .delete()
-        .eq("id", doctorToDelete.id);
+      const response = await fetch("/api/delete-user/deleteUser", {
+        method: "POST", // You may want to use POST depending on your API design
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: doctorToDelete.user_id,
+          role: doctorToDelete.role,
+        }),
+      });
 
-      if (error) {
-        throw new Error(error.message);
+      const data = await response.json();
+
+      if (data.success) {
+        setDoctors((prevDoctors) =>
+          prevDoctors.filter((doctor) => doctor.id !== doctorToDelete.id)
+        ); // Remove the client from the local state
+        enqueueSnackbar("Doctor deleted successfully.", {
+          variant: "success",
+        });
+      } else {
+        throw new Error(data.error || "Unknown error");
       }
+      setDeleteLoading(false);
 
-      // Remove the doctor from the local state
-      setDoctors((prevDoctors) =>
-        prevDoctors.filter((doctor) => doctor.id !== doctorToDelete.id)
-      );
-
-      enqueueSnackbar("Doctor deleted successfully.", { variant: "success" });
-      setOpenDeleteDialog(false); // Close the delete confirmation dialog
+      setOpenDeleteDialog(false); // Close the confirmation dialog
     } catch (error) {
-      enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
+      setDeleteLoading(false);
+      console.log(error);
+      enqueueSnackbar(`Error: ${error.message}`, {
+        variant: "error",
+      });
     }
   };
-
   //UseEffects
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -393,7 +410,11 @@ const DoctorTable = () => {
           <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button
+            onClick={handleDelete}
+            color="secondary"
+            loading={deleteLoading}
+          >
             Delete
           </Button>
         </DialogActions>

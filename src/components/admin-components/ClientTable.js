@@ -79,6 +79,7 @@ const ClientTable = () => {
         },
         body: JSON.stringify({
           userId: clientToDelete.user_id,
+          role: clientToDelete.role,
         }),
       });
 
