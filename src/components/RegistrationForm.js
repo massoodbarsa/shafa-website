@@ -147,6 +147,7 @@ const RegisterForm = () => {
         }
         if (userType === UserRole.Client) {
           insertData.role = UserRole.Client;
+          insertData.status = Status.FREE;
         }
 
         const { error: insertError } = await supabase

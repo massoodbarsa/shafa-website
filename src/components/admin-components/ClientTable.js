@@ -44,7 +44,7 @@ const ClientTable = () => {
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const statusOptions = Object.values(Status).filter(
-    (value) => value !== Status.FREE && value !== Status.EXPIRED
+    (value) => value !== Status.ACTIVE && value !== Status.EXPIRED
   );
 
   // Open delete confirmation dialog
