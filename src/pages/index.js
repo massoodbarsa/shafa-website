@@ -33,6 +33,7 @@ import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import useAuthStore from "../store/authStore";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { Status } from "@/enums/PackageTypes";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -67,7 +68,10 @@ export default function Home() {
     (doctor) =>
       (!selectedCountry || doctor.location === selectedCountry) &&
       (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
-      (!selectedRating || doctor.avg_rating >= selectedRating)
+      (!selectedRating || doctor.avg_rating >= selectedRating) &&
+      doctor.status !== Status.CANCELLED &&
+      doctor.status !== Status.EXPIRED &&
+      doctor.status !== Status.PENDING
   );
 
   const paginatedDoctors = filteredDoctors.slice(
