@@ -333,8 +333,22 @@ const DoctorProfile = () => {
             });
 
             // Check if the logged-in user is the doctor
-            if (user?.user_id === data.user_id) {
+            if (
+              user?.user_id === data.user_id &&
+              !["Pending", "Cancelled", "Expired"].includes(data.status)
+            ) {
               setEditable(true);
+            } else {
+              // If the status is one of the restricted statuses, show an error and disable editing
+              if (["Pending", "Cancelled", "Expired"].includes(data.status)) {
+                enqueueSnackbar(
+                  `Your account status is ${data.status}. Editing is not possible.`,
+                  {
+                    variant: "error",
+                  }
+                );
+                setEditable(false);
+              }
             }
           } else {
             console.error("No doctor found for this name");

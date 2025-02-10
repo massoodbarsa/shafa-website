@@ -19,6 +19,8 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/enums/UserRole";
 import useAuthStore from "../../store/authStore";
+import { Status } from "@/enums/PackageTypes";
+import { useSnackbar } from "notistack";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -30,6 +32,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   // const [isChecking, setIsChecking] = useState(true);
+  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
 
@@ -111,6 +114,15 @@ const LoginPage = () => {
 
       if (!userData) {
         throw new Error("Invalid user data received");
+      }
+
+      if (userData.status === Status.CANCELLED) {
+        enqueueSnackbar("Your account has been cancelled.", {
+          variant: "error",
+        });
+        throw new Error(
+          "Your account has been cancelled. Please contact support."
+        );
       }
 
       login();
