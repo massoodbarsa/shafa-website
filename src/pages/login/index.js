@@ -126,6 +126,10 @@ const LoginPage = () => {
       }
 
       login();
+
+      enqueueSnackbar("Your are logged in.", {
+        variant: "success",
+      });
       setUser(data.userData); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
 

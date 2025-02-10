@@ -17,6 +17,7 @@ import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
 import { UserRole } from "@/enums/UserRole";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
+import { useSnackbar } from "notistack";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -24,6 +25,7 @@ const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isLoggedIn, logout } = useAuthStore();
+  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   useEffect(() => {
     const userData = localStorage.getItem("user_data");
@@ -43,6 +45,9 @@ const Header = () => {
   const handleMenuClose = () => setAnchorElNav(null);
   const handleLogout = () => {
     logout();
+    enqueueSnackbar("Your are logged out.", {
+      variant: "info",
+    });
     router.push("/login");
   };
 
