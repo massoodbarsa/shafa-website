@@ -3,6 +3,11 @@ import { supabaseAdmin } from "../../../utils/supabase-admin";
 export default async function handler(req, res) {
   const { userId } = req.body;
 
+  // Ensure userId is provided
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
   try {
     // Delete associated clients first
     const { error: deleteClientsError } = await supabaseAdmin
@@ -17,13 +22,15 @@ export default async function handler(req, res) {
       });
     }
 
-    // Then delete the user
+    // Then delete the user from auth
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (error) {
-      throw error;
+      console.error("Error deleting user:", error);
+      throw error; // rethrow error for the catch block to handle
     }
 
+    // Return success response
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Delete user error:", error);
