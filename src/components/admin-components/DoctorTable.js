@@ -35,7 +35,7 @@ const DoctorTable = () => {
   const [doctorToEdit, setDoctorToEdit] = useState(null);
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
-  const [editedRole, setEditedRole] = useState("");
+  // const [editedRole, setEditedRole] = useState("");
   const [editedStatus, setEditedStatus] = useState("");
   const [editedStartDate, setEditedStartDate] = useState("");
   const [editedEndDate, setEditedEndDate] = useState("");
@@ -51,7 +51,7 @@ const DoctorTable = () => {
     setDoctorToEdit(doctor);
     setEditedFirstName(doctor.first_name || "");
     setEditedLastName(doctor.last_name || "");
-    setEditedRole(doctor.role || "");
+    // setEditedRole(doctor.role || "");
     setEditedStatus(doctor.status || "");
 
     // Format dates as yyyy-mm-dd for the TextField
@@ -129,7 +129,7 @@ const DoctorTable = () => {
         ...(editedLastName !== doctorToEdit.last_name && {
           last_name: editedLastName,
         }),
-        ...(editedRole !== doctorToEdit.role && { role: editedRole }),
+        // ...(editedRole !== doctorToEdit.role && { role: editedRole }),
         ...(editedStatus !== doctorToEdit.status && { status: editedStatus }),
         ...(editedSpeciality !== doctorToEdit.editedSpeciality && {
           speciality: editedSpeciality,
@@ -314,7 +314,7 @@ const DoctorTable = () => {
               onChange={(e) => setEditedLastName(e.target.value)}
               fullWidth
             />
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
               <Select
                 value={editedRole}
@@ -326,7 +326,7 @@ const DoctorTable = () => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
