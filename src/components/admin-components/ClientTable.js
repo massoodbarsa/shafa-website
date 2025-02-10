@@ -166,6 +166,7 @@ const ClientTable = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
+            <TableCell>Email</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
@@ -174,6 +175,7 @@ const ClientTable = () => {
           {clients.map((client) => (
             <TableRow key={client.id}>
               <TableCell>{client.full_name}</TableCell>
+              <TableCell>{client.email}</TableCell>
               <TableCell>{client.status}</TableCell>
               <TableCell>
                 <IconButton
