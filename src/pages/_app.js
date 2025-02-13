@@ -7,7 +7,7 @@ import Layout from "../components/Layout"; // Your custom layout component
 import { SnackbarProvider } from "notistack";
 import { useRouter } from "next/router";
 import useAuthStore from "../store/authStore";
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();

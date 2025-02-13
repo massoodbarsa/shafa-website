@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import { loadStripe } from "@stripe/stripe-js";
-import { PackageTypes, Status } from "@/enums/PackageTypes";
+import { PackageTypes, Status } from "@/src/enums/PackageTypes";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY

@@ -33,7 +33,7 @@ import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import useAuthStore from "../store/authStore";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { Status } from "@/enums/PackageTypes";
+import { Status } from "@/src/enums/PackageTypes";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);

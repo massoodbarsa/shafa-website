@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/public/images/logo.png`;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
                 <table width="100%" style="max-width:600px;background:#ffffff;border-radius:12px;padding:24px;" role="presentation">
                   <tr>
                     <td align="center" style="padding-bottom:24px;">
-                      <img src="https://yourdomain.com/logo.png" width="120" alt="IHB Logo" style="max-width:120px;height:auto;">
+                      <img src="${logoUrl}" width="120" alt="IHB Logo" style="max-width:120px;height:auto;">
                     </td>
                   </tr>
                   <tr>

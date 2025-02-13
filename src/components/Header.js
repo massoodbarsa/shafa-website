@@ -15,7 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import useAuthStore from "../store/authStore";
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import { useSnackbar } from "notistack";
 

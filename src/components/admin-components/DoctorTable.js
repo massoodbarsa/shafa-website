@@ -24,8 +24,8 @@ import { Edit, Delete } from "@mui/icons-material";
 import { supabase } from "../../utils/supabase";
 import { useSnackbar } from "notistack";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
-import { UserRole } from "@/enums/UserRole";
-import { Status } from "@/enums/PackageTypes";
+import { UserRole } from "@/src/enums/UserRole";
+import { Status } from "@/src/enums/PackageTypes";
 import { formatDate } from "../../utils/formatDate";
 import AdminSpecialitySelect from "./AdminSpecialitySelect";
 

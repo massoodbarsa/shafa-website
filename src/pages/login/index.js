@@ -17,9 +17,9 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 import useAuthStore from "../../store/authStore";
-import { Status } from "@/enums/PackageTypes";
+import { Status } from "@/src/enums/PackageTypes";
 import { useSnackbar } from "notistack";
 import { supabase } from "../../utils/supabase";
 

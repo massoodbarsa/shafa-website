@@ -24,9 +24,9 @@ import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useSnackbar } from "notistack";
 
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 import SpecialitySelect from "./SpecialitySelect";
-import { Status } from "@/enums/PackageTypes";
+import { Status } from "@/src/enums/PackageTypes";
 import { formatDate } from "../utils/formatDate";
 
 const RegisterForm = () => {

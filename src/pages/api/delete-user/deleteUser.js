@@ -1,4 +1,4 @@
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 import { supabaseAdmin } from "../../../utils/supabase-admin";
 
 export default async function handler(req, res) {

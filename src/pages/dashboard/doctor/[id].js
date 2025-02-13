@@ -27,7 +27,7 @@ import { capitalizeFirstLetter } from "@/src/utils/capitalize";
 import { useSnackbar } from "notistack";
 import ReviewSubmitCard from "@/src/components/ReviewSubmitCard";
 import HomeIcon from "@mui/icons-material/Home";
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 

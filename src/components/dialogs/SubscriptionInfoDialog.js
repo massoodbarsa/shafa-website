@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
-import { Status } from "@/enums/PackageTypes";
+import { Status } from "@/src/enums/PackageTypes";
 
 // Define status colors
 const statusColors = {

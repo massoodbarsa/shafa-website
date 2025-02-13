@@ -8,7 +8,7 @@ import { Tab as BaseTab, tabClasses } from "@mui/base/Tab";
 import ClientTable from "@/src/components/admin-components/ClientTable";
 import DoctorTable from "@/src/components/admin-components/DoctorTable";
 import useAuthStore from "@/src/store/authStore";
-import { UserRole } from "@/enums/UserRole";
+import { UserRole } from "@/src/enums/UserRole";
 
 export default function AdminDashboard() {
   const { user } = useAuthStore();

@@ -1,7 +1,7 @@
 import { buffer } from "micro";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
-import { PackageTypes, Status } from "@/enums/PackageTypes";
+import { PackageTypes, Status } from "@/src/enums/PackageTypes";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
