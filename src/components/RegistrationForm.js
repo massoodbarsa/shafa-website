@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
+import { v4 as uuidv4 } from "uuid";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -93,6 +94,32 @@ const RegisterForm = () => {
     reset(); // Reset form when userType changes
   }, [userType, reset]);
 
+  const sendVerificationEmail = async (email, link) => {
+    try {
+      const response = await fetch("/api/auth/send-email", {
+        // Changed endpoint path
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          link,
+          subject: "Verify Your Email Address",
+          template: "email-verification", // Add template identifier if using email templates
+        }),
+      });
+
+      const data = await response.json(); // Parse response body
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send email");
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Email error:", error);
+      throw error; // Re-throw to handle in caller
+    }
+  };
   const onSubmit = async (formData) => {
     setServerError("");
     setSuccessMessage("");
@@ -115,6 +142,15 @@ const RegisterForm = () => {
 
       const { user } = authData;
       if (!user?.id) throw new Error("User creation failed.");
+
+      const token = uuidv4();
+
+      await supabase
+        .from("email_verifications")
+        .insert([{ user_id: user.id, token }]);
+
+      const confirmationLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/confirm-email?token=${token}`;
+      await sendVerificationEmail(formData.email, confirmationLink);
 
       const table = userType === UserRole.Doctor ? "doctors" : "clients";
 
@@ -165,11 +201,30 @@ const RegisterForm = () => {
         enqueueSnackbar("You are successfully registerd.", {
           variant: "success",
         });
-      }, 1000); // Redirect after 3 seconds
+      }, 2000); // Redirect after 3 seconds
     } catch (error) {
       setLoading(false); // Stop loading once error
 
       console.error("Registration Error:", error);
+
+      if (error.message.includes("Failed to send email")) {
+        setServerError(
+          "Failed to send verification email. Please contact support."
+        );
+
+        await fetch("/api/delete-user/deleteUser", {
+          method: "POST", // You may want to use POST depending on your API design
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            role: userType,
+          }),
+        });
+
+        return;
+      }
 
       const errorMessage = error.message.includes("User already registered")
         ? "Email already registered."

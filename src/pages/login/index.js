@@ -14,13 +14,14 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/enums/UserRole";
 import useAuthStore from "../../store/authStore";
 import { Status } from "@/enums/PackageTypes";
 import { useSnackbar } from "notistack";
+import { supabase } from "../../utils/supabase";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -35,6 +36,10 @@ const LoginPage = () => {
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
+
+  const searchParams = useSearchParams();
+  const verified = searchParams.get("verified");
+  const verifyError = searchParams.get("error");
 
   // useEffect(() => {
   //   // If the user is already logged in, redirect them
@@ -77,86 +82,100 @@ const LoginPage = () => {
     }
   }, []); // Empty dependency array to run once on mount
 
+  // useEffect(() => {
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     (event, session) => {
+  //       if (session) {
+  //         console.log("Session updated:", session);
+  //         localStorage.setItem("auth_session", JSON.stringify(session));
+  //       } else {
+  //         console.log("User logged out");
+  //         localStorage.removeItem("auth_session");
+  //       }
+  //     }
+  //   );
+
+  //   return () => {
+  //     authListener?.unsubscribe();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchSession = async () => {
+  //     const { data: session, error: sessionError } =
+  //       await supabase.auth.getSession();
+  //     if (sessionError) {
+  //       console.error("Error fetching session:", sessionError);
+  //     } else if (session) {
+  //       console.log("Session fetched successfully", session);
+  //     } else {
+  //       console.log("No session found");
+  //     }
+  //   };
+
+  //   fetchSession();
+  // }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const body =
-        userType === UserRole.Doctor
-          ? { email, password, medicalLicense }
-          : { email, password };
-
-      // Simulated API call - replace with actual endpoint
-      const response = await fetch(
-        `/api/auth/${userType.toLocaleLowerCase()}/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
-
-      const data = await response.json();
-
-      console.log(data);
-
-      if (data.error === "Email not confirmed") {
-        throw new Error(
-          "Please activate your account by confirming your email."
-        );
-      }
-
-      if (!response.ok) throw new Error("Login failed");
-
-      const userData =
-        userType === UserRole.Doctor ? data.doctorProfile : data.clientData;
-
-      if (!userData) {
-        throw new Error("Invalid user data received");
-      }
-
-      if (userData.status === Status.CANCELLED) {
-        enqueueSnackbar("Your account has been cancelled.", {
-          variant: "error",
-        });
-        throw new Error(
-          "Your account has been cancelled. Please contact support."
-        );
-      }
-
-      login();
-
-      enqueueSnackbar("Your are logged in.", {
-        variant: "success",
+      // 1. Authenticate with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-      setUser(data.userData); // Store user info
+
+      if (error) throw error;
+
+      // 2. Check custom verification status
+      const { data: profile } = await supabase
+        .from(userType === UserRole.Doctor ? "doctors" : "clients")
+        .select("*")
+        .eq("user_id", data.user.id)
+        .single();
+
+      if (!profile?.email_verified) {
+        await supabase.auth.signOut();
+        throw new Error("Please verify your email first");
+      }
+
+      // 3. Proceed with login
+      setUser({ ...profile }); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
 
-      localStorage.setItem("user_data", JSON.stringify(userData));
-      localStorage.setItem(
-        "auth_token",
-        JSON.stringify({ email: data.user.email, id: data.user.id })
-      );
+      console.log(profile);
 
-      console.log("User Role:", userData.role, UserRole.Admin); // Debugging
       router.push(
-        userData.role === UserRole.Doctor
-          ? `/dashboard/doctor/${userData.id}`
-          : userData.role === UserRole.Admin
+        profile.role === UserRole.Doctor
+          ? `/dashboard/doctor/${profile.id}`
+          : profile.role === UserRole.Admin
           ? "/dashboard/admin"
           : "/"
       );
     } catch (err) {
-      console.log(err);
-      setError(err.message || "Invalid credentials. Please try again.");
+      setError(err.message);
+      enqueueSnackbar(err.message, { variant: "error" });
+      setPassword("");
+      setMedicalLicense("");
     }
   };
 
-  // if (isChecking) return null; // Prevent flashing the login form
-
   return (
     <Container maxWidth="sm">
+      {verified && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          Email successfully verified! You can now login.
+        </Alert>
+      )}
+
+      {verifyError === "invalid_token" && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          Invalid or expired verification link
+        </Alert>
+      )}
+
       <Box sx={{ textAlign: "center", mb: 4 }}>
         {userType === UserRole.Doctor ? (
           <MedicalServicesIcon
