@@ -17,10 +17,90 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `"IHB" <${process.env.EMAIL_USER}>`,
       to: req.body.email,
-      subject: "Verify Your Email",
-      html: `<a href="${req.body.link}">Verify Email</a>`,
+      subject: "Verify Your Email Address",
+      text: `Please verify your email: ${req.body.link}`,
+      html: `
+        <!DOCTYPE html>
+        <html xmlns:v="urn:schemas-microsoft-com:vml">
+        <head>
+          <meta charset="utf-8">
+          <meta http-equiv="x-ua-compatible" content="ie=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <!--[if mso]>
+          <xml><o:OfficeDocumentSettings xmlns:o="urn:schemas-microsoft-com:office:office"></o:OfficeDocumentSettings></xml>
+          <style type="text/css">
+            td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: Arial, sans-serif;}
+          </style>
+          <![endif]-->
+        </head>
+        <body style="margin:0;padding:0;background:#f3f4f6;">
+          <!-- Hidden preheader text -->
+          <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
+            Confirm your email address to complete your IHB registration
+          </div>
+    
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td align="center" style="padding:24px;">
+                <table width="100%" style="max-width:600px;background:#ffffff;border-radius:12px;padding:24px;" role="presentation">
+                  <tr>
+                    <td align="center" style="padding-bottom:24px;">
+                      <img src="https://yourdomain.com/logo.png" width="120" alt="IHB Logo" style="max-width:120px;height:auto;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-bottom:24px;">
+                      <h1 style="color:#111827;font-size:24px;margin:0 0 16px;">Almost there, ${
+                        req.body.firstName || "User"
+                      }!</h1>
+                      <p style="color:#4b5563;margin:0 0 24px;line-height:1.5;">
+                        Please verify your email address to activate your IHB account.
+                      </p>
+                      <a href="${req.body.link}" 
+                         style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;display:inline-block;font-weight:500;">
+                        Confirm Email
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top:24px;border-top:1px solid #e5e7eb;">
+                      <p style="color:#6b7280;font-size:14px;margin:0 0 8px;">
+                        If you didn't create this account, you can safely ignore this email.
+                      </p>
+                      <p style="color:#6b7280;font-size:14px;margin:0;">
+                        Need help? <a href="mailto:support@yourdomain.com" style="color:#2563eb;text-decoration:none;">Contact us</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+                
+                <!-- Footer -->
+                <table width="100%" style="max-width:600px;padding:24px 0;" role="presentation">
+                  <tr>
+                    <td align="center" style="color:#6b7280;font-size:12px;">
+                      <p style="margin:0 0 8px;">
+                        © ${new Date().getFullYear()} IHB. All rights reserved.
+                      </p>
+                      <p style="margin:0;">
+                        <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" 
+                           style="color:#6b7280;text-decoration:none;margin-right:12px;">
+                          Privacy Policy
+                        </a>
+                        <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" 
+                           style="color:#6b7280;text-decoration:none;">
+                          Terms of Service
+                        </a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
     });
-
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error("Full error details:", error);
