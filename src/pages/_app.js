@@ -8,6 +8,7 @@ import { SnackbarProvider } from "notistack";
 import { useRouter } from "next/router";
 import useAuthStore from "../store/authStore";
 import { UserRole } from "@/src/enums/UserRole";
+import AuthGuard from "../hooks/AuthGuard";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -15,14 +16,10 @@ function MyApp({ Component, pageProps }) {
 
   //Protect admin route
   useEffect(() => {
-    const checkUserRole = async () => {
-      if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
-        router.push("/"); // Redirect to homepage if not admin
-      }
-    };
-
-    checkUserRole();
-  }, [router.pathname]);
+    if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
+      router.push("/"); // Redirect to homepage if not admin
+    }
+  }, [router.pathname, user?.role]); // Run only when pathname or user role changes
 
   return (
     <ThemeProvider theme={theme}>
@@ -32,9 +29,11 @@ function MyApp({ Component, pageProps }) {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={2000}
       >
-        <Layout>
-          <Component {...pageProps} /> {/* Render the current page */}
-        </Layout>
+        <AuthGuard>
+          <Layout>
+            <Component {...pageProps} /> {/* Render the current page */}
+          </Layout>
+        </AuthGuard>
       </SnackbarProvider>
     </ThemeProvider>
   );
