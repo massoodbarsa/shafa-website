@@ -145,8 +145,6 @@ const LoginPage = () => {
       setUser({ ...profile }); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
 
-      console.log(profile);
-
       router.push(
         profile.role === UserRole.Doctor
           ? `/dashboard/doctor/${profile.id}`
