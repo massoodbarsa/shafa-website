@@ -262,7 +262,7 @@ const LoginPage = () => {
             label="Remember me"
           />
           <Link
-            href="/forgot-password"
+            href="/dashboard/forgot-password"
             sx={{
               color: "text.secondary",
               fontSize: "0.9rem",

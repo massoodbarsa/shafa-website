@@ -23,7 +23,7 @@ const AuthGuard = ({ children }) => {
       // Skip redirection for register or forgot-password pages
       if (
         router.pathname === "/register" ||
-        router.pathname === "/forgot-password" ||
+        router.pathname === "/dashboard/forgot-password" ||
         router.pathname === "/contact/contactUs" ||
         router.pathname === "/about/aboutUs" ||
         router.pathname === "/"
