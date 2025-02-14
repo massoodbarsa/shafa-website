@@ -19,6 +19,7 @@ const AuthGuard = ({ children }) => {
         data: { session },
         error,
       } = await supabase.auth.getSession();
+      if (router.pathname === "/register") return;
 
       if (session && !error) {
         // Cleanup previous timer before starting new one
