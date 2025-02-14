@@ -30,6 +30,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { UserRole } from "@/src/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import LanguageIcon from "@mui/icons-material/Language";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -50,10 +51,12 @@ const DoctorProfile = () => {
     locationFlag: "",
     averageRating: null,
     address: "",
+    website: "",
   });
 
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
+  const [websiteError, setWebsiteError] = useState("");
 
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -93,6 +96,20 @@ const DoctorProfile = () => {
       isValid = false;
     } else {
       setAddressError("");
+    }
+
+    if (formData.website.trim() !== "") {
+      const websiteRegex =
+        /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?\/?$/gm;
+
+      if (!websiteRegex.test(formData.website)) {
+        setWebsiteError(
+          "Please enter a valid website (e.g., example.com or www.example.com)"
+        );
+        isValid = false;
+      } else {
+        setWebsiteError("");
+      }
     }
 
     return isValid;
@@ -183,6 +200,7 @@ const DoctorProfile = () => {
           location: formData.location,
           location_flag: formData.locationFlag,
           address: formData.address,
+          website: formData.website,
         })
         .eq("user_id", doctorData.user_id);
 
@@ -210,6 +228,7 @@ const DoctorProfile = () => {
         location: updatedDoctor.location,
         location_flag: updatedDoctor.locationFlag,
         address: updatedDoctor.address,
+        website: updatedDoctor.website,
       }));
 
       enqueueSnackbar("Your data is updated.", {
@@ -330,6 +349,7 @@ const DoctorProfile = () => {
               locationCode: data.location_code,
               averageRating: data.avg_rating,
               address: data.address,
+              website: data.website,
             });
 
             // Check if the logged-in user is the doctor
@@ -542,6 +562,37 @@ const DoctorProfile = () => {
               />
             ) : (
               <Typography>{formData.phone}</Typography>
+            )}
+          </Box>
+          <Box display="flex" alignItems="center" my={3}>
+            <LanguageIcon sx={{ mr: 1 }} />
+            {editable ? (
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Website"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="https://example.com"
+                error={!!websiteError}
+                helperText={websiteError} // Show validation message
+              />
+            ) : (
+              <Typography>
+                {formData.website ? (
+                  <a
+                    href={formData.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#1976d2", textDecoration: "none" }}
+                  >
+                    {formData.website}
+                  </a>
+                ) : (
+                  "No website provided"
+                )}
+              </Typography>
             )}
           </Box>
           <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
