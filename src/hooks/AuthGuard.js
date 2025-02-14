@@ -19,7 +19,8 @@ const AuthGuard = ({ children }) => {
         data: { session },
         error,
       } = await supabase.auth.getSession();
-      if (router.pathname === "/register") return;
+
+      console.log(router.pathname);
 
       if (session && !error) {
         // Cleanup previous timer before starting new one
@@ -48,8 +49,9 @@ const AuthGuard = ({ children }) => {
       if (subscription) subscription.unsubscribe();
       if (cleanupRef.current) cleanupRef.current();
     };
-  }, [router, clearUser, startTimer]);
+  }, [router.pathname, clearUser, startTimer]);
 
   return <>{children}</>;
 };
+
 export default AuthGuard;
