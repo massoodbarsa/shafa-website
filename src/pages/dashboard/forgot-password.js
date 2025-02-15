@@ -102,6 +102,7 @@ const ForgotPassword = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
           >
             {loading ? "Is sending..." : "Send Reset Link"}
           </Button>

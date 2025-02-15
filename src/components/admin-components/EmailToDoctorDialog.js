@@ -10,23 +10,58 @@ import {
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 
-const EmailToDoctorDialog = ({ open, emailTo, onClose }) => {
+const EmailToDoctorDialog = ({ open, emailTo, onClose, emailToFullname }) => {
   const [emailSubject, setEmailSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const handleEmailSubmit = async () => {
-    try {
-      // Handle email sending logic here, like calling an API for sending emails
-      console.log(`Email sent to ${emailTo}:`);
-      console.log(`Subject: ${emailSubject}`);
-      console.log(`Body: ${emailBody}`);
+    setLoading(true);
+    if (!emailSubject || !emailBody) {
+      enqueueSnackbar("Both subject and body must be filled out.", {
+        variant: "warning",
+      });
 
-      enqueueSnackbar("Email sent successfully!", { variant: "success" });
-      setOpenEmailDialog(false);
+      setLoading(false);
+
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/admin-doctor-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          name: emailToFullname,
+          email: emailTo,
+          subject: emailSubject,
+          message: emailBody,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setEmailBody("");
+        setEmailSubject("");
+        enqueueSnackbar("Email sent.", {
+          variant: "success",
+        });
+        setLoading(false);
+      } else {
+        enqueueSnackbar(error, {
+          variant: "success",
+        });
+      }
+
+      onClose(true); // Close dialog after sending email
     } catch (error) {
-      enqueueSnackbar("Error sending email.", { variant: "error" });
+      setError(error);
+      setLoading(false);
     }
   };
 
@@ -40,6 +75,7 @@ const EmailToDoctorDialog = ({ open, emailTo, onClose }) => {
             value={emailSubject}
             onChange={(e) => setEmailSubject(e.target.value)} // Use setter to update subject
             fullWidth
+            required
           />
           <TextField
             label="Body"
@@ -48,6 +84,7 @@ const EmailToDoctorDialog = ({ open, emailTo, onClose }) => {
             fullWidth
             multiline
             rows={4}
+            required
           />
         </Box>
       </DialogContent>
@@ -55,8 +92,12 @@ const EmailToDoctorDialog = ({ open, emailTo, onClose }) => {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleEmailSubmit} color="secondary">
-          Send Email
+        <Button
+          onClick={handleEmailSubmit}
+          color="secondary"
+          disabled={loading}
+        >
+          {loading ? "Sending..." : "Send Email"}
         </Button>
       </DialogActions>
     </Dialog>

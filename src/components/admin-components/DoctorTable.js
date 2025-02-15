@@ -47,7 +47,8 @@ const DoctorTable = () => {
   const [doctorToDelete, setDoctorToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const [emailTo, setEmailTo] = useState(null);
+  const [emailTo, setEmailTo] = useState("");
+  const [emailToFullname, setEmailToFullname] = useState("");
   const [openEmailDialog, setOpenEmailDialog] = useState(false);
 
   const isMobile = useBreakpointDown();
@@ -121,7 +122,9 @@ const DoctorTable = () => {
   };
 
   const handleOpenEmailDialog = (doctor) => {
+    console.log(doctor);
     setEmailTo(doctor.email);
+    setEmailToFullname(doctor.full_name);
     setOpenEmailDialog(true);
   };
 
@@ -439,6 +442,7 @@ const DoctorTable = () => {
         open={openEmailDialog}
         emailTo={emailTo}
         onClose={() => setOpenEmailDialog(false)}
+        emailToFullname={emailToFullname}
       />
     </Box>
   );
