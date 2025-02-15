@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import { supabase } from "../utils/supabase";
 import useAuthStore from "../store/authStore";
 import useSessionTimer from "./useSessionTimer";
+import { UserRole } from "../enums/UserRole";
 
 const AuthGuard = ({ children }) => {
-  const { clearUser } = useAuthStore();
+  const { clearUser, user, isLoggedIn } = useAuthStore();
   const router = useRouter();
   const { startTimer } = useSessionTimer();
   const cleanupRef = useRef(null);
@@ -19,19 +20,6 @@ const AuthGuard = ({ children }) => {
         data: { session },
         error,
       } = await supabase.auth.getSession();
-
-      // Skip redirection for register or forgot-password pages
-      // if (
-      //   router.pathname === "/register" ||
-      //   router.pathname === "/dashboard/forgot-password" ||
-      //   router.pathname === "/contact/contactUs" ||
-      //   router.pathname === "/about/aboutUs" ||
-      //   router.pathname === "/"
-      // ) {
-      //   return;
-      // }
-
-      console.log(router.pathname);
 
       if (session && !error) {
         // Cleanup previous timer before starting new one
@@ -61,6 +49,22 @@ const AuthGuard = ({ children }) => {
       if (cleanupRef.current) cleanupRef.current();
     };
   }, [router.pathname, clearUser, startTimer]);
+
+  useEffect(() => {
+    if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
+      router.push("/"); // Redirect to homepage if not admin
+    }
+  }, [router.pathname, user?.role]); // Run only when pathname or user role changes
+
+  useEffect(() => {
+    if (
+      (router.pathname.includes("/login") ||
+        router.pathname.includes("/register")) &&
+      isLoggedIn()
+    ) {
+      router.push("/"); // Redirect to homepage if not admin
+    }
+  }, [router.pathname, isLoggedIn]); // Run only when pathname or user role changes
 
   return <>{children}</>;
 };
