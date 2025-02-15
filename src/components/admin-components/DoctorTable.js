@@ -28,6 +28,8 @@ import { UserRole } from "@/src/enums/UserRole";
 import { Status } from "@/src/enums/PackageTypes";
 import { formatDate } from "../../utils/formatDate";
 import AdminSpecialitySelect from "./AdminSpecialitySelect";
+import EmailIcon from "@mui/icons-material/Email";
+import EmailToDoctorDialog from "./EmailToDoctorDialog";
 
 const DoctorTable = () => {
   const [doctors, setDoctors] = useState([]);
@@ -43,8 +45,10 @@ const DoctorTable = () => {
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState(null);
-
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const [emailTo, setEmailTo] = useState(null);
+  const [openEmailDialog, setOpenEmailDialog] = useState(false);
 
   const isMobile = useBreakpointDown();
   const { enqueueSnackbar } = useSnackbar();
@@ -114,6 +118,11 @@ const DoctorTable = () => {
       // Optionally, reset the end date to match start date or handle error
       setEditedEndDate(editedStartDate);
     }
+  };
+
+  const handleOpenEmailDialog = (doctor) => {
+    setEmailTo(doctor.email);
+    setOpenEmailDialog(true);
   };
 
   const handleEdit = async () => {
@@ -219,6 +228,7 @@ const DoctorTable = () => {
       });
     }
   };
+
   //UseEffects
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -233,21 +243,22 @@ const DoctorTable = () => {
   }, []);
 
   return (
-    <>
+    <Box sx={{ overflowX: "auto" }}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell sx={{ minWidth: 110 }}>Send email</TableCell>
             <TableCell>Photo</TableCell>
             <TableCell sx={{ minWidth: 110 }}>First Name</TableCell>
             <TableCell sx={{ minWidth: 110 }}>Last Name</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>Address</TableCell>
+            <TableCell sx={{ minWidth: 200 }}>Address</TableCell>
             <TableCell>Location</TableCell>
             <TableCell>Speciality</TableCell> {/* New column for Speciality */}
             <TableCell>Role</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Start Date</TableCell>
-            <TableCell>End Date</TableCell>
+            <TableCell sx={{ minWidth: 110 }}>Start Date</TableCell>
+            <TableCell sx={{ minWidth: 110 }}>End Date</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -255,6 +266,11 @@ const DoctorTable = () => {
         <TableBody>
           {doctors.map((doctor) => (
             <TableRow key={doctor.id}>
+              <TableCell>
+                <IconButton onClick={() => handleOpenEmailDialog(doctor)}>
+                  <EmailIcon color="primary" />
+                </IconButton>
+              </TableCell>
               <TableCell>
                 {doctor.profile_image ? (
                   <Avatar
@@ -419,7 +435,12 @@ const DoctorTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+      <EmailToDoctorDialog
+        open={openEmailDialog}
+        emailTo={emailTo}
+        onClose={() => setOpenEmailDialog(false)}
+      />
+    </Box>
   );
 };
 
