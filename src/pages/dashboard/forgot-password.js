@@ -7,7 +7,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   // Simplified email sending function
   const sendResetEmail = async (email) => {
@@ -35,8 +35,11 @@ const ForgotPassword = () => {
     setError(null);
     setSuccess(null);
 
+    setLoading(true);
+
     if (!email) {
       setError("Please enter your email address.");
+      setLoading(false);
       return;
     }
 
@@ -45,8 +48,11 @@ const ForgotPassword = () => {
       setSuccess(
         "Check your email for a link to reset your password. If you don't see it, check your spam folder."
       );
+      setLoading(false);
     } catch (error) {
       setError(error.message || "Something went wrong. Please try again.");
+
+      setLoading(false);
     }
   };
 
@@ -98,7 +104,7 @@ const ForgotPassword = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Send Reset Link
+            {loading ? "Is sending..." : "Send Reset Link"}
           </Button>
         </Box>
       </Box>
