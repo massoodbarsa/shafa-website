@@ -21,15 +21,15 @@ const AuthGuard = ({ children }) => {
       } = await supabase.auth.getSession();
 
       // Skip redirection for register or forgot-password pages
-      if (
-        router.pathname === "/register" ||
-        router.pathname === "/dashboard/forgot-password" ||
-        router.pathname === "/contact/contactUs" ||
-        router.pathname === "/about/aboutUs" ||
-        router.pathname === "/"
-      ) {
-        return;
-      }
+      // if (
+      //   router.pathname === "/register" ||
+      //   router.pathname === "/dashboard/forgot-password" ||
+      //   router.pathname === "/contact/contactUs" ||
+      //   router.pathname === "/about/aboutUs" ||
+      //   router.pathname === "/"
+      // ) {
+      //   return;
+      // }
 
       console.log(router.pathname);
 
@@ -37,6 +37,9 @@ const AuthGuard = ({ children }) => {
         // Cleanup previous timer before starting new one
         if (cleanupRef.current) cleanupRef.current();
         cleanupRef.current = startTimer();
+      } else {
+        clearUser();
+        router.push("/login");
       }
     };
 

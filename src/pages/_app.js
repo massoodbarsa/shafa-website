@@ -12,11 +12,20 @@ import AuthGuard from "../hooks/AuthGuard";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, isLoggedIn } = useAuthStore();
 
   //Protect admin route
   useEffect(() => {
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
+      router.push("/"); // Redirect to homepage if not admin
+    }
+  }, [router.pathname, user?.role]); // Run only when pathname or user role changes
+
+  useEffect(() => {
+    if (
+      router.pathname.includes("/login") ||
+      (router.pathname.includes("/register") && isLoggedIn)
+    ) {
       router.push("/"); // Redirect to homepage if not admin
     }
   }, [router.pathname, user?.role]); // Run only when pathname or user role changes
