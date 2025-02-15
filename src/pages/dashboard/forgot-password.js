@@ -9,7 +9,27 @@ const ForgotPassword = () => {
   const [success, setSuccess] = useState(null);
   const router = useRouter();
 
-  // Handle form submission
+  // Simplified email sending function
+  const sendResetEmail = async (email) => {
+    try {
+      const response = await fetch("/api/auth/newpass-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send email");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Email error:", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -21,16 +41,12 @@ const ForgotPassword = () => {
     }
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess(
-          "Check your email for a link to reset your password. If you don't see it, check your spam folder."
-        );
-      }
+      await sendResetEmail(email);
+      setSuccess(
+        "Check your email for a link to reset your password. If you don't see it, check your spam folder."
+      );
     } catch (error) {
-      setError("Something went wrong. Please try again.");
+      setError(error.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -38,46 +54,50 @@ const ForgotPassword = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
+          mt: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginTop: 8,
         }}
       >
-        <Typography variant="h5">Forgot Password</Typography>
+        <Typography variant="h5" gutterBottom>
+          Forgot Password
+        </Typography>
 
         <Box
           component="form"
           onSubmit={handleSubmit}
-          sx={{
-            mt: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
+          sx={{ mt: 3, width: "100%" }}
         >
           <TextField
             label="Email Address"
             variant="outlined"
             fullWidth
+            margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            type="email"
           />
 
           {error && (
-            <Typography color="error" variant="body2">
+            <Typography color="error" sx={{ mt: 2 }}>
               {error}
             </Typography>
           )}
 
           {success && (
-            <Typography color="success" variant="body2">
+            <Typography color="success.main" sx={{ mt: 2 }}>
               {success}
             </Typography>
           )}
 
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Send Reset Link
           </Button>
         </Box>
