@@ -14,8 +14,6 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const { user, isLoggedIn } = useAuthStore();
 
-  console.log(isLoggedIn());
-
   //Protect admin route
   useEffect(() => {
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
