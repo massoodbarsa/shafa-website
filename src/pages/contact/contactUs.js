@@ -11,34 +11,71 @@ import {
   IconButton,
 } from "@mui/material";
 import { Twitter, Instagram, Email, Phone } from "@mui/icons-material";
+import { useSnackbar } from "notistack";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    subject: "",
     message: "",
   });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add form submission logic (e.g., API call)
+
+    setLoading(true);
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.subject ||
+      !formData.message
+    ) {
+      setError("All fields are required.");
+      setLoading(false);
+      return;
+    }
+
+    setError(""); // Clear previous error
+    setSuccess(""); // Clear previous success message
+
+    try {
+      const response = await fetch("/api/auth/contact-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+
+      enqueueSnackbar("Message sent successfully!", {
+        variant: "success",
+      });
+      setLoading(false);
+
+      setFormData({ name: "", email: "", subject: "", message: "" }); // Clear form
+    } catch (error) {
+      setError(error.message || "Something went wrong. Try again.");
+    }
   };
 
   return (
     <Container maxWidth="md">
-      <Paper
-        elevation={3}
-        sx={{ padding: 4, marginTop: 4, borderRadius: 2, position: "relative" }}
-      >
+      <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 2 }}>
         <Box textAlign="center" mb={3}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Contact Us
-          </Typography>
+          <Typography variant="h4">Contact Us</Typography>
         </Box>
 
         {/* Contact Info */}
@@ -53,7 +90,6 @@ export default function ContactUs() {
             <Phone color="success" />
             <Typography variant="body1">+123 456 7890</Typography>
           </Box>
-
           <Box
             display="flex"
             justifyContent="center"
@@ -90,12 +126,20 @@ export default function ContactUs() {
             onChange={handleChange}
           />
           <TextField
-            label="Email"
+            label="Your Email"
             name="email"
             type="email"
             fullWidth
             required
             value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Subject"
+            name="subject"
+            fullWidth
+            required
+            value={formData.subject}
             onChange={handleChange}
           />
           <TextField
@@ -108,8 +152,22 @@ export default function ContactUs() {
             value={formData.message}
             onChange={handleChange}
           />
-          <Button type="submit" variant="contained" color="primary">
-            Send Message
+
+          {error && <Typography color="error">{error}</Typography>}
+          {success && <Typography color="success.main">{success}</Typography>}
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={
+              !formData.name ||
+              !formData.email ||
+              !formData.subject ||
+              !formData.message
+            }
+          >
+            {loading ? "Sending..." : "Send Message"}
           </Button>
         </Box>
       </Paper>

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../../utils/supabase";
-import { useRouter } from "next/router";
+
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
 
 const ForgotPassword = () => {
