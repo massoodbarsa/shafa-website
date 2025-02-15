@@ -14,6 +14,8 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const { user, isLoggedIn } = useAuthStore();
 
+  console.log(isLoggedIn());
+
   //Protect admin route
   useEffect(() => {
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
@@ -23,12 +25,13 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (
-      router.pathname.includes("/login") ||
-      (router.pathname.includes("/register") && isLoggedIn)
+      (router.pathname.includes("/login") ||
+        router.pathname.includes("/register")) &&
+      isLoggedIn()
     ) {
       router.push("/"); // Redirect to homepage if not admin
     }
-  }, [router.pathname, user?.role]); // Run only when pathname or user role changes
+  }, [router.pathname, isLoggedIn]); // Run only when pathname or user role changes
 
   return (
     <ThemeProvider theme={theme}>
