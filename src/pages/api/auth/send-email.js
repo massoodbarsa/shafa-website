@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/public/images/logo.png`;
+const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
