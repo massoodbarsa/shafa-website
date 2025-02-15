@@ -3,7 +3,7 @@ import { useEffect, useCallback, useRef } from "react";
 import { supabase } from "../utils/supabase";
 import useAuthStore from "../store/authStore";
 
-const useSessionTimer = (inactivityTimeout = 2000) => {
+const useSessionTimer = (inactivityTimeout = 60 * 60 * 1000) => {
   const { clearUser } = useAuthStore();
   const timeoutRef = useRef(null);
   const eventsRef = useRef([]);
