@@ -14,7 +14,6 @@ const AuthGuard = ({ children }) => {
 
   useEffect(() => {
     let subscription;
-    let isMounted = true; // Prevent state updates on unmounted component
 
     const checkSession = async () => {
       const {
@@ -23,15 +22,12 @@ const AuthGuard = ({ children }) => {
       } = await supabase.auth.getSession();
 
       if (session && !error) {
-        if (isMounted) {
-          if (cleanupRef.current) cleanupRef.current();
-          cleanupRef.current = startTimer();
-        }
+        // Cleanup previous timer before starting new one
+        if (cleanupRef.current) cleanupRef.current();
+        cleanupRef.current = startTimer();
       } else {
-        if (isMounted) {
-          clearUser();
-          router.push("/login");
-        }
+        clearUser();
+        router.push("/login");
       }
     };
 
@@ -41,14 +37,14 @@ const AuthGuard = ({ children }) => {
       if (event === "SIGNED_OUT") {
         if (cleanupRef.current) cleanupRef.current();
         clearUser();
-        router.push("/login");
+        // router.push("/login");
       }
     });
 
     subscription = authListener.data.subscription;
 
     return () => {
-      isMounted = false;
+      // Cleanup all resources
       if (subscription) subscription.unsubscribe();
       if (cleanupRef.current) cleanupRef.current();
     };
