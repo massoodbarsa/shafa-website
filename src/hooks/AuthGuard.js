@@ -25,9 +25,6 @@ const AuthGuard = ({ children }) => {
         // Cleanup previous timer before starting new one
         if (cleanupRef.current) cleanupRef.current();
         cleanupRef.current = startTimer();
-      } else {
-        clearUser();
-        router.push("/login");
       }
     };
 
