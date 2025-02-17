@@ -150,7 +150,7 @@ const LoginPage = () => {
           ? `/dashboard/doctor/${profile.id}`
           : profile.role === UserRole.Admin
           ? "/dashboard/admin"
-          : "/"
+          : "/list"
       );
     } catch (err) {
       setError(err.message);

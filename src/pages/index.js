@@ -1,403 +1,230 @@
-"use client";
-
 import {
-  Container,
   Box,
+  Typography,
+  Button,
   Card,
   CardContent,
-  Typography,
-  CardMedia,
-  CircularProgress,
-  Toolbar,
-  FormControl,
-  Button,
-  Autocomplete,
-  TextField,
-  InputAdornment,
-  Grid2,
-  Drawer,
-  IconButton,
   Avatar,
-  Pagination,
+  Grid,
+  Container,
 } from "@mui/material";
-import { useEffect, useState, useCallback, useMemo } from "react";
-
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { supabase } from "../utils/supabase";
-import StarIcon from "@mui/icons-material/Star";
-import Link from "next/link";
-import NoRecords from "../components/NoRecords";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
-import useBreakpointDown from "../hooks/useBreakpointDown.hook";
-import useAuthStore from "../store/authStore";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { Status } from "@/src/enums/PackageTypes";
 
-export default function Home() {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedSpecialty, setSelectedSpecialty] = useState("");
-  const [selectedRating, setSelectedRating] = useState("");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const { user } = useAuthStore();
+const Homepage = () => {
   const router = useRouter();
 
-  const itemsPerPage = 6; // 6 items per page
-  const { enqueueSnackbar } = useSnackbar();
-
-  const isMobile = useBreakpointDown();
-  countries.registerLocale(enLocale);
-
-  // Get unique countries and specialties from doctors
-  const uniqueCountries = useMemo(
-    () => [...new Set(doctors.map((d) => d.location))],
-    [doctors]
-  );
-
-  const uniqueSpecialties = useMemo(
-    () => [...new Set(doctors.map((d) => d.speciality))],
-    [doctors]
-  );
-  // Filter doctors based on selection
-  const filteredDoctors = doctors.filter(
-    (doctor) =>
-      (!selectedCountry || doctor.location === selectedCountry) &&
-      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
-      (!selectedRating || doctor.avg_rating >= selectedRating) &&
-      doctor.status !== Status.CANCELLED &&
-      doctor.status !== Status.EXPIRED &&
-      doctor.status !== Status.PENDING
-  );
-
-  const paginatedDoctors = filteredDoctors.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const getUserCountry = useCallback(async () => {
-    try {
-      const response = await fetch(
-        "https://ipinfo.io/json?token=3c9c12f932e280"
-      );
-      const data = await response.json();
-      return data.country; // Returns country code (e.g., "US", "IN")
-    } catch (error) {
-      console.error("Error fetching IP info:", error);
-      return null;
-    }
-  }, []);
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
-
-  const handleRouteToProfile = (doctorId) => {
-    if (!user) {
-      enqueueSnackbar("Register to see doctor page.", {
-        variant: "warning",
-      });
-      return;
-    }
-    router.push(`/dashboard/doctor/${doctorId}`);
-  };
-
-  // Fetch doctors from Supabase
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      const { data, error } = await supabase.from("doctors").select("*");
-
-      if (error) {
-        console.error("Error fetching doctors:", error);
-      } else {
-        setDoctors(data);
-      }
-      setLoading(false);
-    };
-
-    fetchDoctors();
-  }, []);
-
-  // Auto-select user country if available in the doctors list
-  useEffect(() => {
-    async function fetchData() {
-      const userCountryCode = await getUserCountry(); // e.g., "US", "IN"
-      if (userCountryCode) {
-        const countryName = countries.getName(userCountryCode, "en");
-        if (countryName && doctors.some((d) => d.location === countryName)) {
-          setSelectedCountry(countryName);
-        }
-      }
-    }
-    fetchData();
-  }, [getUserCountry, doctors]);
-
-  // Extract filter content into a variable for reuse in toolbar and drawer
-  const filterContent = (
-    <Grid2 container gap={5} justifyContent="space-around" alignItems="center">
-      <Grid2 item sm={4} xs={12}>
-        <FormControl sx={{ width: 200 }}>
-          <Autocomplete
-            options={uniqueCountries
-              .filter((location) => location) // Filter out null or undefined countries
-              .map((location) => {
-                const doctorWithFlag = doctors.find(
-                  (d) => d.location === location
-                );
-                return {
-                  label: location,
-                  flag: doctorWithFlag?.location_flag || "",
-                };
-              })}
-            value={
-              selectedCountry
-                ? {
-                    label: selectedCountry,
-                    flag:
-                      doctors.find((d) => d.location === selectedCountry)
-                        ?.location_flag || "",
-                  }
-                : null
-            }
-            onChange={(event, newValue) =>
-              setSelectedCountry(newValue ? newValue.label : "")
-            }
-            getOptionLabel={(option) => option.label || ""}
-            renderOption={(props, option) => (
-              <li {...props}>
-                {option.flag && (
-                  <img
-                    src={option.flag}
-                    alt={option.label}
-                    style={{ width: 20, height: 14, marginRight: 8 }}
-                  />
-                )}
-                {option.label}
-              </li>
-            )}
-            slotProps={{
-              input: {
-                startAdornment: selectedCountry && (
-                  <InputAdornment position="start">
-                    <img
-                      src={
-                        doctors.find((d) => d.location === selectedCountry)
-                          ?.location_flag || ""
-                      }
-                      alt={selectedCountry}
-                      style={{ width: 20, height: 14, marginRight: 8 }}
-                    />
-                  </InputAdornment>
-                ),
-              },
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Country" variant="outlined" />
-            )}
-          />
-        </FormControl>
-      </Grid2>
-      <Grid2 item sm={4} xs={12}>
-        <FormControl sx={{ width: 250 }}>
-          <Autocomplete
-            options={uniqueSpecialties}
-            value={selectedSpecialty || null}
-            onChange={(event, newValue) => setSelectedSpecialty(newValue || "")}
-            renderInput={(params) => (
-              <TextField {...params} label="Specialty" variant="outlined" />
-            )}
-          />
-        </FormControl>
-      </Grid2>
-      <Grid2 item sm={4} xs={12}>
-        <Box
-          sx={{
-            gap: 1,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body2">Rating: </Typography>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <StarIcon
-              key={index}
-              sx={{
-                cursor: "pointer",
-                color: index < Math.round(selectedRating) ? "gold" : "gray",
-              }}
-              onClick={() => setSelectedRating(index + 1)}
-            />
-          ))}
-          <Button
-            onClick={() => setSelectedRating(null)}
-            sx={{ ml: 2 }}
-            variant="outlined"
-            size="small"
-          >
-            Reset
-          </Button>
-        </Box>
-      </Grid2>
-    </Grid2>
-  );
-
   return (
-    <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
-      {/* Filter Toolbar */}
-      <Toolbar
-        sx={{
-          display: "flex",
-          gap: 3,
-          mb: 6,
-          bgcolor: "ButtonFace",
-          p: 3,
-          justifyContent: "space-around",
-        }}
-      >
-        {isMobile ? (
-          <IconButton
-            onClick={() => setMobileFiltersOpen(true)}
-            aria-label="open filters"
-            color="primary"
-            size="large"
-          >
-            <FilterListIcon />
-          </IconButton>
-        ) : (
-          filterContent
-        )}
-      </Toolbar>
+    <Container maxWidth="lg">
+      {/* Hero Section */}
+      <Box textAlign="center" py={10}>
+        <Typography variant="h3" fontWeight={700} gutterBottom>
+          Find Trusted Farsi-Speaking Doctors Near You
+        </Typography>
+        <Typography variant="h6" color="textSecondary" gutterBottom>
+          Connect with verified professionals for your healthcare needs.
+        </Typography>
+        <Box sx={{ width: "100%", position: "relative", height: 300, mt: 2 }}>
+          <Image
+            src="/main.jpeg"
+            alt="Doctor"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
+      </Box>
 
-      {/* Mobile Filter Drawer */}
-      {isMobile && (
-        <Drawer
-          anchor="bottom"
-          open={mobileFiltersOpen}
-          onClose={() => setMobileFiltersOpen(false)}
+      {/* Why Choose Us */}
+      <Box py={5} textAlign="center">
+        <Typography variant="h4" fontWeight={600} gutterBottom>
+          Why Choose Us?
+        </Typography>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ py: 2, overflow: "visible" }}
         >
-          <Box sx={{ p: 2 }}>
-            {filterContent}
-            <Button
-              onClick={() => setMobileFiltersOpen(false)}
-              variant="contained"
-              fullWidth
-              sx={{ mt: 2 }}
-            >
-              Apply Filters
-            </Button>
-          </Box>
-        </Drawer>
-      )}
-
-      {/* Doctors Grid */}
-
-      <Grid2 container spacing={5} justifyContent="center">
-        {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "100vh",
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : paginatedDoctors.length > 0 ? (
-          paginatedDoctors.map((doctor) => (
-            <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
-              {/* <Link href={`/dashboard/doctor/${doctor.id}`} passHref> */}
+          {[
+            "Verified Doctors",
+            "Read & Leave Reviews",
+            "Farsi-Speaking Specialists",
+          ].map((item, index) => (
+            <Grid item xs={12} sm={4} key={index}>
               <Card
                 sx={{
-                  width: 250, // Fixed width
-                  height: 400, // Fixed height
-                  display: "flex",
-                  flexDirection: "column",
-                  cursor: "pointer",
+                  p: 3,
+                  transition: "0.3s",
+                  border: "1px solid transparent",
+                  height: "100%",
+                  transformOrigin: "center center",
+                  overflow: "visible",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0px 10px 20px rgb(59, 216, 221)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                    zIndex: 1,
+                  },
                 }}
-                onClick={() => handleRouteToProfile(doctor.id)} // Use router.push for navigation
               >
-                <Box p={1}>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <StarIcon
-                      key={index}
-                      sx={{
-                        cursor: "pointer",
-                        color:
-                          index < Math.round(doctor.avg_rating)
-                            ? "gold"
-                            : "gray",
-                      }}
-                    />
-                  ))}
-                </Box>
-
-                {doctor.profile_image ? (
-                  <CardMedia
-                    component="img"
-                    height="200" // Fixed height for image
-                    image={doctor.profile_image}
-                    alt={`${doctor.first_name} ${doctor.last_name}`}
-                    sx={{
-                      objectFit: "contain",
-                      objectPosition: "top",
-                    }}
-                  />
-                ) : (
-                  <Avatar
-                    sx={{
-                      width: 170,
-                      height: 200,
-                      mx: "auto",
-                      mb: 2,
-                    }}
-                  />
-                )}
-
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="body1">
-                    {doctor.first_name} {doctor.last_name}
+                <CardContent>
+                  <Typography variant="h6" fontWeight={500}>
+                    {item}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {doctor.speciality || "Specialty not available"}
-                  </Typography>
-                  <Box display="flex" alignItems="center" mt={2}>
-                    {doctor.location_flag && (
-                      <img
-                        src={doctor.location_flag}
-                        alt={doctor.location}
-                        width="20"
-                        height="14"
-                        style={{ marginRight: 8 }}
-                      />
-                    )}
-                    <Typography variant="body2">{doctor.location}</Typography>
-                  </Box>
                 </CardContent>
               </Card>
-              {/* </Link> */}
-            </Grid2>
-          ))
-        ) : (
-          <Box width="100%">
-            <NoRecords />
-          </Box>
-        )}
-      </Grid2>
-      {Math.ceil(filteredDoctors.length / itemsPerPage) > 1 && (
-        <Pagination
-          count={Math.ceil(filteredDoctors.length / itemsPerPage)}
-          page={currentPage}
-          onChange={handlePageChange}
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      {/* Featured Doctors */}
+      {/* <Box py={5}>
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          textAlign="center"
+          gutterBottom
+        >
+          Featured Doctors
+        </Typography>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ py: 2, overflow: "visible" }}
+        >
+          {[1, 2, 3].map((id) => (
+            <Grid item xs={12} sm={4} key={id}>
+              <Card
+                sx={{
+                  transition: "0.3s",
+                  border: "1px solid transparent",
+                  height: "100%",
+                  transformOrigin: "center center",
+                  overflow: "visible",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.2)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                    zIndex: 1,
+                  },
+                }}
+              >
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Avatar sx={{ width: 80, height: 80, mx: "auto", mb: 2 }} />
+                  <Typography variant="h6">Doctor Name</Typography>
+                  <Typography color="textSecondary">Specialty</Typography>
+                  <Button size="small" sx={{ mt: 2 }}>
+                    View Profile
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box> */}
+
+      {/* Testimonials */}
+      {/* <Box py={5} textAlign="center">
+        <Typography variant="h4" fontWeight={600} gutterBottom>
+          What Our Users Say
+        </Typography>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ py: 2, overflow: "visible" }}
+        >
+          {[
+            "Great platform!",
+            "Helped me find a doctor!",
+            "Highly recommend!",
+          ].map((review, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+              <Card
+                sx={{
+                  p: 3,
+                  transition: "0.3s",
+                  border: "1px solid transparent",
+                  height: "100%",
+                  transformOrigin: "center center",
+                  overflow: "visible",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0px 10px 20px rgb(59, 216, 221)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                    zIndex: 1,
+                  },
+                }}
+              >
+                <CardContent>
+                  <Typography variant="body1">"{review}"</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box> */}
+
+      {/* How It Works */}
+      <Box py={5} textAlign="center">
+        <Typography variant="h4" fontWeight={600} gutterBottom>
+          How It Works
+        </Typography>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ py: 2, overflow: "visible" }}
+        >
+          {[
+            "Search & Find",
+            "Read & Leave Reviews",
+            "See Specialist Profile",
+          ].map((step, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+              <Card
+                sx={{
+                  p: 3,
+                  transition: "0.3s",
+                  border: "1px solid transparent",
+                  height: "100%",
+                  transformOrigin: "center center",
+                  overflow: "visible",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0px 10px 20px rgb(59, 216, 221)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                    zIndex: 1,
+                  },
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" fontWeight={500}>
+                    {step}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      {/* Final CTA */}
+      <Box textAlign="center" py={5}>
+        <Button
+          variant="contained"
           color="primary"
-          sx={{ mt: 5, display: "flex", justifyContent: "center" }}
-        />
-      )}
+          size="large"
+          onClick={() => router.push("/list")}
+          sx={{ fontSize: "1.1rem", py: 2, px: 4 }}
+        >
+          See the List of Doctors
+        </Button>
+      </Box>
     </Container>
   );
-}
+};
+
+export default Homepage;

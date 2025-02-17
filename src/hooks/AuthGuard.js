@@ -49,7 +49,7 @@ const AuthGuard = ({ children }) => {
 
   useEffect(() => {
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
-      router.push("/"); // Redirect to homepage if not admin
+      router.push("/list"); // Redirect to homepage if not admin
     }
   }, [router.pathname, user?.role]); // Run only when pathname or user role changes
 
@@ -59,7 +59,7 @@ const AuthGuard = ({ children }) => {
         router.pathname.includes("/register")) &&
       isLoggedIn()
     ) {
-      router.push("/"); // Redirect to homepage if not admin
+      router.push("/list"); // Redirect to homepage if not admin
     }
   }, [router.pathname, isLoggedIn]); // Run only when pathname or user role changes
 
