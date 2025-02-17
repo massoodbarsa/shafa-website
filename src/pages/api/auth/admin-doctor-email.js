@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
+const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/fivicon.png`;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -24,10 +24,11 @@ export default async function handler(req, res) {
         <div style="max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 20px;">
             <img src="${logoUrl}" alt="Logo" style="width: 150px; height: auto;"/>
+            
           </div>
           <div style="background-color: #ffffff; padding: 20px; border-radius: 8px;">
          
-            <p style="font-size: 16px;">You have received a new message from <strong>Iranian Health Bridge</strong>:</p>
+            <p style="font-size: 16px;">You have received a new message from <strong> Iranian Doctors Hub </strong>:</p>
             <p style="font-size: 16px;"><strong>Email:</strong> ${email}</p>
             <p style="font-size: 16px;"><strong>Subject:</strong> ${subject}</p>
             <div style="border-top: 1px solid #e0e0e0; margin-top: 20px; padding-top: 20px;">
@@ -49,7 +50,7 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: `"IHB" <${process.env.EMAIL_USER}>`,
+      from: `"IDH" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Subject: ${subject}`,
       html: emailHtml,

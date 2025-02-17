@@ -12,7 +12,7 @@ const Footer = () => {
         textAlign: "center",
       }}
     >
-      <Typography variant="body1">© 2025 Iranian Health Bridge</Typography>
+      <Typography variant="body1">© 2025 Iranian Doctors Hub</Typography>
     </Box>
   );
 };

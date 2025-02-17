@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
     // Send email
     await transporter.sendMail({
-      from: `"IHB" <${process.env.EMAIL_USER}>`,
+      from: `"IDH" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Password Reset Request",
       html: `<!DOCTYPE html>

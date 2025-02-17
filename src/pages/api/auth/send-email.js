@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: `"IHB" <${process.env.EMAIL_USER}>`,
+      from: `"IDH" <${process.env.EMAIL_USER}>`,
       to: req.body.email,
       subject: "Verify Your Email Address",
       text: `Please verify your email: ${req.body.link}`,

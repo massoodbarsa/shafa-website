@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Box,
+  Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
@@ -121,13 +122,14 @@ const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
+        <Avatar alt="Remy Sharp" src="/favicon.svg" sx={{ mr: 2 }} />
         <Typography
           variant="h6"
           component={Link}
           href="/"
           sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
         >
-          Iranian Health Bridge
+          Iranian Doctors Hub
         </Typography>
 
         {isMobile ? (
