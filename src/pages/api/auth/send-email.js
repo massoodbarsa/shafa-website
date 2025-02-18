@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         <body style="margin:0;padding:0;background:#f3f4f6;">
           <!-- Hidden preheader text -->
           <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
-            Confirm your email address to complete your IHB registration
+            Confirm your email address to complete your IDH registration
           </div>
     
           <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
@@ -47,16 +47,14 @@ export default async function handler(req, res) {
                 <table width="100%" style="max-width:600px;background:#ffffff;border-radius:12px;padding:24px;" role="presentation">
                   <tr>
                     <td align="center" style="padding-bottom:24px;">
-                      <img src="${logoUrl}" width="120" alt="IHB Logo" style="max-width:120px;height:auto;">
+                      <img src="${logoUrl}" width="120" alt="IDH Logo" style="max-width:120px;height:auto;">
                     </td>
                   </tr>
                   <tr>
                     <td style="padding-bottom:24px;">
-                      <h1 style="color:#111827;font-size:24px;margin:0 0 16px;">Almost there, ${
-                        req.body.firstName || "User"
-                      }!</h1>
+                      <h1 style="color:#111827;font-size:24px;margin:0 0 16px;">Almost there, </h1>
                       <p style="color:#4b5563;margin:0 0 24px;line-height:1.5;">
-                        Please verify your email address to activate your IHB account.
+                        Please verify your email address to activate your IDH account.
                       </p>
                       <a href="${req.body.link}" 
                          style="background:#2563eb;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;display:inline-block;font-weight:500;">
