@@ -79,6 +79,8 @@ const DoctorProfile = () => {
     })
   );
 
+  const containsFarsi = (text) => /[\u0600-\u06FF]/.test(text);
+
   const validateFields = () => {
     let isValid = true;
 
@@ -596,7 +598,17 @@ const DoctorProfile = () => {
             )}
           </Box>
           <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
-          <Typography variant="body1" mt={3} sx={{ whiteSpace: "pre-line" }}>
+          <Typography
+            variant="body1"
+            mt={3}
+            sx={{
+              whiteSpace: "pre-line",
+              textAlign: containsFarsi(doctorData.description)
+                ? "right"
+                : "left",
+              direction: containsFarsi(doctorData.description) ? "rtl" : "ltr", // Set direction dynamically
+            }}
+          >
             {doctorData.description}
           </Typography>
           {editable && (
@@ -605,10 +617,18 @@ const DoctorProfile = () => {
                 fullWidth
                 label="Description"
                 multiline
-                rows={4}
+                rows={6}
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
+                InputProps={{
+                  style: {
+                    textAlign: containsFarsi(formData.description)
+                      ? "right"
+                      : "left",
+                  },
+                  dir: containsFarsi(formData.description) ? "rtl" : "ltr", // Set direction dynamically
+                }}
               />
               <LoadingButton
                 type="submit"
