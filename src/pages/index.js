@@ -19,23 +19,40 @@ const Homepage = () => {
     <>
       {/* Later on featured doctores should land here .use getServerSideProps */}
       <NextSeo
-        title="Find Trusted Farsi-Speaking Doctors Near You"
-        description="Connect with verified Farsi-speaking doctors for your healthcare needs in Europe."
+        title="Find Farsi-speaking Doctors for Iranians Abroad"
+        description="Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized."
         openGraph={{
-          title: "Find Trusted Farsi-Speaking Doctors Near You",
+          url: 'https://www.yourwebsite.com', // Replace with your homepage URL
+          title: 'Find Farsi-speaking Doctors for Iranians Abroad',
           description:
-            "Connect with verified Farsi-speaking doctors for your healthcare needs in Europe.",
-          url: `${process.env.NEXT_PUBLIC_BASE_UR}`,
+            'Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized.',
           images: [
             {
-              url: "/main.jpeg",
+              url: 'https://www.yourwebsite.com/images/hero-banner.jpg', // Replace with your image URL
               width: 1200,
               height: 630,
-              alt: "Healthcare with Farsi-speaking Doctors",
+              alt: 'Doctors Connecting with Iranians Abroad',
             },
           ],
+          site_name: 'Your Platform Name', // Replace with your platform name
+        }}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Iranian Doctors Hub", // Replace with your platform's name
+          "url": "https://www.iraniandoctorshub.com", // Replace with your website's URL
+          "logo": "https://www.iraniandoctorshub.com/logo.png", // Replace with your logo URL
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+31-123-456-7890", // Replace with your contact number
+            "contactType": "customer service",
+            "areaServed": "Worldwide", // You can change this to specific countries or regions
+            "availableLanguage": "Farsi, English", // Add languages available for customer support
+          },
         }}
       />
+      
+      {/*
       <Container maxWidth="lg">
         {/* Hero Section */}
         <Box textAlign="center" py={10}>
