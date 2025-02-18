@@ -123,7 +123,7 @@ const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
-        <Avatar alt="Remy Sharp" src="/favicon.svg" sx={{ mr: 2 }} />
+        <Avatar alt="Remy Sharp" src="/logo.png" sx={{ mr: 2 }} />
         <Typography
           variant="h6"
           component={Link}

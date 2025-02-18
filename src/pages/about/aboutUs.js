@@ -1,12 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Container, Typography, Box, Paper, Button } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  Paper,
+  Button,
+  Avatar,
+} from "@mui/material";
 import { Twitter, Instagram } from "@mui/icons-material";
 import { NextSeo } from "next-seo";
+import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 
 export default function AboutUs() {
   const [language, setLanguage] = useState("en");
+  const isMobile = useBreakpointDown();
 
   const content = {
     en: {
@@ -43,7 +52,7 @@ export default function AboutUs() {
           url: `${process.env.NEXT_PUBLIC_BASE_UR}/about-us`,
           images: [
             {
-              url: "/about-us-image.jpg", // Use an appropriate image for the about us page
+              url: "/main.jpeg", // Use an appropriate image for the about us page
               width: 1200,
               height: 630,
               alt: "About Us Image",
@@ -61,6 +70,11 @@ export default function AboutUs() {
             position: "relative",
           }}
         >
+          <Avatar
+            alt="Contact Us Image"
+            src="/logo.png"
+            sx={{ width: isMobile ? 50 : 100, height: isMobile ? 50 : 100 }}
+          />
           <Box sx={{ position: "absolute", top: 16, right: 16 }}>
             <Button
               onClick={() => setLanguage(language === "en" ? "fa" : "en")}

@@ -39,11 +39,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <CssBaseline /> {/* Normalize CSS */}
         <Head>
-          <link
-            rel="icon"
-            href="/favicon.svg"
-            style={{ borderRadius: "50%" }}
-          />
+          <link rel="icon" href="/logo.png" style={{ borderRadius: "50%" }} />
         </Head>
         <SnackbarProvider
           maxSnack={3}

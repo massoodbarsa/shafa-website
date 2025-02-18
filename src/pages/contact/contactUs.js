@@ -9,10 +9,13 @@ import {
   TextField,
   Button,
   IconButton,
+  Avatar,
 } from "@mui/material";
 import { Twitter, Instagram, Email, Phone } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import { NextSeo } from "next-seo";
+
+import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -25,6 +28,8 @@ export default function ContactUs() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const isMobile = useBreakpointDown();
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
@@ -84,7 +89,7 @@ export default function ContactUs() {
           url: `${process.env.NEXT_PUBLIC_BASE_UR}/contact`,
           images: [
             {
-              url: "/contact-image.jpg", // Use an appropriate image URL for the contact page
+              url: "/main.jpeg", // Use an appropriate image URL for the contact page
               width: 1200,
               height: 630,
               alt: "Contact Us Image",
@@ -95,6 +100,11 @@ export default function ContactUs() {
 
       <Container maxWidth="md">
         <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 2 }}>
+          <Avatar
+            alt="Contact Us Image"
+            src="/logo.png"
+            sx={{ width: isMobile ? 50 : 100, height: isMobile ? 50 : 100 }}
+          />
           <Box textAlign="center" mb={3}>
             <Typography variant="h4">Contact Us</Typography>
           </Box>
