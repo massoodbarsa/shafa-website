@@ -64,6 +64,8 @@ const DoctorProfile = () => {
     review_text: "",
   });
 
+  console.log(formData);
+
   const { id } = router.query; // Dynamic doctorId from the URL
 
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
@@ -256,6 +258,15 @@ const DoctorProfile = () => {
       console.error("Error fetching reviews:", error.message);
     } else {
       setReviews(data);
+
+      // Calculate average rating here
+      if (data.length > 0) {
+        const total = data.reduce((sum, review) => sum + review.rating, 0);
+        const average = total / data.length;
+        setFormData((prev) => ({ ...prev, averageRating: average }));
+      } else {
+        setFormData((prev) => ({ ...prev, averageRating: 0 }));
+      }
     }
   };
 
@@ -349,10 +360,11 @@ const DoctorProfile = () => {
               description: data.description,
               location: data.location,
               locationCode: data.location_code,
-              averageRating: data.avg_rating,
               address: data.address,
               website: data.website,
             });
+
+            console.log(data);
 
             // Check if the logged-in user is the doctor
             if (
@@ -463,7 +475,7 @@ const DoctorProfile = () => {
                 />
               ))}
               <Typography sx={{ ml: 1 }}>
-                ({formData.averageRating || 0})
+                ({formData.averageRating?.toFixed(1) || 0})
               </Typography>
             </Box>
 

@@ -66,9 +66,8 @@ export default function Home() {
   // Filter doctors based on selection
   const filteredDoctors = doctors.filter(
     (doctor) =>
-      (!selectedCountry || doctor.location === selectedCountry) &&
-      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
-      (!selectedRating || doctor.avg_rating >= selectedRating) &&
+      // ... other filters remain the same
+      (!selectedRating || doctor.averageRating >= selectedRating) &&
       doctor.status !== Status.CANCELLED &&
       doctor.status !== Status.EXPIRED &&
       doctor.status !== Status.PENDING
@@ -109,19 +108,30 @@ export default function Home() {
   // Fetch doctors from Supabase
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data, error } = await supabase.from("doctors").select("*");
+      const { data, error } = await supabase
+        .from("doctors")
+        .select("*, reviews (rating)"); // Include reviews
 
       if (error) {
         console.error("Error fetching doctors:", error);
       } else {
-        setDoctors(data);
+        // Calculate average rating for each doctor
+        const doctorsWithRatings = data.map((doctor) => {
+          const ratings = doctor.reviews?.map((r) => r.rating) || [];
+          const average =
+            ratings.length > 0
+              ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+              : 0;
+          return { ...doctor, averageRating: average };
+        });
+
+        setDoctors(doctorsWithRatings);
       }
       setLoading(false);
     };
 
     fetchDoctors();
   }, []);
-
   // Auto-select user country if available in the doctors list
   useEffect(() => {
     async function fetchData() {
@@ -329,7 +339,7 @@ export default function Home() {
                       sx={{
                         cursor: "pointer",
                         color:
-                          index < Math.round(doctor.avg_rating)
+                          index < Math.round(doctor.averageRating)
                             ? "gold"
                             : "gray",
                       }}
