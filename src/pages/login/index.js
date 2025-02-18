@@ -19,7 +19,6 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { UserRole } from "@/src/enums/UserRole";
 import useAuthStore from "../../store/authStore";
-import { Status } from "@/src/enums/PackageTypes";
 import { useSnackbar } from "notistack";
 import { supabase } from "../../utils/supabase";
 
@@ -32,26 +31,13 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  // const [isChecking, setIsChecking] = useState(true);
   const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
-  const { login, setUser, setAuth, isLoggedIn, user } = useAuthStore(); // Import setUser function
+  const { setUser, setAuth } = useAuthStore(); // Import setUser function
 
   const searchParams = useSearchParams();
   const verified = searchParams.get("verified");
   const verifyError = searchParams.get("error");
-
-  // useEffect(() => {
-  //   // If the user is already logged in, redirect them
-  //   if (user && isLoggedIn) {
-  //     const dashboardPath = user.license_nr // Check if user is a doctor
-  //       ? `/dashboard/doctor/${user.id}`
-  //       : `/`;
-  //     router.push(dashboardPath);
-  //   } else {
-  //     setIsChecking(false); // Allow login page to render if not authenticated
-  //   }
-  // }, [router, isLoggedIn, user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,41 +66,7 @@ const LoginPage = () => {
         }
       }
     }
-  }, []); // Empty dependency array to run once on mount
-
-  // useEffect(() => {
-  //   const { data: authListener } = supabase.auth.onAuthStateChange(
-  //     (event, session) => {
-  //       if (session) {
-  //         console.log("Session updated:", session);
-  //         localStorage.setItem("auth_session", JSON.stringify(session));
-  //       } else {
-  //         console.log("User logged out");
-  //         localStorage.removeItem("auth_session");
-  //       }
-  //     }
-  //   );
-
-  //   return () => {
-  //     authListener?.unsubscribe();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchSession = async () => {
-  //     const { data: session, error: sessionError } =
-  //       await supabase.auth.getSession();
-  //     if (sessionError) {
-  //       console.error("Error fetching session:", sessionError);
-  //     } else if (session) {
-  //       console.log("Session fetched successfully", session);
-  //     } else {
-  //       console.log("No session found");
-  //     }
-  //   };
-
-  //   fetchSession();
-  // }, []);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
