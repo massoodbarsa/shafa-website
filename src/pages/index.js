@@ -22,37 +22,36 @@ const Homepage = () => {
         title="Find Farsi-speaking Doctors for Iranians Abroad"
         description="Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized."
         openGraph={{
-          url: 'https://www.yourwebsite.com', // Replace with your homepage URL
-          title: 'Find Farsi-speaking Doctors for Iranians Abroad',
+          url: "https://www.yourwebsite.com", // Replace with your homepage URL
+          title: "Find Farsi-speaking Doctors for Iranians Abroad",
           description:
-            'Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized.',
+            "Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized.",
           images: [
             {
-              url: 'https://www.yourwebsite.com/images/hero-banner.jpg', // Replace with your image URL
+              url: "https://www.yourwebsite.com/images/hero-banner.jpg", // Replace with your image URL
               width: 1200,
               height: 630,
-              alt: 'Doctors Connecting with Iranians Abroad',
+              alt: "Doctors Connecting with Iranians Abroad",
             },
           ],
-          site_name: 'Your Platform Name', // Replace with your platform name
+          site_name: "Your Platform Name", // Replace with your platform name
         }}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "Iranian Doctors Hub", // Replace with your platform's name
-          "url": "https://www.iraniandoctorshub.com", // Replace with your website's URL
-          "logo": "https://www.iraniandoctorshub.com/logo.png", // Replace with your logo URL
-          "contactPoint": {
+          name: "Iranian Doctors Hub", // Replace with your platform's name
+          url: "https://www.iraniandoctorshub.com", // Replace with your website's URL
+          logo: "https://www.iraniandoctorshub.com/logo.png", // Replace with your logo URL
+          contactPoint: {
             "@type": "ContactPoint",
-            "telephone": "+31-123-456-7890", // Replace with your contact number
-            "contactType": "customer service",
-            "areaServed": "Worldwide", // You can change this to specific countries or regions
-            "availableLanguage": "Farsi, English", // Add languages available for customer support
+            telephone: "+31-123-456-7890", // Replace with your contact number
+            contactType: "customer service",
+            areaServed: "Worldwide", // You can change this to specific countries or regions
+            availableLanguage: "Farsi, English", // Add languages available for customer support
           },
         }}
       />
-      
-      {/*
+
       <Container maxWidth="lg">
         {/* Hero Section */}
         <Box textAlign="center" py={10}>
