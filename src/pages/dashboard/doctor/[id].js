@@ -584,7 +584,11 @@ const DoctorProfile = () => {
               <Typography>
                 {formData.website ? (
                   <a
-                    href={formData.website}
+                    href={
+                      formData.website.startsWith("http")
+                        ? formData.website
+                        : `https://${formData.website}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: "#1976d2", textDecoration: "none" }}
