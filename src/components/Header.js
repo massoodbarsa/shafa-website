@@ -123,7 +123,26 @@ const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
-        <Avatar alt="Remy Sharp" src="/logo.png" sx={{ mr: 2 }} />
+        <Avatar
+          alt="Contact Us Image"
+          src="/logo.png"
+          sx={{
+            mr: 2,
+            boxShadow: "0px 0px 10px 5px rgba(255, 165, 0, 0.8)", // Initial glow
+            animation: "glow 2s infinite alternate",
+            "@keyframes glow": {
+              "0%": {
+                boxShadow: "0px 0px 5px 2px rgb(62, 209, 214)",
+              }, // cane glow
+              "50%": {
+                boxShadow: "0px 0px 5px 5px rgb(54, 216, 94)",
+              }, // More greenglow
+              "100%": {
+                boxShadow: "0px 0px 5px 6px rgb(216, 219, 78)",
+              }, // Bright blue glow
+            },
+          }}
+        />
         <Typography
           variant="h6"
           component={Link}

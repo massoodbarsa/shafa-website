@@ -11,9 +11,11 @@ import {
 import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 
 const Homepage = () => {
   const router = useRouter();
+  const isMobile = useBreakpointDown();
 
   return (
     <>
@@ -61,12 +63,41 @@ const Homepage = () => {
           <Typography variant="h6" color="textSecondary" gutterBottom>
             Connect with verified professionals for your healthcare needs.
           </Typography>
-          <Box sx={{ width: "100%", position: "relative", height: 300, mt: 2 }}>
+          <Box
+            sx={{
+              width: "100%",
+              position: "relative",
+              height: 300,
+              mt: 2,
+              p: 2,
+            }}
+          >
             <Image
               src="/main.jpeg"
               alt="Doctor"
               layout="fill"
               objectFit="cover"
+            />
+            <Avatar
+              alt="Contact Us Image"
+              src="/logo.png"
+              sx={{
+                width: isMobile ? 50 : 150,
+                height: isMobile ? 50 : 150,
+                boxShadow: "0px 0px 20px 5px rgba(255, 165, 0, 0.8)", // Initial glow
+                animation: "glow 2s infinite alternate",
+                "@keyframes glow": {
+                  "0%": {
+                    boxShadow: "0px 0px 10px 2px rgb(62, 209, 214)",
+                  }, // cane glow
+                  "50%": {
+                    boxShadow: "0px 0px 20px 5px rgb(54, 216, 94)",
+                  }, // More greenglow
+                  "100%": {
+                    boxShadow: "0px 0px 30px 8px rgb(74, 161, 211)",
+                  }, // Bright blue glow
+                },
+              }}
             />
           </Box>
         </Box>

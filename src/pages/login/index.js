@@ -13,6 +13,7 @@ import {
   ToggleButton,
   FormControlLabel,
   Checkbox,
+  Avatar,
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
@@ -21,6 +22,7 @@ import { UserRole } from "@/src/enums/UserRole";
 import useAuthStore from "../../store/authStore";
 import { useSnackbar } from "notistack";
 import { supabase } from "../../utils/supabase";
+import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
