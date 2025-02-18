@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Container, Typography, Box, Paper, Button } from "@mui/material";
 import { Twitter, Instagram } from "@mui/icons-material";
+import { NextSeo } from "next-seo";
 
 export default function AboutUs() {
   const [language, setLanguage] = useState("en");
@@ -31,46 +32,71 @@ export default function AboutUs() {
   };
 
   return (
-    <Container maxWidth="md">
-      <Paper
-        elevation={3}
-        sx={{ padding: 4, marginTop: 4, borderRadius: 2, position: "relative" }}
-      >
-        <Box sx={{ position: "absolute", top: 16, right: 16 }}>
-          <Button
-            onClick={() => setLanguage(language === "en" ? "fa" : "en")}
-            variant="outlined"
-          >
-            {content[language].toggleText}
-          </Button>
-        </Box>
-        <Box textAlign="center" mb={3}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            {content[language].title}
-          </Typography>
-        </Box>
-        <Typography variant="body1" paragraph>
-          {content[language].paragraph1}
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {content[language].paragraph2}
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {content[language].paragraph3}
-        </Typography>
-        <Box
+    <>
+      <NextSeo
+        title="About Us | Farsi-Speaking Doctors"
+        description="Our platform connects Iranians outside of Iran with trusted Farsi-speaking doctors, making healthcare more accessible and personalized."
+        openGraph={{
+          title: "About Us | Farsi-Speaking Doctors",
+          description:
+            "Our platform connects Iranians outside of Iran with trusted Farsi-speaking doctors, making healthcare more accessible and personalized.",
+          url: `${process.env.NEXT_PUBLIC_BASE_UR}/about-us`,
+          images: [
+            {
+              url: "/about-us-image.jpg", // Use an appropriate image for the about us page
+              width: 1200,
+              height: 630,
+              alt: "About Us Image",
+            },
+          ],
+        }}
+      />
+      <Container maxWidth="md">
+        <Paper
+          elevation={3}
           sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-            display: "flex",
-            gap: 1,
+            padding: 4,
+            marginTop: 4,
+            borderRadius: 2,
+            position: "relative",
           }}
         >
-          <Twitter sx={{ cursor: "pointer" }} color="primary" />
-          <Instagram sx={{ cursor: "pointer" }} color="secondary" />
-        </Box>
-      </Paper>
-    </Container>
+          <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+            <Button
+              onClick={() => setLanguage(language === "en" ? "fa" : "en")}
+              variant="outlined"
+            >
+              {content[language].toggleText}
+            </Button>
+          </Box>
+          <Box textAlign="center" mb={3}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              {content[language].title}
+            </Typography>
+          </Box>
+          <Typography variant="body1" paragraph>
+            {content[language].paragraph1}
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {content[language].paragraph2}
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {content[language].paragraph3}
+          </Typography>
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 16,
+              right: 16,
+              display: "flex",
+              gap: 1,
+            }}
+          >
+            <Twitter sx={{ cursor: "pointer" }} color="primary" />
+            <Instagram sx={{ cursor: "pointer" }} color="secondary" />
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }

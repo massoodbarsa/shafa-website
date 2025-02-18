@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Twitter, Instagram, Email, Phone } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
+import { NextSeo } from "next-seo";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -72,105 +73,126 @@ export default function ContactUs() {
   };
 
   return (
-    <Container maxWidth="md">
-      <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 2 }}>
-        <Box textAlign="center" mb={3}>
-          <Typography variant="h4">Contact Us</Typography>
-        </Box>
+    <>
+      <NextSeo
+        title="Contact Us | Farsi-Speaking Doctors"
+        description="Get in touch with us to find more information about our services, or for any inquiries you may have."
+        openGraph={{
+          title: "Contact Us | Farsi-Speaking Doctors",
+          description:
+            "Get in touch with us to find more information about our services, or for any inquiries you may have.",
+          url: `${process.env.NEXT_PUBLIC_BASE_UR}/contact`,
+          images: [
+            {
+              url: "/contact-image.jpg", // Use an appropriate image URL for the contact page
+              width: 1200,
+              height: 630,
+              alt: "Contact Us Image",
+            },
+          ],
+        }}
+      />
 
-        {/* Contact Info */}
-        <Box textAlign="center" mb={5}>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap={1}
-            mb={2}
-          >
-            <Phone color="success" />
-            <Typography variant="body1">+123 456 7890</Typography>
+      <Container maxWidth="md">
+        <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 2 }}>
+          <Box textAlign="center" mb={3}>
+            <Typography variant="h4">Contact Us</Typography>
           </Box>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap={1}
-          >
-            <Email color="success" />
-            <Typography variant="body1">contact@example.com</Typography>
+
+          {/* Contact Info */}
+          <Box textAlign="center" mb={5}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              gap={1}
+              mb={2}
+            >
+              <Phone color="success" />
+              <Typography variant="body1">+123 456 7890</Typography>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              gap={1}
+            >
+              <Email color="success" />
+              <Typography variant="body1">contact@example.com</Typography>
+            </Box>
           </Box>
-        </Box>
-        <Box display="flex" justifyContent="center" gap={2} mb={3}>
-          <IconButton href="https://twitter.com" target="_blank">
-            <Twitter color="primary" />
-          </IconButton>
-          <IconButton href="https://instagram.com" target="_blank">
-            <Instagram color="secondary" />
-          </IconButton>
-        </Box>
+          <Box display="flex" justifyContent="center" gap={2} mb={3}>
+            <IconButton href="https://twitter.com" target="_blank">
+              <Twitter color="primary" />
+            </IconButton>
+            <IconButton href="https://instagram.com" target="_blank">
+              <Instagram color="secondary" />
+            </IconButton>
+          </Box>
 
-        {/* Contact Form */}
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          display="flex"
-          flexDirection="column"
-          gap={2}
-        >
-          <TextField
-            label="Name"
-            name="name"
-            fullWidth
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Your Email"
-            name="email"
-            type="email"
-            fullWidth
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Subject"
-            name="subject"
-            fullWidth
-            required
-            value={formData.subject}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Message"
-            name="message"
-            multiline
-            rows={4}
-            fullWidth
-            required
-            value={formData.message}
-            onChange={handleChange}
-          />
-
-          {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="success.main">{success}</Typography>}
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={
-              !formData.name ||
-              !formData.email ||
-              !formData.subject ||
-              !formData.message
-            }
+          {/* Contact Form */}
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={2}
           >
-            {loading ? "Sending..." : "Send Message"}
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+            <TextField
+              label="Name"
+              name="name"
+              fullWidth
+              required
+              value={formData.name}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Your Email"
+              name="email"
+              type="email"
+              fullWidth
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Subject"
+              name="subject"
+              fullWidth
+              required
+              value={formData.subject}
+              onChange={handleChange}
+            />
+            <TextField
+              label="Message"
+              name="message"
+              multiline
+              rows={4}
+              fullWidth
+              required
+              value={formData.message}
+              onChange={handleChange}
+            />
+
+            {error && <Typography color="error">{error}</Typography>}
+            {success && <Typography color="success.main">{success}</Typography>}
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={
+                !formData.name ||
+                !formData.email ||
+                !formData.subject ||
+                !formData.message
+              }
+            >
+              {loading ? "Sending..." : "Send Message"}
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }

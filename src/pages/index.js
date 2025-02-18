@@ -8,6 +8,7 @@ import {
   Grid,
   Container,
 } from "@mui/material";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
