@@ -28,6 +28,7 @@ import { UserRole } from "@/src/enums/UserRole";
 import SpecialitySelect from "./SpecialitySelect";
 import { Status } from "@/src/enums/PackageTypes";
 import { formatDate } from "../utils/formatDate";
+import { capitalizeFirstLetter } from "../utils/capitalize";
 
 const RegisterForm = () => {
   const supabase = createClientComponentClient({
@@ -167,10 +168,11 @@ const RegisterForm = () => {
       if (!existing) {
         const insertData = {
           user_id: user.id,
-          first_name: formData.first_name.toLowerCase(),
-          last_name: formData.last_name.toLowerCase(),
-          full_name:
-            `${formData.first_name} ${formData.last_name}`.toLowerCase(),
+          first_name: capitalizeFirstLetter(formData.first_name),
+          last_name: capitalizeFirstLetter(formData.last_name),
+          full_name: `${capitalizeFirstLetter(
+            formData.first_name
+          )} ${capitalizeFirstLetter(formData.last_name)}`,
           email: formData.email.trim(),
         };
 
