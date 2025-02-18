@@ -31,6 +31,7 @@ import { UserRole } from "@/src/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import LanguageIcon from "@mui/icons-material/Language";
+import { NextSeo } from "next-seo";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -399,6 +400,23 @@ const DoctorProfile = () => {
 
   return (
     <Container maxWidth="lg">
+      <NextSeo
+        title={`${doctorData.full_name} | Farsi-Speaking Doctor`}
+        description={`Learn more about ${doctorData.full_name}, a top Farsi-speaking doctor specializing in ${doctorData.specialty}.`}
+        openGraph={{
+          title: `${doctorData.full_name} | Farsi-Speaking Doctor`,
+          description: `Learn more about ${doctorData.full_name}, a top Farsi-speaking doctor specializing in ${doctorData.specialty}.`,
+          url: `${process.env.NEXT_PUBLIC_BASE_UR}/dashboard/doctor/${doctorData.id}`,
+          images: [
+            {
+              url: doctorData.profileImage || "/default-doctor.png",
+              width: 1200,
+              height: 630,
+              alt: `${doctorData.name} Profile Image`,
+            },
+          ],
+        }}
+      />
       {user?.id === doctorData?.id && (
         <Box position="relative">
           <OpenIconSpeedDial doctorData={doctorData} />
