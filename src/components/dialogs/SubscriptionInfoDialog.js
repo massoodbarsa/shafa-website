@@ -39,29 +39,25 @@ const calculateDuration = (startDate, endDate) => {
   const end = new Date(endDate);
 
   const diffTime = Math.abs(end - start);
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  let years = end.getFullYear() - start.getFullYear();
-  let months = end.getMonth() - start.getMonth();
-  let days = end.getDate() - start.getDate();
+  // Calculate total months (approximate, using 30.44 days per month average)
+  const totalMonths = Math.floor(totalDays / 30.44);
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  const days = Math.round(totalDays - totalMonths * 30.44);
 
-  if (days < 0) {
-    months--;
-    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
-    days += prevMonth.getDate();
+  // Return appropriate format based on duration
+  if (totalMonths >= 12) {
+    return { years, months, days: 0, totalDays }; // Days not shown for >12 months
+  } else if (totalMonths >= 1) {
+    return { years: 0, months: totalMonths, days, totalDays }; // Months and days
+  } else {
+    return { years: 0, months: 0, days: totalDays, totalDays }; // Days only
   }
-
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-
-  if (days < 0) days = 0;
-
-  return { diffDays, years, months, days };
 };
 
-// Capitalize package name
+// Format package name
 const formatPackageName = (packageId) => {
   if (!packageId) return "None";
   return packageId.charAt(0).toUpperCase() + packageId.slice(1).toLowerCase();
@@ -72,20 +68,37 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
   const [duration] = useState(
     user
       ? calculateDuration(user.start_date, user.end_date)
-      : { years: 0, months: 0, days: 0 }
+      : { years: 0, months: 0, days: 0, totalDays: 0 }
   );
+
+  // Format duration string based on calculated values
+  const formatDuration = () => {
+    const { years, months, days } = duration;
+
+    if (years > 0) {
+      const yearText = `${years} year${years > 1 ? "s" : ""}`;
+      const monthText =
+        months > 0 ? ` ${months} month${months > 1 ? "s" : ""}` : "";
+      return yearText + monthText;
+    } else if (months > 0) {
+      const monthText = `${months} month${months > 1 ? "s" : ""}`;
+      const dayText = days > 0 ? ` ${days} day${days > 1 ? "s" : ""}` : "";
+      return monthText + dayText;
+    } else {
+      return `${days} day${days > 1 ? "s" : ""}`;
+    }
+  };
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm" // Slightly narrower for a cleaner look
+      maxWidth="sm"
       fullWidth
       fullScreen={isMobile}
-      sx={{ "& .MuiDialog-paper": { borderRadius: 2 } }} // Rounded corners
+      sx={{ "& .MuiDialog-paper": { borderRadius: 2 } }}
     >
       <DialogTitle color="primary">Subscription Information</DialogTitle>
-
       <DialogContent sx={{ p: 4 }}>
         {user ? (
           <Grid container spacing={2}>
@@ -122,18 +135,7 @@ export default function SubscriptionInfoDialog({ open, onClose, user }) {
                     <Box display="flex" alignItems="center" gap={1}>
                       <CalendarIcon sx={{ color: "text.secondary" }} />
                       <Typography variant="body1">
-                        <strong>Duration:</strong>{" "}
-                        {duration.years > 0
-                          ? `${duration.years} year${
-                              duration.years > 1 ? "s" : ""
-                            }`
-                          : duration.months > 0
-                          ? `${duration.months} month${
-                              duration.months > 1 ? "s" : ""
-                            }`
-                          : `${duration.days} day${
-                              duration.days > 1 ? "s" : ""
-                            }`}
+                        <strong>Duration:</strong> {formatDuration()}
                       </Typography>
                     </Box>
                   )}
