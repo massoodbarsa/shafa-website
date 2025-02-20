@@ -26,7 +26,7 @@ const AuthGuard = ({ children }) => {
         router.push("/login");
       } else {
         if (cleanupRef.current) cleanupRef.current();
-        cleanupRef.current = startTimer(); // Start timer only if session exists
+        cleanupRef.current = startTimer();
       }
     };
 
@@ -49,10 +49,12 @@ const AuthGuard = ({ children }) => {
   }, [router.pathname, clearUser, startTimer]);
 
   useEffect(() => {
+    // Only redirect if user is loaded and not an admin
+    if (user === null) return; // Wait for user to be loaded
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
       router.push("/list");
     }
-  }, [router.pathname, user?.role]);
+  }, [router.pathname, user]);
 
   useEffect(() => {
     if (
