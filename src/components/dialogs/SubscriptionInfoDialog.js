@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -10,12 +10,16 @@ import {
   Paper,
   Divider,
   Chip,
+  Box,
 } from "@mui/material";
-
+import {
+  Event as EventIcon,
+  CalendarToday as CalendarIcon,
+  CardMembership as MembershipIcon,
+} from "@mui/icons-material";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
-import { Status } from "@/src/enums/PackageTypes";
+import { Status, PackageTypes } from "@/src/enums/PackageTypes";
 
-// Define status colors
 const statusColors = {
   [Status.ACTIVE]: "success",
   [Status.EXPIRED]: "warning",
@@ -24,110 +28,168 @@ const statusColors = {
   [Status.FREE]: "info",
 };
 
+const packageColors = {
+  [PackageTypes.BRONZE]: "#CD7F32", // Bronze
+  [PackageTypes.SILVER]: "#C0C0C0", // Silver
+  [PackageTypes.GOLD]: "#FFD700", // Gold
+};
+
 const calculateDuration = (startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
 
   const diffTime = Math.abs(end - start);
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert to days
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  // Calculate years and months
   let years = end.getFullYear() - start.getFullYear();
   let months = end.getMonth() - start.getMonth();
   let days = end.getDate() - start.getDate();
 
-  // Adjust if days are negative (crossing month boundary)
   if (days < 0) {
     months--;
     const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
     days += prevMonth.getDate();
   }
 
-  // Adjust if months are negative (crossing year boundary)
   if (months < 0) {
     years--;
     months += 12;
   }
 
-  // Ensure days are non-negative
   if (days < 0) days = 0;
 
   return { diffDays, years, months, days };
 };
 
+// Capitalize package name
+const formatPackageName = (packageId) => {
+  if (!packageId) return "None";
+  return packageId.charAt(0).toUpperCase() + packageId.slice(1).toLowerCase();
+};
+
 export default function SubscriptionInfoDialog({ open, onClose, user }) {
   const isMobile = useBreakpointDown();
-
   const [duration] = useState(
-    calculateDuration(user.start_date, user.end_date)
+    user
+      ? calculateDuration(user.start_date, user.end_date)
+      : { years: 0, months: 0, days: 0 }
   );
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="sm" // Slightly narrower for a cleaner look
       fullWidth
       fullScreen={isMobile}
+      sx={{ "& .MuiDialog-paper": { borderRadius: 2 } }} // Rounded corners
     >
       <DialogTitle color="primary">Subscription Information</DialogTitle>
-      <DialogContent>
+
+      <DialogContent sx={{ p: 4 }}>
         {user ? (
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Paper
-                elevation={3}
+                elevation={4}
                 sx={{
-                  padding: 4,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
+                  p: 3,
+                  bgcolor: "#fafafa",
+                  borderRadius: 2,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               >
-                {user.status !== Status.FREE && (
-                  <Typography variant="body1">
-                    <strong>Duration:</strong>{" "}
-                    {duration.years > 0
-                      ? `${duration.years} year${duration.years > 1 ? "s" : ""}`
-                      : duration.months > 0
-                      ? `${duration.months} month${
-                          duration.months > 1 ? "s" : ""
-                        }`
-                      : `${duration.days} day${duration.days > 1 ? "s" : ""}`}
-                  </Typography>
-                )}
+                <Box display="flex" flexDirection="column" gap={2}>
+                  {/* Package Type */}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <MembershipIcon sx={{ color: "text.secondary" }} />
+                    <Typography variant="body1">
+                      <strong>Package:</strong>{" "}
+                      <Chip
+                        label={formatPackageName(user.last_package)}
+                        sx={{
+                          bgcolor:
+                            packageColors[user.last_package] || "grey.300",
+                          color: user.last_package ? "white" : "text.primary",
+                          fontWeight: "bold",
+                        }}
+                      />
+                    </Typography>
+                  </Box>
 
-                <Divider sx={{ marginBottom: 2 }} />
-                <Typography
-                  variant="body1"
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
-                  <Chip
-                    label={user.status}
-                    color={statusColors[user.status]}
-                    // color="default"
-                    variant="filled"
-                  />
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Start Date:</strong>{" "}
-                  {new Date(user.start_date).toLocaleDateString()}
-                </Typography>
-                {user.status !== Status.FREE && (
-                  <Typography variant="body1">
-                    <strong>End Date:</strong>{" "}
-                    {new Date(user.end_date).toLocaleDateString()}
-                  </Typography>
-                )}
+                  {/* Duration */}
+                  {user.status !== Status.FREE && (
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <CalendarIcon sx={{ color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        <strong>Duration:</strong>{" "}
+                        {duration.years > 0
+                          ? `${duration.years} year${
+                              duration.years > 1 ? "s" : ""
+                            }`
+                          : duration.months > 0
+                          ? `${duration.months} month${
+                              duration.months > 1 ? "s" : ""
+                            }`
+                          : `${duration.days} day${
+                              duration.days > 1 ? "s" : ""
+                            }`}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  <Divider sx={{ my: 2 }} />
+
+                  {/* Status */}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <EventIcon sx={{ color: "text.secondary" }} />
+                    <Typography variant="body1">
+                      <strong>Status:</strong>{" "}
+                      <Chip
+                        label={user.status}
+                        color={statusColors[user.status]}
+                        variant="filled"
+                        sx={{ fontWeight: "bold" }}
+                      />
+                    </Typography>
+                  </Box>
+
+                  {/* Start Date */}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <CalendarIcon sx={{ color: "text.secondary" }} />
+                    <Typography variant="body1">
+                      <strong>Start Date:</strong>{" "}
+                      {new Date(user.start_date).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+
+                  {/* End Date */}
+                  {user.status !== Status.FREE && (
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <CalendarIcon sx={{ color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        <strong>End Date:</strong>{" "}
+                        {new Date(user.end_date).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
               </Paper>
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="body1">No user found.</Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ p: 2 }}>
+            No subscription information available.
+          </Typography>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary" variant="contained">
+      <DialogActions sx={{ p: 3 }}>
+        <Button
+          onClick={onClose}
+          color="primary"
+          variant="contained"
+          sx={{ borderRadius: 1, px: 4 }}
+        >
           Close
         </Button>
       </DialogActions>

@@ -13,9 +13,9 @@ export default async function handler(req, res) {
     const { packageId, currency = "eur" } = req.body;
 
     const packages = {
-      [PackageTypes.ONE_MONTH]: { price: 10, name: "1 Month Subscription" },
-      [PackageTypes.THREE_MONTHS]: { price: 25, name: "3 Months Subscription" },
-      [PackageTypes.ONE_YEAR]: { price: 90, name: "1 Year Subscription" },
+      [PackageTypes.BRONZE]: { price: 10, name: "3 Month Subscription" },
+      [PackageTypes.SILVER]: { price: 25, name: "6 Months Subscription" },
+      [PackageTypes.GOLD]: { price: 90, name: "1 Year Subscription" },
     };
 
     if (!packages[packageId]) {

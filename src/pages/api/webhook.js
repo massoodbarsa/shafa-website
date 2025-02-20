@@ -59,15 +59,18 @@ export default async function handler(req, res) {
     const startDate = new Date();
     let endDate = new Date(doctor.end_date || startDate);
 
-    if (packageId === PackageTypes.ONE_MONTH)
-      endDate.setMonth(endDate.getMonth() + 1);
-    if (packageId === PackageTypes.THREE_MONTHS)
+    if (packageId === PackageTypes.BRONZE)
       endDate.setMonth(endDate.getMonth() + 3);
-    if (packageId === PackageTypes.ONE_YEAR)
+    if (packageId === PackageTypes.SILVER)
+      endDate.setMonth(endDate.getMonth() + 6);
+    if (packageId === PackageTypes.GOLD)
       endDate.setFullYear(endDate.getFullYear() + 1);
 
     console.log("📅 Subscription Start:", startDate);
     console.log("📅 Subscription End:", endDate);
+
+    // Determine if the doctor should be featured
+    const isFeatured = packageId === PackageTypes.GOLD;
 
     // Update the existing doctor's subscription
     const { error: updateError } = await supabase
@@ -77,6 +80,7 @@ export default async function handler(req, res) {
         status: Status.ACTIVE,
         start_date: startDate.toISOString(),
         end_date: endDate.toISOString(),
+        featured: isFeatured,
       })
       .eq("id", doctor.id);
 
