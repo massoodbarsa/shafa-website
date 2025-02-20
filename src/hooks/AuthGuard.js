@@ -1,4 +1,3 @@
-// src/hooks/AuthGuard.js
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../utils/supabase";
@@ -21,27 +20,29 @@ const AuthGuard = ({ children }) => {
         error,
       } = await supabase.auth.getSession();
 
-      if (session && !error) {
-        // Cleanup previous timer before starting new one
+      if (error || !session) {
+        clearUser();
         if (cleanupRef.current) cleanupRef.current();
-        cleanupRef.current = startTimer();
+        router.push("/login");
+      } else {
+        if (cleanupRef.current) cleanupRef.current();
+        cleanupRef.current = startTimer(); // Start timer only if session exists
       }
     };
 
     checkSession();
 
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
+      if (event === "SIGNED_OUT" || !session) {
         if (cleanupRef.current) cleanupRef.current();
         clearUser();
-        // router.push("/login");
+        router.push("/login");
       }
     });
 
     subscription = authListener.data.subscription;
 
     return () => {
-      // Cleanup all resources
       if (subscription) subscription.unsubscribe();
       if (cleanupRef.current) cleanupRef.current();
     };
@@ -49,9 +50,9 @@ const AuthGuard = ({ children }) => {
 
   useEffect(() => {
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
-      router.push("/list"); // Redirect to homepage if not admin
+      router.push("/list");
     }
-  }, [router.pathname, user?.role]); // Run only when pathname or user role changes
+  }, [router.pathname, user?.role]);
 
   useEffect(() => {
     if (
@@ -59,9 +60,9 @@ const AuthGuard = ({ children }) => {
         router.pathname.includes("/register")) &&
       isLoggedIn()
     ) {
-      router.push("/list"); // Redirect to homepage if not admin
+      router.push("/list");
     }
-  }, [router.pathname, isLoggedIn]); // Run only when pathname or user role changes
+  }, [router.pathname, isLoggedIn]);
 
   return <>{children}</>;
 };

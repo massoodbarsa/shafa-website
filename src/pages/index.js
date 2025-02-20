@@ -236,7 +236,7 @@ const Homepage = () => {
       </Box> */}
 
         {/* How It Works */}
-        <Box py={5} textAlign="center">
+        {/* <Box py={5} textAlign="center">
           <Typography variant="h4" fontWeight={600} gutterBottom>
             How It Works
           </Typography>
@@ -277,7 +277,7 @@ const Homepage = () => {
               </Grid>
             ))}
           </Grid>
-        </Box>
+        </Box> */}
 
         {/* Final CTA */}
         <Box textAlign="center" py={5}>
