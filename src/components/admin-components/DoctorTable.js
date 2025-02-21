@@ -30,6 +30,7 @@ import { formatDate } from "../../utils/formatDate";
 import AdminSpecialitySelect from "./AdminSpecialitySelect";
 import EmailIcon from "@mui/icons-material/Email";
 import EmailToDoctorDialog from "./EmailToDoctorDialog";
+import { useRouter } from "next/router";
 
 const DoctorTable = () => {
   const [doctors, setDoctors] = useState([]);
@@ -53,6 +54,8 @@ const DoctorTable = () => {
 
   const isMobile = useBreakpointDown();
   const { enqueueSnackbar } = useSnackbar();
+
+  const router = useRouter();
 
   const handleOpenEditDialog = (doctor) => {
     setDoctorToEdit(doctor);
@@ -274,7 +277,10 @@ const DoctorTable = () => {
                   <EmailIcon color="primary" />
                 </IconButton>
               </TableCell>
-              <TableCell>
+              <TableCell
+                onClick={() => router.push(`/dashboard/doctor/${doctor.id}`)}
+                sx={{ cursor: "pointer" }}
+              >
                 {doctor.profile_image ? (
                   <Avatar
                     src={doctor.profile_image}
