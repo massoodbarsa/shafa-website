@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router"; // Using next/router
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import {
   Container,
   Box,
@@ -19,7 +21,7 @@ import StarIcon from "@mui/icons-material/Star";
 import useAuthStore from "../../../store/authStore";
 import { supabase } from "../../../utils/supabase";
 import LinearProgress from "@mui/material/LinearProgress";
-import { LoadingButton } from "@mui/lab"; // Import LoadingButton
+import { LoadingButton } from "@mui/lab";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
@@ -35,10 +37,10 @@ import LanguageIcon from "@mui/icons-material/Language";
 const DoctorProfile = () => {
   const router = useRouter();
   const { user } = useAuthStore();
-  const [loading, setLoading] = useState(false); // Loading state
-
+  const [loading, setLoading] = useState(false);
   const [editable, setEditable] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
+  const [specialities, setSpecialities] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -53,50 +55,56 @@ const DoctorProfile = () => {
     address: "",
     website: "",
   });
-
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [websiteError, setWebsiteError] = useState("");
-
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     rating: 0,
     review_text: "",
   });
 
-  console.log(formData);
-
-  const { id } = router.query; // Dynamic doctorId from the URL
-
-  const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
-
+  const { id } = router.query;
+  const { enqueueSnackbar } = useSnackbar();
   const isMobile = useBreakpointDown();
+
   // Load country names
   countries.registerLocale(enLocale);
   const countryList = Object.entries(countries.getNames("en")).map(
     ([code, name]) => ({
       code,
       label: name,
-      flag: `https://flagcdn.com/w40/${code.toLowerCase()}.png`, // Flags API
+      flag: `https://flagcdn.com/w40/${code.toLowerCase()}.png`,
     })
   );
 
   const containsFarsi = (text) => /[\u0600-\u06FF]/.test(text);
 
+  // Fetch specialties from Supabase
+  const fetchSpecialities = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("specialities")
+        .select("name, farsi_name");
+      if (error) throw error;
+      setSpecialities(data || []);
+    } catch (error) {
+      console.error("Error fetching specialties:", error.message);
+    }
+  };
+
   const validateFields = () => {
     let isValid = true;
 
-    if (!formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)) {
-      setPhoneError("Enter a valid phone number.");
+    if (formData.phone && !/^[0-9+\-\s()]{7,15}$/.test(formData.phone)) {
+      setPhoneError("Enter a valid phone number (7-15 digits).");
       isValid = false;
     } else {
       setPhoneError("");
     }
 
-    if (!formData.address || formData.address < 6) {
-      setAddressError(
-        "Address could not be empty and must be at least 6 characters."
-      );
+    if (!formData.address || formData.address.length < 6) {
+      setAddressError("Address must be at least 6 characters.");
       isValid = false;
     } else {
       setAddressError("");
@@ -105,11 +113,8 @@ const DoctorProfile = () => {
     if (formData.website.trim() !== "") {
       const websiteRegex =
         /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?\/?$/gm;
-
       if (!websiteRegex.test(formData.website)) {
-        setWebsiteError(
-          "Please enter a valid website (e.g., example.com or www.example.com)"
-        );
+        setWebsiteError("Enter a valid website (e.g., example.com)");
         isValid = false;
       } else {
         setWebsiteError("");
@@ -124,7 +129,6 @@ const DoctorProfile = () => {
   };
 
   const handleLocationChange = (event, newValue) => {
-    console.log(newValue);
     if (newValue) {
       setFormData({
         ...formData,
@@ -138,69 +142,52 @@ const DoctorProfile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setLoading(true); // Start loading state
-
+    setLoading(true);
     try {
       const fileName = `doctors/${Date.now()}-${file.name}`;
-
-      // 1. Check if the doctor already has a profile image
       const existingImageUrl = formData.profileImage;
 
-      // If there's an existing image, delete it from the storage
       if (existingImageUrl) {
-        const existingFileName = existingImageUrl.split("/").pop(); // Extract file name from URL
+        const existingFileName = existingImageUrl.split("/").pop();
         const { error: deleteError } = await supabase.storage
           .from("profile_pictures")
           .remove([`doctors/${existingFileName}`]);
-
-        if (deleteError) {
-          throw deleteError;
-        }
+        if (deleteError) throw deleteError;
       }
 
-      // 2. Upload new image to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from("profile_pictures")
         .upload(fileName, file);
-
       if (uploadError) throw uploadError;
 
-      // 3. Get public URL of the uploaded image
       const { data: publicUrlData } = supabase.storage
         .from("profile_pictures")
         .getPublicUrl(fileName);
 
-      // 4. Update the doctor's profile in the database
       const { error: updateError } = await supabase
         .from("doctors")
         .update({ profile_image: publicUrlData.publicUrl })
         .eq("user_id", user.user_id);
-
       if (updateError) throw updateError;
 
-      // 5. Update local state with the new image URL
       setFormData({ ...formData, profileImage: publicUrlData.publicUrl });
     } catch (error) {
       console.error("Error uploading image:", error.message);
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (!doctorData) return;
+    if (!doctorData || !validateFields()) return;
 
-    if (!validateFields()) return;
-
-    setLoading(true); // Start loading state
-
+    setLoading(true);
     try {
-      // Update the doctor's description in the database
       const { error } = await supabase
         .from("doctors")
         .update({
           description: formData.description,
-          phone: formData.phone, // Update phone number
+          phone: formData.phone,
           location: formData.location,
           location_flag: formData.locationFlag,
           address: formData.address,
@@ -208,42 +195,33 @@ const DoctorProfile = () => {
         })
         .eq("user_id", doctorData.user_id);
 
-      if (error) {
-        throw new Error(error.message); // Handle any errors
-      }
+      if (error) throw error;
 
-      // Fetch updated data after saving
       const { data: updatedDoctor, error: fetchError } = await supabase
         .from("doctors")
         .select("*")
         .eq("user_id", doctorData.user_id)
         .single();
 
-      if (fetchError) {
-        throw new Error(fetchError.message);
-      }
+      if (fetchError) throw fetchError;
 
-      // Update state with new data
       setDoctorData(updatedDoctor);
       setFormData((prev) => ({
         ...prev,
         description: updatedDoctor.description,
         phone: updatedDoctor.phone,
         location: updatedDoctor.location,
-        location_flag: updatedDoctor.locationFlag,
+        locationFlag: updatedDoctor.location_flag,
         address: updatedDoctor.address,
         website: updatedDoctor.website,
       }));
 
-      enqueueSnackbar("Your data is updated.", {
-        variant: "success",
-      });
-
-      console.log("Updated doctor data:", updatedDoctor);
+      enqueueSnackbar("Your data is updated.", { variant: "success" });
     } catch (error) {
-      console.error("Error updating description:", error.message);
+      console.error("Error updating profile:", error.message);
+      enqueueSnackbar("Failed to update profile.", { variant: "error" });
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 
@@ -258,41 +236,28 @@ const DoctorProfile = () => {
       console.error("Error fetching reviews:", error.message);
     } else {
       setReviews(data);
-
-      // Calculate average rating here
-      if (data.length > 0) {
-        const total = data.reduce((sum, review) => sum + review.rating, 0);
-        const average = total / data.length;
-        setFormData((prev) => ({ ...prev, averageRating: average }));
-      } else {
-        setFormData((prev) => ({ ...prev, averageRating: 0 }));
-      }
+      const total = data.reduce((sum, review) => sum + review.rating, 0);
+      const average = data.length > 0 ? total / data.length : 0;
+      setFormData((prev) => ({ ...prev, averageRating: average }));
     }
   };
 
   const handleSubmitReview = async () => {
     if (newReview.rating === 0) {
-      enqueueSnackbar("Please select a rating before submitting.", {
-        variant: "warning",
-      });
+      enqueueSnackbar("Please select a rating.", { variant: "warning" });
       return;
     }
 
     setLoading(true);
-
     try {
-      // Check if the client has already reviewed this doctor
       const { data: existingReview, error: checkError } = await supabase
         .from("reviews")
         .select("id")
         .eq("doctor_id", doctorData.id)
         .eq("client_id", user.id)
+        .single();
 
-        .single(); // Ensure only one record is fetched
-
-      if (checkError && checkError.code !== "PGRST116") {
-        throw checkError; // Ignore "PGRST116" (no rows found), as that means no review exists
-      }
+      if (checkError && checkError.code !== "PGRST116") throw checkError;
 
       if (user?.id === doctorData?.id) {
         enqueueSnackbar("You cannot review your own profile.", {
@@ -302,14 +267,12 @@ const DoctorProfile = () => {
       }
 
       if (existingReview) {
-        enqueueSnackbar(
-          "You have already submitted a review for this doctor.",
-          { variant: "error" }
-        );
+        enqueueSnackbar("You have already reviewed this doctor.", {
+          variant: "error",
+        });
         return;
       }
 
-      // Insert new review
       const { error: insertError } = await supabase.from("reviews").insert([
         {
           doctor_id: doctorData.id,
@@ -321,17 +284,16 @@ const DoctorProfile = () => {
 
       if (insertError) throw insertError;
 
-      // Fetch updated reviews
       fetchReviews();
-      setReviews({ rating: 0, reviewText: "" }); // Reset form
+      setNewReview({ rating: 0, review_text: "" });
+      enqueueSnackbar("Review submitted successfully.", { variant: "success" });
     } catch (error) {
       console.error("Error submitting review:", error.message);
+      enqueueSnackbar("Failed to submit review.", { variant: "error" });
     } finally {
       setLoading(false);
     }
   };
-
-  // useEffects
 
   useEffect(() => {
     if (id) {
@@ -340,52 +302,42 @@ const DoctorProfile = () => {
           const { data, error } = await supabase
             .from("doctors")
             .select("*")
-            .eq("id", id) // Assuming full_name is the correct column
-            .single(); // Ensure we get only one result
+            .eq("id", id)
+            .single();
 
-          if (error) {
-            throw new Error(error.message); // Throw error if any issue
-          }
+          if (error) throw error;
 
           if (data) {
             setDoctorData(data);
             setFormData({
-              firstName: data.first_name,
-              lastName: data.last_name,
-              speciality: data.speciality,
-              profileImage: data.profile_image,
-              email: data.email,
-              phone: data.phone,
-              location: data.location,
-              description: data.description,
-              location: data.location,
-              locationCode: data.location_code,
-              address: data.address,
-              website: data.website,
+              firstName: data.first_name || "",
+              lastName: data.last_name || "",
+              speciality: data.speciality || "",
+              profileImage: data.profile_image || "",
+              email: data.email || "",
+              phone: data.phone || "",
+              description: data.description || "",
+              location: data.location || "",
+              locationFlag: data.location_flag || "",
+              averageRating: null,
+              address: data.address || "",
+              website: data.website || "",
             });
 
-            console.log(data);
-
-            // Check if the logged-in user is the doctor
             if (
               user?.user_id === data.user_id &&
               !["Pending", "Cancelled", "Expired"].includes(data.status)
             ) {
               setEditable(true);
-            } else {
-              // If the status is one of the restricted statuses, show an error and disable editing
-              if (["Pending", "Cancelled", "Expired"].includes(data.status)) {
-                enqueueSnackbar(
-                  `Your account status is ${data.status}. Editing is not possible.`,
-                  {
-                    variant: "error",
-                  }
-                );
-                setEditable(false);
-              }
+            } else if (
+              ["Pending", "Cancelled", "Expired"].includes(data.status)
+            ) {
+              enqueueSnackbar(
+                `Your account status is ${data.status}. Editing is not possible.`,
+                { variant: "error" }
+              );
+              setEditable(false);
             }
-          } else {
-            console.error("No doctor found for this name");
           }
         } catch (error) {
           console.error("Error fetching doctor data:", error.message);
@@ -393,6 +345,7 @@ const DoctorProfile = () => {
       };
 
       fetchDoctorData();
+      fetchSpecialities();
     }
   }, [id, user]);
 
@@ -402,12 +355,17 @@ const DoctorProfile = () => {
     }
   }, [doctorData]);
 
-  if (!user || !doctorData)
+  if (!doctorData) {
     return (
       <Box sx={{ width: "100%" }}>
         <LinearProgress />
       </Box>
     );
+  }
+
+  const farsiSpeciality =
+    specialities.find((spec) => spec.name === formData.speciality)
+      ?.farsi_name || "";
 
   return (
     <Container maxWidth="lg">
@@ -419,12 +377,7 @@ const DoctorProfile = () => {
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar
           src={formData.profileImage}
-          sx={{
-            width: 160,
-            height: 200,
-            mx: "auto",
-            mb: 2,
-          }}
+          sx={{ width: 160, height: 200, mx: "auto", mb: 2 }}
         />
         {editable && (
           <Button variant="contained" component="label">
@@ -445,11 +398,10 @@ const DoctorProfile = () => {
         <CardContent>
           <Box
             display="flex"
-            flexDirection={isMobile ? "column" : "row"} // Stack on mobile, row on desktop
+            flexDirection={isMobile ? "column" : "row"}
             alignItems="center"
-            justifyContent={isMobile ? "flex-start" : "space-between"} // Stack or space-between based on device
+            justifyContent={isMobile ? "flex-start" : "space-between"}
           >
-            {/* Stars */}
             <Typography
               variant="h5"
               gutterBottom
@@ -478,15 +430,22 @@ const DoctorProfile = () => {
                 ({formData.averageRating?.toFixed(1) || 0})
               </Typography>
             </Box>
-
-            {/* Name */}
           </Box>
-          <Chip
-            label={formData.speciality.toUpperCase()}
-            color="success"
-            variant="outlined"
-            sx={{ mt: 1 }}
-          />
+          <Box display="flex" alignItems="center" mt={1} gap={1}>
+            <Chip
+              label={formData.speciality.toUpperCase()}
+              color="success"
+              variant="outlined"
+            />
+
+            {farsiSpeciality && (
+              <Chip
+                label={farsiSpeciality}
+                color="primary"
+                variant="outlined"
+              />
+            )}
+          </Box>
           <Box display="flex" alignItems="center" mt={3}>
             <EmailIcon sx={{ mr: 1 }} />
             <Typography>{formData.email}</Typography>
@@ -502,7 +461,6 @@ const DoctorProfile = () => {
                 value={formData.phone}
                 onChange={(e) => {
                   const input = e.target.value;
-                  // Allow only numbers, spaces, dashes, parentheses, and +
                   if (/^[0-9+\-\s()]*$/.test(input)) {
                     setFormData({ ...formData, phone: input });
                   }
@@ -511,10 +469,9 @@ const DoctorProfile = () => {
                 helperText={phoneError}
               />
             ) : (
-              <Typography>{formData.phone}</Typography>
+              <Typography>{formData.phone || "Not provided"}</Typography>
             )}
           </Box>
-          {/* Editable Location Field */}
           <Box display="flex" alignItems="center" my={3}>
             <AddLocationAltIcon sx={{ mr: 1 }} />
             {editable ? (
@@ -544,17 +501,17 @@ const DoctorProfile = () => {
               />
             ) : (
               <Typography display="flex" alignItems="center" gap={1}>
-                {formData.location}{" "}
-                {doctorData.location_flag && (
+                {formData.location || "Not provided"}
+                {formData.locationFlag && (
                   <img
-                    src={doctorData.location_flag}
-                    alt={doctorData.location}
+                    src={formData.locationFlag}
+                    alt={formData.location}
                     width="20"
                     height="14"
                     style={{ marginRight: 8 }}
                   />
                 )}
-              </Typography> // Display selected location
+              </Typography>
             )}
           </Box>
           <Box display="flex" alignItems="center" my={3}>
@@ -567,15 +524,14 @@ const DoctorProfile = () => {
                 name="address"
                 value={formData.address}
                 required
-                onChange={(e) => {
-                  const input = e.target.value;
-                  setFormData({ ...formData, address: input });
-                }}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
                 error={!!addressError}
                 helperText={addressError}
               />
             ) : (
-              <Typography>{formData.phone}</Typography>
+              <Typography>{formData.address || "Not provided"}</Typography>
             )}
           </Box>
           <Box display="flex" alignItems="center" my={3}>
@@ -590,7 +546,7 @@ const DoctorProfile = () => {
                 onChange={handleChange}
                 placeholder="https://example.com"
                 error={!!websiteError}
-                helperText={websiteError} // Show validation message
+                helperText={websiteError}
               />
             ) : (
               <Typography>
@@ -613,19 +569,18 @@ const DoctorProfile = () => {
               </Typography>
             )}
           </Box>
-          <Divider sx={{ my: 2 }} /> {/* Line between paragraphs */}
+          <Divider sx={{ my: 2 }} />
           <Typography
             variant="body1"
             mt={3}
             sx={{
               whiteSpace: "pre-line",
-              textAlign: containsFarsi(doctorData.description)
-                ? "right"
-                : "left",
-              direction: containsFarsi(doctorData.description) ? "rtl" : "ltr", // Set direction dynamically
+              direction: "unset", // Remove forced direction
+              unicodeBidi: "plaintext", // Let browser handle bidi naturally
+              textAlign: "justify", // Justify for readability, adjust as needed
             }}
           >
-            {doctorData.description}
+            {formData.description || "No description provided"}
           </Typography>
           {editable && (
             <Box mt={3}>
@@ -638,12 +593,11 @@ const DoctorProfile = () => {
                 value={formData.description}
                 onChange={handleChange}
                 InputProps={{
-                  style: {
-                    textAlign: containsFarsi(formData.description)
-                      ? "right"
-                      : "left",
+                  sx: {
+                    direction: "unset", // Match Typography for consistency
+                    unicodeBidi: "plaintext", // Natural bidi for input
+                    textAlign: "left", // Default left for input, adjust if needed
                   },
-                  dir: containsFarsi(formData.description) ? "rtl" : "ltr", // Set direction dynamically
                 }}
               />
               <LoadingButton
@@ -669,7 +623,7 @@ const DoctorProfile = () => {
         user={user}
         disableReviewForm={
           user?.id === doctorData?.id || user?.role === UserRole.Doctor
-        } // Disable review form if the user is the doctor
+        }
       />
     </Container>
   );
