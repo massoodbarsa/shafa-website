@@ -21,7 +21,6 @@ import {
   Pagination,
 } from "@mui/material";
 import { useEffect, useState, useCallback, useMemo } from "react";
-
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { supabase } from "../../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
@@ -37,6 +36,7 @@ import { Status } from "@/src/enums/PackageTypes";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
+  const [specialities, setSpecialities] = useState([]); // New state for specialties
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
@@ -46,27 +46,49 @@ export default function Home() {
 
   const { user } = useAuthStore();
   const router = useRouter();
-
-  const itemsPerPage = 6; // 6 items per page
+  const itemsPerPage = 6;
   const { enqueueSnackbar } = useSnackbar();
-
   const isMobile = useBreakpointDown();
   countries.registerLocale(enLocale);
 
-  // Get unique countries and specialties from doctors
+  // Fetch specialties from Supabase
+  const fetchSpecialities = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("specialities")
+        .select("name, farsi_name");
+      if (error) throw error;
+      setSpecialities(data || []);
+    } catch (error) {
+      console.error("Error fetching specialties:", error.message);
+    }
+  };
+
   const uniqueCountries = useMemo(
     () => [...new Set(doctors.map((d) => d.location))],
     [doctors]
   );
 
-  const uniqueSpecialties = useMemo(
-    () => [...new Set(doctors.map((d) => d.speciality))],
-    [doctors]
-  );
-  // Filter doctors based on selection
+  const uniqueSpecialties = useMemo(() => {
+    const specialtiesFromDoctors = [
+      ...new Set(doctors.map((d) => d.speciality)),
+    ];
+    return specialtiesFromDoctors
+      .filter((specialty) => specialty) // Filter out null or undefined
+      .map((specialty) => {
+        const specialtyData =
+          specialities.find((s) => s.name === specialty) || {};
+        return {
+          label: specialty,
+          farsiLabel: specialtyData.farsi_name || "",
+        };
+      });
+  }, [doctors, specialities]);
+
   const filteredDoctors = doctors.filter(
     (doctor) =>
-      // ... other filters remain the same
+      (!selectedCountry || doctor.location === selectedCountry) &&
+      (!selectedSpecialty || doctor.speciality === selectedSpecialty) &&
       (!selectedRating || doctor.averageRating >= selectedRating) &&
       doctor.status !== Status.CANCELLED &&
       doctor.status !== Status.EXPIRED &&
@@ -84,7 +106,7 @@ export default function Home() {
         "https://ipinfo.io/json?token=3c9c12f932e280"
       );
       const data = await response.json();
-      return data.country; // Returns country code (e.g., "US", "IN")
+      return data.country;
     } catch (error) {
       console.error("Error fetching IP info:", error);
       return null;
@@ -105,17 +127,15 @@ export default function Home() {
     router.push(`/dashboard/doctor/${doctorId}`);
   };
 
-  // Fetch doctors from Supabase
   useEffect(() => {
     const fetchDoctors = async () => {
       const { data, error } = await supabase
         .from("doctors")
-        .select("*, reviews (rating)"); // Include reviews
+        .select("*, reviews (rating)");
 
       if (error) {
         console.error("Error fetching doctors:", error);
       } else {
-        // Calculate average rating for each doctor
         const doctorsWithRatings = data.map((doctor) => {
           const ratings = doctor.reviews?.map((r) => r.rating) || [];
           const average =
@@ -124,18 +144,18 @@ export default function Home() {
               : 0;
           return { ...doctor, averageRating: average };
         });
-
         setDoctors(doctorsWithRatings);
       }
       setLoading(false);
     };
 
     fetchDoctors();
+    fetchSpecialities(); // Fetch specialties
   }, []);
-  // Auto-select user country if available in the doctors list
+
   useEffect(() => {
     async function fetchData() {
-      const userCountryCode = await getUserCountry(); // e.g., "US", "IN"
+      const userCountryCode = await getUserCountry();
       if (userCountryCode) {
         const countryName = countries.getName(userCountryCode, "en");
         if (countryName && doctors.some((d) => d.location === countryName)) {
@@ -146,14 +166,13 @@ export default function Home() {
     fetchData();
   }, [getUserCountry, doctors]);
 
-  // Extract filter content into a variable for reuse in toolbar and drawer
   const filterContent = (
     <Grid2 container gap={5} justifyContent="space-around" alignItems="center">
       <Grid2 item sm={4} xs={12}>
         <FormControl sx={{ width: 200 }}>
           <Autocomplete
             options={uniqueCountries
-              .filter((location) => location) // Filter out null or undefined countries
+              .filter((location) => location)
               .map((location) => {
                 const doctorWithFlag = doctors.find(
                   (d) => d.location === location
@@ -215,8 +234,26 @@ export default function Home() {
         <FormControl sx={{ width: 250 }}>
           <Autocomplete
             options={uniqueSpecialties}
-            value={selectedSpecialty || null}
-            onChange={(event, newValue) => setSelectedSpecialty(newValue || "")}
+            value={
+              uniqueSpecialties.find(
+                (spec) => spec.label === selectedSpecialty
+              ) || null
+            }
+            onChange={(event, newValue) =>
+              setSelectedSpecialty(newValue ? newValue.label : "")
+            }
+            getOptionLabel={(option) => option.label || ""}
+            renderOption={(props, option) => (
+              <li
+                {...props}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Typography>{option.label}</Typography>
+                <Typography sx={{ color: "text.secondary" }}>
+                  {option.farsiLabel}
+                </Typography>
+              </li>
+            )}
             renderInput={(params) => (
               <TextField {...params} label="Specialty" variant="outlined" />
             )}
@@ -224,13 +261,7 @@ export default function Home() {
         </FormControl>
       </Grid2>
       <Grid2 item sm={4} xs={12}>
-        <Box
-          sx={{
-            gap: 1,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ gap: 1, display: "flex", alignItems: "center" }}>
           <Typography variant="body2">Rating: </Typography>
           {Array.from({ length: 5 }).map((_, index) => (
             <StarIcon
@@ -257,7 +288,6 @@ export default function Home() {
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
-      {/* Filter Toolbar */}
       <Toolbar
         sx={{
           display: "flex",
@@ -282,7 +312,6 @@ export default function Home() {
         )}
       </Toolbar>
 
-      {/* Mobile Filter Drawer */}
       {isMobile && (
         <Drawer
           anchor="bottom"
@@ -303,8 +332,6 @@ export default function Home() {
         </Drawer>
       )}
 
-      {/* Doctors Grid */}
-
       <Grid2 container spacing={5} justifyContent="center">
         {loading ? (
           <Box
@@ -319,80 +346,77 @@ export default function Home() {
             <CircularProgress />
           </Box>
         ) : paginatedDoctors.length > 0 ? (
-          paginatedDoctors.map((doctor) => (
-            <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
-              {/* <Link href={`/dashboard/doctor/${doctor.id}`} passHref> */}
-              <Card
-                sx={{
-                  width: 250, // Fixed width
-                  height: 400, // Fixed height
-                  display: "flex",
-                  flexDirection: "column",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleRouteToProfile(doctor.id)} // Use router.push for navigation
-              >
-                <Box p={1}>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <StarIcon
-                      key={index}
-                      sx={{
-                        cursor: "pointer",
-                        color:
-                          index < Math.round(doctor.averageRating)
-                            ? "gold"
-                            : "gray",
-                      }}
-                    />
-                  ))}
-                </Box>
-
-                {doctor.profile_image ? (
-                  <CardMedia
-                    component="img"
-                    height="200" // Fixed height for image
-                    image={doctor.profile_image}
-                    alt={`${doctor.first_name} ${doctor.last_name}`}
-                    sx={{
-                      objectFit: "contain",
-                      objectPosition: "top",
-                    }}
-                  />
-                ) : (
-                  <Avatar
-                    sx={{
-                      width: 170,
-                      height: 200,
-                      mx: "auto",
-                      mb: 2,
-                    }}
-                  />
-                )}
-
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="body1">
-                    {doctor.first_name} {doctor.last_name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {doctor.speciality || "Specialty not available"}
-                  </Typography>
-                  <Box display="flex" alignItems="center" mt={2}>
-                    {doctor.location_flag && (
-                      <img
-                        src={doctor.location_flag}
-                        alt={doctor.location}
-                        width="20"
-                        height="14"
-                        style={{ marginRight: 8 }}
+          paginatedDoctors.map((doctor) => {
+            const farsiSpeciality =
+              specialities.find((spec) => spec.name === doctor.speciality)
+                ?.farsi_name || "";
+            return (
+              <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
+                <Card
+                  sx={{
+                    width: 250,
+                    height: 400,
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleRouteToProfile(doctor.id)}
+                >
+                  <Box p={1}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <StarIcon
+                        key={index}
+                        sx={{
+                          color:
+                            index < Math.round(doctor.averageRating)
+                              ? "gold"
+                              : "gray",
+                        }}
                       />
-                    )}
-                    <Typography variant="body2">{doctor.location}</Typography>
+                    ))}
                   </Box>
-                </CardContent>
-              </Card>
-              {/* </Link> */}
-            </Grid2>
-          ))
+                  {doctor.profile_image ? (
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={doctor.profile_image}
+                      alt={`${doctor.first_name} ${doctor.last_name}`}
+                      sx={{ objectFit: "contain", objectPosition: "top" }}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{ width: 170, height: 200, mx: "auto", mb: 2 }}
+                    />
+                  )}
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="body1">
+                      {doctor.first_name} {doctor.last_name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {doctor.speciality || "Specialty not available"}
+                    </Typography>
+                    {farsiSpeciality && (
+                      <Typography variant="body2" color="text.secondary">
+                        ({farsiSpeciality})
+                      </Typography>
+                    )}
+                    <Box display="flex" alignItems="center" mt={2}>
+                      {doctor.location_flag && (
+                        <img
+                          src={doctor.location_flag}
+                          alt={doctor.location}
+                          width="20"
+                          height="14"
+                          style={{ marginRight: 8 }}
+                        />
+                      )}
+                      <Typography variant="body2">{doctor.location}</Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid2>
+            );
+          })
         ) : (
           <Box width="100%">
             <NoRecords />
