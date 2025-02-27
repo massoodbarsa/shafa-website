@@ -31,6 +31,7 @@ import AdminSpecialitySelect from "./AdminSpecialitySelect";
 import EmailIcon from "@mui/icons-material/Email";
 import EmailToDoctorDialog from "./EmailToDoctorDialog";
 import { useRouter } from "next/router";
+import StatusDot from "./StatusDot";
 
 const DoctorTable = () => {
   const [doctors, setDoctors] = useState([]);
@@ -270,69 +271,86 @@ const DoctorTable = () => {
         </TableHead>
 
         <TableBody>
-          {doctors.map((doctor) => (
-            <TableRow key={doctor.id}>
-              <TableCell>
-                <IconButton onClick={() => handleOpenEmailDialog(doctor)}>
-                  <EmailIcon color="primary" />
-                </IconButton>
-              </TableCell>
-              <TableCell
-                onClick={() => router.push(`/dashboard/doctor/${doctor.id}`)}
-                sx={{ cursor: "pointer" }}
+          {doctors.map((doctor) => {
+            const isEndDatePastCurrent = doctor.end_date
+              ? new Date(doctor.end_date) < new Date() ||
+                doctor.status === Status.EXPIRED
+              : false;
+
+            return (
+              <TableRow
+                key={doctor.id}
+                sx={{
+                  ...(isEndDatePastCurrent && {
+                    backgroundColor: "rgba(255, 0, 0, 0.1)", // Light red background for expired
+                  }),
+                }}
               >
-                {doctor.profile_image ? (
-                  <Avatar
-                    src={doctor.profile_image}
-                    alt="Doctor's Photo"
-                    sx={{ width: 40, height: 40 }}
-                  />
-                ) : (
-                  <Avatar
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      mx: "auto",
-                      mb: 2,
-                    }}
-                  />
-                )}
-              </TableCell>{" "}
-              {/* First column for Photo */}
-              <TableCell>{doctor.first_name}</TableCell>
-              <TableCell>{doctor.last_name}</TableCell>
-              <TableCell>{doctor.email}</TableCell>
-              <TableCell>{doctor.address}</TableCell>
-              <TableCell>{doctor.location}</TableCell>
-              <TableCell>{doctor.speciality}</TableCell>{" "}
-              <TableCell>{doctor.role}</TableCell>
-              <TableCell>{doctor.status}</TableCell>
-              <TableCell>
-                {doctor.start_date &&
-                  new Date(doctor.start_date).toISOString().split("T")[0]}
-              </TableCell>{" "}
-              {/* For table display */}
-              <TableCell>
-                {doctor.end_date &&
-                  new Date(doctor.end_date).toISOString().split("T")[0]}
-              </TableCell>{" "}
-              {/* For table display */}
-              <TableCell>
-                <IconButton
-                  onClick={() => handleOpenEditDialog(doctor)}
-                  color="primary"
+                <TableCell>
+                  <IconButton onClick={() => handleOpenEmailDialog(doctor)}>
+                    <EmailIcon color="primary" />
+                  </IconButton>
+                </TableCell>
+                <TableCell
+                  onClick={() => router.push(`/dashboard/doctor/${doctor.id}`)}
+                  sx={{ cursor: "pointer" }}
                 >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleOpenDeleteDialog(doctor)}
-                  color="error"
-                >
-                  <Delete />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+                  {doctor.profile_image ? (
+                    <Avatar
+                      src={doctor.profile_image}
+                      alt="Doctor's Photo"
+                      sx={{ width: 40, height: 40 }}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        mx: "auto",
+                        mb: 2,
+                      }}
+                    />
+                  )}
+                </TableCell>{" "}
+                {/* First column for Photo */}
+                <TableCell>{doctor.first_name}</TableCell>
+                <TableCell>{doctor.last_name}</TableCell>
+                <TableCell>{doctor.email}</TableCell>
+                <TableCell>{doctor.address}</TableCell>
+                <TableCell>{doctor.location}</TableCell>
+                <TableCell>{doctor.speciality}</TableCell>{" "}
+                <TableCell>{doctor.role}</TableCell>
+                <TableCell>
+                  <StatusDot status={doctor.status} endDate={doctor.end_date} />
+                  {doctor.status}
+                </TableCell>
+                <TableCell>
+                  {doctor.start_date &&
+                    new Date(doctor.start_date).toISOString().split("T")[0]}
+                </TableCell>{" "}
+                {/* For table display */}
+                <TableCell>
+                  {doctor.end_date &&
+                    new Date(doctor.end_date).toISOString().split("T")[0]}
+                </TableCell>{" "}
+                {/* For table display */}
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleOpenEditDialog(doctor)}
+                    color="primary"
+                  >
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleOpenDeleteDialog(doctor)}
+                    color="error"
+                  >
+                    <Delete />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <Dialog
