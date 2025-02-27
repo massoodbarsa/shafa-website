@@ -111,7 +111,7 @@ export default function ContactUs() {
 
           {/* Contact Info */}
           <Box textAlign="center" mb={5}>
-            <Box
+            {/* <Box
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -120,7 +120,7 @@ export default function ContactUs() {
             >
               <Phone color="success" />
               <Typography variant="body1">+123 456 7890</Typography>
-            </Box>
+            </Box> */}
             <Box
               display="flex"
               justifyContent="center"
@@ -128,14 +128,19 @@ export default function ContactUs() {
               gap={1}
             >
               <Email color="success" />
-              <Typography variant="body1">contact@example.com</Typography>
+              <Typography variant="body1">
+                IranianDoctorsHub@gmail.com
+              </Typography>
             </Box>
           </Box>
           <Box display="flex" justifyContent="center" gap={2} mb={3}>
             <IconButton href="https://twitter.com" target="_blank">
               <Twitter color="primary" />
             </IconButton>
-            <IconButton href="https://instagram.com" target="_blank">
+            <IconButton
+              href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
+              target="_blank"
+            >
               <Instagram color="secondary" />
             </IconButton>
           </Box>

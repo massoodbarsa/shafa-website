@@ -8,6 +8,7 @@ import {
   Paper,
   Button,
   Avatar,
+  IconButton,
 } from "@mui/material";
 import { Twitter, Instagram } from "@mui/icons-material";
 import { NextSeo } from "next-seo";
@@ -106,8 +107,15 @@ export default function AboutUs() {
               gap: 1,
             }}
           >
-            <Twitter sx={{ cursor: "pointer" }} color="primary" />
-            <Instagram sx={{ cursor: "pointer" }} color="secondary" />
+            <IconButton href="https://twitter.com" target="_blank">
+              <Twitter color="primary" />
+            </IconButton>
+            <IconButton
+              href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
+              target="_blank"
+            >
+              <Instagram color="secondary" />
+            </IconButton>
           </Box>
         </Paper>
       </Container>
