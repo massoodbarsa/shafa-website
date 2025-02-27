@@ -24,7 +24,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { supabase } from "../../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
-import Link from "next/link";
+
 import NoRecords from "../../components/NoRecords";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";

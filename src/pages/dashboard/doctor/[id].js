@@ -33,7 +33,6 @@ import { UserRole } from "@/src/enums/UserRole";
 import OpenIconSpeedDial from "@/src/components/OpenIconSpeedDial";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import LanguageIcon from "@mui/icons-material/Language";
-import { Status } from "@/src/enums/PackageTypes";
 
 const DoctorProfile = () => {
   const router = useRouter();
