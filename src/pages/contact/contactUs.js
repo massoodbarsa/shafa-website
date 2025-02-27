@@ -134,9 +134,9 @@ export default function ContactUs() {
             </Box>
           </Box>
           <Box display="flex" justifyContent="center" gap={2} mb={3}>
-            <IconButton href="https://twitter.com" target="_blank">
+            {/* <IconButton href="https://twitter.com" target="_blank">
               <Twitter color="primary" />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
               target="_blank"
