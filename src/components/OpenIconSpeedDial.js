@@ -11,6 +11,7 @@ import { useState } from "react";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import UpgradeProfileDialog from "./dialogs/UpgradeProfileDialog";
 import SubscriptionInfoDialog from "./dialogs/SubscriptionInfoDialog";
+import { Status } from "../enums/PackageTypes";
 
 export default function OpenIconSpeedDial({ doctorData }) {
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
@@ -31,11 +32,18 @@ export default function OpenIconSpeedDial({ doctorData }) {
           tooltipTitle="Subscription Info"
           onClick={() => setOpenSubscriptionInfoDialog(true)} // Open the subscription dialog
         />
-        <SpeedDialAction
-          icon={<UpgradeIcon color="success" />}
-          tooltipTitle="Upgrade profile"
-          onClick={() => setOpenUpgradeProfileDialog(true)}
-        />
+        {doctorData.status !== Status.FREE && (
+          <SpeedDialAction
+            icon={
+              <UpgradeIcon
+                color="success"
+                sx={{ ":disabled": doctorData.status !== Status.FREE }}
+              />
+            }
+            tooltipTitle="Upgrade profile"
+            onClick={() => setOpenUpgradeProfileDialog(true)}
+          />
+        )}
         <SpeedDialAction
           icon={<DeleteIcon color="error" />}
           tooltipTitle="Delete profile"
