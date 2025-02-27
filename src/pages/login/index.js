@@ -23,6 +23,7 @@ import useAuthStore from "../../store/authStore";
 import { useSnackbar } from "notistack";
 import { supabase } from "../../utils/supabase";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import { Status } from "@/src/enums/PackageTypes";
 
 const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
@@ -95,9 +96,16 @@ const LoginPage = () => {
         throw new Error("Please verify your email first");
       }
 
+      if (profile?.status === Status.CANCELLED) {
+        await supabase.auth.signOut();
+        throw new Error("Your account is cancelled.please contact us!");
+      }
+
       // 3. Proceed with login
       setUser({ ...profile }); // Store user info
       setAuth({ email: data.user.email, id: data.user.id }); //store auth data
+
+      console.log(profile);
 
       router.push(
         profile.role === UserRole.Doctor
