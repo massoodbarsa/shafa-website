@@ -4,7 +4,7 @@ import { Status } from "@/src/enums/PackageTypes";
 const StatusDot = ({ status, endDate }) => {
   const currentDate = new Date();
   const isExpired =
-    (endDate && new Date(endDate) > currentDate) || status === Status.EXPIRED;
+    (endDate && new Date(endDate) < currentDate) || status === Status.EXPIRED;
 
   const getDotColor = () => {
     if (isExpired) return "red";

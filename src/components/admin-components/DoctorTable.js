@@ -77,10 +77,10 @@ const DoctorTable = () => {
   const filteredAndSortedDoctors = useMemo(() => {
     return [...doctors].sort((a, b) => {
       const aIsExpired =
-        (a.end_date && new Date(a.end_date) > new Date()) ||
+        (a.end_date && new Date(a.end_date) < new Date()) ||
         a.status === Status.EXPIRED;
       const bIsExpired =
-        (b.end_date && new Date(b.end_date) > new Date()) ||
+        (b.end_date && new Date(b.end_date) < new Date()) ||
         b.status === Status.EXPIRED;
 
       // If both are expired or both are not expired, maintain original order
@@ -307,7 +307,7 @@ const DoctorTable = () => {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((doctor) => {
               const isEndDatePastCurrent = doctor.end_date
-                ? new Date(doctor.end_date) > new Date() ||
+                ? new Date(doctor.end_date) < new Date() ||
                   doctor.status === Status.EXPIRED
                 : false;
 
