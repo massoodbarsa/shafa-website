@@ -330,7 +330,7 @@ const DoctorProfile = () => {
             ) {
               setEditable(true);
             } else if (
-              ["Pending", "Cancelled", "Expired"].includes(data.status)
+              user?.user_id === data.user_id && ["Pending", "Cancelled", "Expired"].includes(data.status)
             ) {
               enqueueSnackbar(
                 `Your account status is ${data.status}. Editing is not possible.`,
