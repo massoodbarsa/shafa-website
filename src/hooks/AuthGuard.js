@@ -11,6 +11,7 @@ const AuthGuard = ({ children }) => {
   const { startTimer } = useSessionTimer();
   const cleanupRef = useRef(null);
 
+  // Initial session check on mount only
   useEffect(() => {
     let subscription;
 
@@ -21,10 +22,12 @@ const AuthGuard = ({ children }) => {
       } = await supabase.auth.getSession();
 
       if (error || !session) {
+        console.log("No session found on mount:", error); // Debug log
         clearUser();
         if (cleanupRef.current) cleanupRef.current();
         router.push("/login");
       } else {
+        console.log("Session found on mount:", session.user.id); // Debug log
         if (cleanupRef.current) cleanupRef.current();
         cleanupRef.current = startTimer();
       }
@@ -32,7 +35,9 @@ const AuthGuard = ({ children }) => {
 
     checkSession();
 
+    // Set up auth state listener
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state change:", event, session?.user?.id); // Debug log
       if (event === "SIGNED_OUT" || !session) {
         if (cleanupRef.current) cleanupRef.current();
         clearUser();
@@ -46,16 +51,17 @@ const AuthGuard = ({ children }) => {
       if (subscription) subscription.unsubscribe();
       if (cleanupRef.current) cleanupRef.current();
     };
-  }, [router.pathname, clearUser, startTimer]);
+  }, [clearUser, startTimer]); // Removed router.pathname from dependencies
 
+  // Role-based redirect for admin routes
   useEffect(() => {
-    // Only redirect if user is loaded and not an admin
     if (user === null) return; // Wait for user to be loaded
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
       router.push("/list");
     }
   }, [router.pathname, user]);
 
+  // Redirect from login/register if already logged in
   useEffect(() => {
     if (
       (router.pathname.includes("/login") ||
