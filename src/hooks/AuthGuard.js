@@ -8,7 +8,7 @@ import { UserRole } from "../enums/UserRole";
 const AuthGuard = ({ children }) => {
   const { clearUser, user, isLoggedIn } = useAuthStore();
   const router = useRouter();
-  const { startTimer } = useSessionTimer(2000); // 2 seconds inactivity timeout
+  const { startTimer } = useSessionTimer(); // 2 seconds inactivity timeout
   const cleanupRef = useRef(null);
   const hasMounted = useRef(false); // Track initial mount
 
