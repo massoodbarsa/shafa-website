@@ -21,8 +21,6 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useBreakpointDown();
 
-  console.log(user);
-
   const handleDeleteProfile = async () => {
     setLoading(true);
 
@@ -44,10 +42,6 @@ const DeleteProfileDialog = ({ user, open, onClose }) => {
         .eq("id", user.id);
 
       if (deleteProfileError) throw deleteProfileError;
-
-      console.log(deleteProfileError);
-
-      console.log(user.id);
 
       // 3. Delete auth user via API
       const response = await fetch("/api/delete-user/deleteMyProfile", {
