@@ -8,10 +8,11 @@ import { UserRole } from "../enums/UserRole";
 const AuthGuard = ({ children }) => {
   const { clearUser, user, isLoggedIn } = useAuthStore();
   const router = useRouter();
-  const { startTimer } = useSessionTimer();
+  const { startTimer } = useSessionTimer(2000); // 2 seconds inactivity timeout
   const cleanupRef = useRef(null);
+  const hasMounted = useRef(false); // Track initial mount
 
-  // Initial session check on mount only
+  // Session check and timer setup
   useEffect(() => {
     let subscription;
 
@@ -22,26 +23,45 @@ const AuthGuard = ({ children }) => {
       } = await supabase.auth.getSession();
 
       if (error || !session) {
-        console.log("No session found on mount:", error); // Debug log
+        console.log("No session found:", error); // Debug log
         clearUser();
         if (cleanupRef.current) cleanupRef.current();
         router.push("/login");
       } else {
-        console.log("Session found on mount:", session.user.id); // Debug log
-        if (cleanupRef.current) cleanupRef.current();
+        console.log("Session found:", session.user.id); // Debug log
+        if (cleanupRef.current) {
+          console.log("Clearing previous timer"); // Debug log
+          cleanupRef.current();
+        }
         cleanupRef.current = startTimer();
+        console.log("Timer started with 2-second inactivity timeout"); // Debug log
       }
     };
 
-    checkSession();
+    // Run on mount and when user logs in/out
+    if (!hasMounted.current || isLoggedIn() !== hasMounted.current) {
+      checkSession();
+      hasMounted.current = isLoggedIn(); // Update mount state
+    }
 
-    // Set up auth state listener
+    // Auth state listener
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state change:", event, session?.user?.id); // Debug log
       if (event === "SIGNED_OUT" || !session) {
-        if (cleanupRef.current) cleanupRef.current();
+        if (cleanupRef.current) {
+          console.log("Clearing timer on sign-out"); // Debug log
+          cleanupRef.current();
+        }
         clearUser();
         router.push("/login");
+      } else if (event === "SIGNED_IN") {
+        // Restart timer on sign-in
+        if (cleanupRef.current) {
+          console.log("Clearing previous timer on sign-in"); // Debug log
+          cleanupRef.current();
+        }
+        cleanupRef.current = startTimer();
+        console.log("Timer restarted on sign-in with 2-second timeout"); // Debug log
       }
     });
 
@@ -49,14 +69,18 @@ const AuthGuard = ({ children }) => {
 
     return () => {
       if (subscription) subscription.unsubscribe();
-      if (cleanupRef.current) cleanupRef.current();
+      if (cleanupRef.current) {
+        console.log("Cleaning up timer on unmount"); // Debug log
+        cleanupRef.current();
+      }
     };
-  }, [clearUser, startTimer]); // Removed router.pathname from dependencies
+  }, [clearUser, startTimer, isLoggedIn]); // Added isLoggedIn to detect login state changes
 
   // Role-based redirect for admin routes
   useEffect(() => {
     if (user === null) return; // Wait for user to be loaded
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
+      console.log("Redirecting non-admin from /admin to /list"); // Debug log
       router.push("/list");
     }
   }, [router.pathname, user]);
@@ -68,6 +92,9 @@ const AuthGuard = ({ children }) => {
         router.pathname.includes("/register")) &&
       isLoggedIn()
     ) {
+      console.log(
+        "Redirecting logged-in user from /login or /register to /list"
+      ); // Debug log
       router.push("/list");
     }
   }, [router.pathname, isLoggedIn]);
