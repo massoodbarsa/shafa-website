@@ -28,7 +28,6 @@ const AuthGuard = ({ children }) => {
         if (cleanupRef.current) cleanupRef.current();
         router.push("/login");
       } else {
-        console.log("Session found:", session.user.id); // Debug log
         if (cleanupRef.current) {
           console.log("Clearing previous timer"); // Debug log
           cleanupRef.current();

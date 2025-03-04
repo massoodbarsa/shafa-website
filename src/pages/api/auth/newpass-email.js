@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
   const { email } = req.body;
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   try {
     // Generate reset token
@@ -24,7 +23,9 @@ export default async function handler(req, res) {
 
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465, // Use 465 for SSL
+      secure: true, // True for 465
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
