@@ -1,4 +1,3 @@
-// pages/api/auth/newpass-email.js
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 
@@ -8,108 +7,66 @@ export default async function handler(req, res) {
   const { email } = req.body;
 
   try {
-    // Generate reset token
+    console.log("Received email for reset:", email); // Log the input email
+
     const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+    console.log(
+      "Generated resetToken (JWT):",
+      resetToken.substring(0, 20) + "..."
+    );
 
-    // Construct reset link
     const resetLink = new URL(
       "/auth/update-password",
       process.env.NEXT_PUBLIC_APP_URL
     );
-    resetLink.searchParams.set("token", encodeURIComponent(resetToken));
-    resetLink.searchParams.set("email", encodeURIComponent(email));
+    resetLink.searchParams.set("token", resetToken);
+    resetLink.searchParams.set("email", email);
 
-    // Create transporter
+    console.log("Reset link:", resetLink.toString());
+
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465, // Use 465 for SSL
-      secure: true, // True for 465
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    // Send email
     await transporter.sendMail({
       from: `"IDH" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Password Reset Request",
-      html: `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Password Reset Request</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 500px;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h2 {
-            color: #333;
-        }
-        p {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .btn {
-            display: inline-block;
-            background-color: #fff;
-            color: #fff;
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            border: 2px #3c15ea solid
-        }
-        .btn:hover {
-            background-color: #3c15ea;
-            color:#fff
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2>Password Reset Request</h2>
-    <p>You recently requested to reset your password. Click the button below to proceed:</p>
-    <a href="${resetLink.toString()}" class="btn">Reset Password</a>
-    <p>If you didn’t request this, please ignore this email.</p>
-    <p class="footer">This link will expire in 1 hour for security reasons.</p>
-</div>
-
-</body>
-</html>
-`,
+      html: `
+      <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4;">
+        <div style="max-width: 500px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #333;">Password Reset Request</h2>
+          <p style="color: #666; font-size: 16px; line-height: 1.5;">
+            You requested a password reset. Click the button below to proceed:
+          </p>
+          <a href="${resetLink.toString()}" style="display: inline-block; background-color: #3c15ea; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; font-weight: bold; margin: 20px 0;">
+            Reset Password
+          </a>
+          <p style="color: #666; font-size: 14px; line-height: 1.5;">
+            If you didn’t request this, please ignore this email.
+          </p>
+          <p style="color: #888; font-size: 12px; margin-top: 20px;">
+            This link will expire in 1 hour for security reasons.
+          </p>
+        </div>
+      </div>
+    `,
     });
 
+    console.log("Email sent successfully to:", email);
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Password reset error:", error);
-    res.status(500).json({
-      error: "Failed to send password reset email",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({ error: "Failed to send email", details: error.message });
   }
 }
