@@ -31,9 +31,9 @@ const AuthGuard = ({ children }) => {
       // If on a public route, skip session enforcement
       const isPublicRoute = publicRoutes.includes(router.pathname);
       if (isPublicRoute) {
-        console.log(
-          `Public route detected (${router.pathname}), skipping redirect`
-        );
+        // console.log(
+        //   `Public route detected (${router.pathname}), skipping redirect`
+        // );
         return;
       }
 
