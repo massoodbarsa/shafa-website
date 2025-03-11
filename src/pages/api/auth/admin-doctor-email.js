@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             </div>
             <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #777;">
               <p>Thank you for reaching out to us!</p>
-              <p style="margin-top: 5px;">&copy; ${new Date().getFullYear()} IHB. All rights reserved.</p>
+              <p style="margin-top: 5px;">&copy; ${new Date().getFullYear()} IDH. All rights reserved.</p>
             </div>
           </div>
         </div>
