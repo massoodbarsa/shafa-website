@@ -25,8 +25,8 @@ const AuthGuard = ({ children }) => {
         error,
       } = await supabase.auth.getSession();
 
-      console.log("Current pathname:", router.pathname); // Debug current route
-      console.log("Session check:", { session, error }); // Debug session state
+      // console.log("Current pathname:", router.pathname); // Debug current route
+      // console.log("Session check:", { session, error }); // Debug session state
 
       // If on a public route, skip session enforcement
       const isPublicRoute = publicRoutes.includes(router.pathname);
@@ -38,14 +38,14 @@ const AuthGuard = ({ children }) => {
       }
 
       if (error || !session) {
-        console.log("No session, redirecting to /login from:", router.pathname);
+        // console.log("No session, redirecting to /login from:", router.pathname);
         clearUser();
         if (cleanupRef.current) cleanupRef.current();
         // router.push("/login");
       } else {
-        console.log("Session found, starting timer");
+        // console.log("Session found, starting timer");
         if (cleanupRef.current) {
-          console.log("Clearing previous timer");
+          // console.log("Clearing previous timer");
           cleanupRef.current();
         }
         cleanupRef.current = startTimer();
@@ -53,32 +53,32 @@ const AuthGuard = ({ children }) => {
     };
 
     if (!hasMounted.current || isLoggedIn() !== hasMounted.current) {
-      console.log("Running checkSession on mount or login state change");
+      // console.log("Running checkSession on mount or login state change");
       checkSession();
       hasMounted.current = isLoggedIn();
     }
 
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth event:", event, "Session:", session?.user?.id);
+      // console.log("Auth event:", event, "Session:", session?.user?.id);
 
       const isPublicRoute = publicRoutes.includes(router.pathname);
 
       if (event === "SIGNED_OUT" || !session) {
         if (cleanupRef.current) {
-          console.log("Clearing timer on sign-out");
+          // console.log("Clearing timer on sign-out");
           cleanupRef.current();
         }
         clearUser();
         if (!isPublicRoute) {
-          console.log("Not a public route, redirecting to /login");
+          // console.log("Not a public route, redirecting to /login");
           // router.push("/login");
         } else {
-          console.log(`On public route (${router.pathname}), no redirect`);
+          // console.log(`On public route (${router.pathname}), no redirect`);
         }
       } else if (event === "SIGNED_IN") {
-        console.log("User signed in, restarting timer");
+        // console.log("User signed in, restarting timer");
         if (cleanupRef.current) {
-          console.log("Clearing previous timer on sign-in");
+          // console.log("Clearing previous timer on sign-in");
           cleanupRef.current();
         }
         cleanupRef.current = startTimer();
@@ -88,7 +88,7 @@ const AuthGuard = ({ children }) => {
     subscription = authListener.data.subscription;
 
     return () => {
-      console.log("Cleaning up AuthGuard");
+      // console.log("Cleaning up AuthGuard");
       if (subscription) subscription.unsubscribe();
       if (cleanupRef.current) cleanupRef.current();
     };
@@ -98,7 +98,7 @@ const AuthGuard = ({ children }) => {
   useEffect(() => {
     if (user === null) return;
     if (router.pathname.includes("/admin") && user?.role !== UserRole.Admin) {
-      console.log("Non-admin accessing /admin, redirecting to /list");
+      // console.log("Non-admin accessing /admin, redirecting to /list");
       router.push("/list");
     }
   }, [router.pathname, user]);
@@ -109,9 +109,9 @@ const AuthGuard = ({ children }) => {
       (router.pathname === "/login" || router.pathname === "/register") &&
       isLoggedIn()
     ) {
-      console.log(
-        "Logged-in user on /login or /register, redirecting to /list"
-      );
+      // console.log(
+      //   "Logged-in user on /login or /register, redirecting to /list"
+      // );
       router.push("/list");
     }
   }, [router.pathname, isLoggedIn]);
