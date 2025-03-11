@@ -109,9 +109,6 @@ const AuthGuard = ({ children }) => {
       (router.pathname === "/login" || router.pathname === "/register") &&
       isLoggedIn()
     ) {
-      // console.log(
-      //   "Logged-in user on /login or /register, redirecting to /list"
-      // );
       router.push("/list");
     }
   }, [router.pathname, isLoggedIn]);
