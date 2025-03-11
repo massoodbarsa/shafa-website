@@ -63,14 +63,7 @@ export default async function handler(req, res) {
                     </td>
                   </tr>
                   <tr>
-                    <td style="padding-top:24px;border-top:1px solid #e5e7eb;">
-                      <p style="color:#6b7280;font-size:14px;margin:0 0 8px;">
-                        If you didn't create this account, you can safely ignore this email.
-                      </p>
-                      <p style="color:#6b7280;font-size:14px;margin:0;">
-                        Need help? <a href="mailto:support@yourdomain.com" style="color:#2563eb;text-decoration:none;">Contact us</a>
-                      </p>
-                    </td>
+                
                   </tr>
                 </table>
                 
@@ -79,18 +72,18 @@ export default async function handler(req, res) {
                   <tr>
                     <td align="center" style="color:#6b7280;font-size:12px;">
                       <p style="margin:0 0 8px;">
-                        © ${new Date().getFullYear()} IHB. All rights reserved.
+                        © ${new Date().getFullYear()} IDH. All rights reserved.
                       </p>
-                      <p style="margin:0;">
-                        <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" 
-                           style="color:#6b7280;text-decoration:none;margin-right:12px;">
-                          Privacy Policy
-                        </a>
-                        <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" 
-                           style="color:#6b7280;text-decoration:none;">
-                          Terms of Service
-                        </a>
-                      </p>
+                      // <p style="margin:0;">
+                      //   <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" 
+                      //      style="color:#6b7280;text-decoration:none;margin-right:12px;">
+                      //     Privacy Policy
+                      //   </a>
+                      //   <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" 
+                      //      style="color:#6b7280;text-decoration:none;">
+                      //     Terms of Service
+                      //   </a>
+                      // </p>
                     </td>
                   </tr>
                 </table>
