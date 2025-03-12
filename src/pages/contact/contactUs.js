@@ -105,7 +105,7 @@ export default function ContactUs() {
           url: `${process.env.NEXT_PUBLIC_BASE_URL}/contact`,
           images: [
             {
-              url: "/main.jpeg", // Use an appropriate image URL for the contact page
+              url: "/main.webp", // Use an appropriate image URL for the contact page
               width: 1200,
               height: 630,
               alt: "Contact Us Image",

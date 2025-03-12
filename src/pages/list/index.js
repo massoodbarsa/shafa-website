@@ -301,7 +301,7 @@ export default function Home() {
             "Browse through a list of Farsi-speaking doctors outside Iran. Filter by specialty, location, and rating.",
           images: [
             {
-              url: "/main.jpeg", // Adjust the image as per your content
+              url: "/main.webp", // Adjust the image as per your content
               width: 800,
               height: 600,
               alt: "Doctor Directory Image",

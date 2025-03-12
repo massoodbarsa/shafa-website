@@ -19,7 +19,6 @@ import useAuthStore from "../store/authStore";
 import { UserRole } from "@/src/enums/UserRole";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import { useSnackbar } from "notistack";
-import Image from "next/image";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -124,15 +123,11 @@ const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
-        <Image
-          src="/logo.png" // Replace with "/logo.webp" if pre-converted
-          alt="avatar"
-          width={40}
-          height={40}
-          quality={85}
-          style={{
+        <Avatar
+          alt="Contact Us Image"
+          src="/logo.png"
+          sx={{
             mr: 2,
-            borderRadius: "50%",
             boxShadow: "0px 0px 10px 5px rgba(255, 165, 0, 0.8)", // Initial glow
             animation: "glow 2s infinite alternate",
             "@keyframes glow": {
@@ -146,13 +141,14 @@ const Header = () => {
                 boxShadow: "0px 0px 5px 6px rgb(216, 219, 78)",
               }, // Bright blue glow
             },
-          }} // Circular like Avatar
+          }}
         />
+
         <Typography
           variant="h6"
           component={Link}
           href="/"
-          sx={{ flexGrow: 1, textDecoration: "none", color: "inherit", ml: 2 }}
+          sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
         >
           Iranian Doctors Hub
         </Typography>

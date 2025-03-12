@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
           siteName: "Iranian Doctors Hub",
           images: [
             {
-              url: "https://iraniandoctorshub.com/main.jpeg", // Ensure this image exists
+              url: "https://iraniandoctorshub.com/main.webp", // Ensure this image exists
               width: 1200,
               height: 630,
               alt: "Find Farsi-speaking doctors worldwide",

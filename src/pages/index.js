@@ -119,7 +119,7 @@ const Homepage = () => {
             }}
           >
             <Image
-              src="/main.jpeg"
+              src="/main.webp"
               alt="Doctor"
               layout="fill"
               objectFit="cover"

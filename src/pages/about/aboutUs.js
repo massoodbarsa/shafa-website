@@ -66,7 +66,7 @@ export default function AboutUs() {
           url: `${process.env.NEXT_PUBLIC_BASE_URL}/about-us`,
           images: [
             {
-              url: "/main.jpeg",
+              url: "/main.webp",
               width: 1200,
               height: 630,
               alt: "About Us Image",
