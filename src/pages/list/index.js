@@ -35,6 +35,7 @@ import useAuthStore from "../../store/authStore";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { Status } from "@/src/enums/PackageTypes";
+import Image from "next/image";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -401,12 +402,20 @@ export default function Home() {
                     </Box>
                     {doctor.profile_image ? (
                       <CardMedia
-                        component="img"
-                        height="200"
-                        image={doctor.profile_image}
-                        alt={`${doctor.first_name} ${doctor.last_name}`}
-                        sx={{ objectFit: "contain", objectPosition: "top" }}
-                      />
+                        sx={{
+                          position: "relative",
+                          height: 200, // Set the desired height
+                          width: "100%", // Ensure it takes the full width of the card
+                        }}
+                      >
+                        <Image
+                          src={doctor.profile_image}
+                          alt={`${doctor.first_name} ${doctor.last_name}`}
+                          layout="fill" // This ensures the image takes the full size of its container
+                          objectFit="contain" // This will crop the image if necessary but will maintain aspect ratio
+                          objectPosition="center" // Centers the image inside the container
+                        />
+                      </CardMedia>
                     ) : (
                       <Avatar
                         sx={{ width: 170, height: 200, mx: "auto", mb: 2 }}
