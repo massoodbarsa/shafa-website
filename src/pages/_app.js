@@ -33,6 +33,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Head>
+          <title>Iranian Doctors Hub</title>
           <link rel="canonical" href="https://iraniandoctorshub.com" />
           <link rel="icon" href="/logo.png" />
           <meta name="robots" content="index, follow" />
