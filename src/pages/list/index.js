@@ -312,7 +312,7 @@ export default function Home() {
           {
             name: "keywords",
             content:
-              "farsi-speaking doctors, doctor directory, healthcare, medical professionals, find doctors, persian doctors,iranian doctors,persian speaking doctors",
+              "farsi-speaking doctors, doctor directory, healthcare, medical professionals, find doctors, persian doctors,iranian doctors,persian speaking doctors,iranian outside,iranian abroad",
           },
           {
             name: "robots",
