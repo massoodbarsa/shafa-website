@@ -154,6 +154,7 @@ export default function ContactUs() {
             <IconButton
               href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
               target="_blank"
+              aria-labelledby="insta-btn"
             >
               <Instagram color="secondary" />
             </IconButton>

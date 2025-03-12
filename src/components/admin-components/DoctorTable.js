@@ -320,7 +320,10 @@ const DoctorTable = () => {
                   }}
                 >
                   <TableCell>
-                    <IconButton onClick={() => handleOpenEmailDialog(doctor)}>
+                    <IconButton
+                      onClick={() => handleOpenEmailDialog(doctor)}
+                      aria-label="email-open-btn"
+                    >
                       <EmailIcon color="primary" />
                     </IconButton>
                   </TableCell>
@@ -376,12 +379,14 @@ const DoctorTable = () => {
                     <IconButton
                       onClick={() => handleOpenEditDialog(doctor)}
                       color="primary"
+                      aria-label="edit-btn"
                     >
                       <Edit />
                     </IconButton>
                     <IconButton
                       onClick={() => handleOpenDeleteDialog(doctor)}
                       color="error"
+                      aria-label="delete-btn"
                     >
                       <Delete />
                     </IconButton>

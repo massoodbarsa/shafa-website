@@ -178,12 +178,14 @@ const ClientTable = () => {
                 <IconButton
                   onClick={() => handleOpenEditDialog(client)}
                   color="primary"
+                  aria-label="edit-btn"
                 >
                   <Edit />
                 </IconButton>
                 <IconButton
                   onClick={() => handleOPenDelteDialog(client)}
                   color="error"
+                  aria-label="del-btn"
                 >
                   <Delete />
                 </IconButton>

@@ -338,7 +338,7 @@ export default function Home() {
           {isMobile ? (
             <IconButton
               onClick={() => setMobileFiltersOpen(true)}
-              aria-label="open filters"
+              aria-label="open-filters"
               color="primary"
               size="large"
             >
