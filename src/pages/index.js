@@ -121,13 +121,16 @@ const Homepage = () => {
             <Image
               src="/main.webp"
               alt="Doctor"
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
             />
 
             <Image
               src="/logo.png" // Replace with "/logo.webp" if pre-converted
               alt="Contact Us Image"
+              loading="lazy"
               width={isMobile ? 50 : 150}
               height={isMobile ? 50 : 150}
               quality={85}

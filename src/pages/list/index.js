@@ -421,11 +421,14 @@ export default function Home() {
                         }}
                       >
                         <Image
+                          loading="lazy"
                           src={doctor.profile_image}
                           alt={`${doctor.first_name} ${doctor.last_name}`}
-                          layout="fill" // This ensures the image takes the full size of its container
-                          objectFit="contain" // This will crop the image if necessary but will maintain aspect ratio
-                          objectPosition="center" // Centers the image inside the container
+                          fill // This ensures the image takes the full size of its container
+                          style={{
+                            objectFit: "contain",
+                            objectPosition: "center",
+                          }}
                         />
                       </CardMedia>
                     ) : (

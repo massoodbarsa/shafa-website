@@ -92,6 +92,7 @@ export default function AboutUs() {
           <Image
             src="/logo.png"
             alt="Contact Us Image"
+            loading="lazy"
             width={isMobile ? 50 : 100}
             height={isMobile ? 50 : 100}
             quality={85}
