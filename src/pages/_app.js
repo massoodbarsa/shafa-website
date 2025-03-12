@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../styles/theme";
 import Layout from "../components/Layout"; // Your custom layout component
 import { DefaultSeo } from "next-seo";
-
+import { Analytics } from "@vercel/analytics/react";
 import { SnackbarProvider } from "notistack";
 
 import AuthGuard from "../hooks/AuthGuard";
@@ -53,6 +53,7 @@ function MyApp({ Component, pageProps }) {
           </AuthGuard>
         </SnackbarProvider>
       </ThemeProvider>
+      <Analytics />
     </>
   );
 }
