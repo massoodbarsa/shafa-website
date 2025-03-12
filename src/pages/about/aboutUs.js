@@ -13,6 +13,7 @@ import {
 import { Twitter, Instagram } from "@mui/icons-material";
 import { NextSeo } from "next-seo";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import Head from "next/head";
 
 export default function AboutUs() {
   const [language, setLanguage] = useState("en");
