@@ -90,10 +90,24 @@ const Homepage = () => {
       <Container maxWidth="lg">
         {/* Hero Section */}
         <Box textAlign="center" py={10}>
-          <Typography variant="h3" fontWeight={700} gutterBottom>
+          <Typography
+            variant="h1"
+            fontWeight={700}
+            gutterBottom
+            sx={{
+              fontSize: { xs: "1.75rem", md: "2.5rem" }, // Smaller: 28px mobile, 40px desktop
+            }}
+          >
             Find Trusted Farsi-Speaking Doctors Near You
           </Typography>
-          <Typography variant="h6" color="textSecondary" gutterBottom>
+          <Typography
+            variant="h2"
+            color="textSecondary"
+            gutterBottom
+            sx={{
+              fontSize: { xs: "1.125rem", md: "1.5rem" }, // Smaller: 18px mobile, 24px desktop
+            }}
+          >
             Connect with verified professionals for your healthcare needs.
           </Typography>
           <Box
@@ -137,7 +151,14 @@ const Homepage = () => {
 
         {/* Why Choose Us */}
         <Box py={5} textAlign="center">
-          <Typography variant="h4" fontWeight={600} gutterBottom>
+          <Typography
+            variant="h2"
+            fontWeight={600}
+            gutterBottom
+            sx={{
+              fontSize: { xs: "1.25rem", md: "1.75rem" }, // Smaller: 20px mobile, 28px desktop
+            }}
+          >
             Why Choose Us?
           </Typography>
           <Grid
@@ -169,7 +190,11 @@ const Homepage = () => {
                   }}
                 >
                   <CardContent>
-                    <Typography variant="h6" fontWeight={500}>
+                    <Typography
+                      variant="h3"
+                      fontWeight={500}
+                      sx={{ fontSize: { xs: "1rem", md: "1.25rem" } }} // 16px mobile, 20px desktop
+                    >
                       {item}
                     </Typography>
                   </CardContent>
@@ -178,139 +203,6 @@ const Homepage = () => {
             ))}
           </Grid>
         </Box>
-
-        {/* Featured Doctors */}
-        {/* <Box py={5}>
-        <Typography
-          variant="h4"
-          fontWeight={600}
-          textAlign="center"
-          gutterBottom
-        >
-          Featured Doctors
-        </Typography>
-        <Grid
-          container
-          spacing={3}
-          justifyContent="center"
-          sx={{ py: 2, overflow: "visible" }}
-        >
-          {[1, 2, 3].map((id) => (
-            <Grid item xs={12} sm={4} key={id}>
-              <Card
-                sx={{
-                  transition: "0.3s",
-                  border: "1px solid transparent",
-                  height: "100%",
-                  transformOrigin: "center center",
-                  overflow: "visible",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.2)",
-                    border: "1px solid rgba(0, 0, 0, 0.1)",
-                    zIndex: 1,
-                  },
-                }}
-              >
-                <CardContent sx={{ textAlign: "center" }}>
-                  <Avatar sx={{ width: 80, height: 80, mx: "auto", mb: 2 }} />
-                  <Typography variant="h6">Doctor Name</Typography>
-                  <Typography color="textSecondary">Specialty</Typography>
-                  <Button size="small" sx={{ mt: 2 }}>
-                    View Profile
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box> */}
-
-        {/* Testimonials */}
-        {/* <Box py={5} textAlign="center">
-        <Typography variant="h4" fontWeight={600} gutterBottom>
-          What Our Users Say
-        </Typography>
-        <Grid
-          container
-          spacing={3}
-          justifyContent="center"
-          sx={{ py: 2, overflow: "visible" }}
-        >
-          {[
-            "Great platform!",
-            "Helped me find a doctor!",
-            "Highly recommend!",
-          ].map((review, index) => (
-            <Grid item xs={12} sm={4} key={index}>
-              <Card
-                sx={{
-                  p: 3,
-                  transition: "0.3s",
-                  border: "1px solid transparent",
-                  height: "100%",
-                  transformOrigin: "center center",
-                  overflow: "visible",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    boxShadow: "0px 10px 20px rgb(59, 216, 221)",
-                    border: "1px solid rgba(0, 0, 0, 0.1)",
-                    zIndex: 1,
-                  },
-                }}
-              >
-                <CardContent>
-                  <Typography variant="body1">"{review}"</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box> */}
-
-        {/* How It Works */}
-        {/* <Box py={5} textAlign="center">
-          <Typography variant="h4" fontWeight={600} gutterBottom>
-            How It Works
-          </Typography>
-          <Grid
-            container
-            spacing={3}
-            justifyContent="center"
-            sx={{ py: 2, overflow: "visible" }}
-          >
-            {[
-              "Search & Find",
-              "Read & Leave Reviews",
-              "See Specialist Profile",
-            ].map((step, index) => (
-              <Grid item xs={12} sm={4} key={index}>
-                <Card
-                  sx={{
-                    p: 3,
-                    transition: "0.3s",
-                    border: "1px solid transparent",
-                    height: "100%",
-                    transformOrigin: "center center",
-                    overflow: "visible",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                      boxShadow: "0px 10px 20px rgb(59, 216, 221)",
-                      border: "1px solid rgba(0, 0, 0, 0.1)",
-                      zIndex: 1,
-                    },
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="h6" fontWeight={500}>
-                      {step}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box> */}
 
         {/* Final CTA */}
         <Box textAlign="center" py={5}>
