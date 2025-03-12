@@ -19,6 +19,7 @@ import useAuthStore from "../store/authStore";
 import { UserRole } from "@/src/enums/UserRole";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
 import { useSnackbar } from "notistack";
+import Image from "next/image";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -123,32 +124,32 @@ const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
-        <Avatar
-          alt="Contact Us Image"
-          src="/logo.png"
-          sx={{
-            mr: 2,
-            boxShadow: "0px 0px 10px 5px rgba(255, 165, 0, 0.8)", // Initial glow
+        <Image
+          src="/logo.png" // Replace with "/logo.webp" if pre-converted
+          alt="header logo"
+          loading="lazy"
+          width={40}
+          height={40}
+          quality={85}
+          style={{
+            borderRadius: "50%",
+            position: "absolute",
+
+            boxShadow: "0px 0px 20px 5px rgba(255, 165, 0, 0.8)",
             animation: "glow 2s infinite alternate",
             "@keyframes glow": {
-              "0%": {
-                boxShadow: "0px 0px 5px 2px rgb(62, 209, 214)",
-              }, // cane glow
-              "50%": {
-                boxShadow: "0px 0px 5px 5px rgb(54, 216, 94)",
-              }, // More greenglow
-              "100%": {
-                boxShadow: "0px 0px 5px 6px rgb(216, 219, 78)",
-              }, // Bright blue glow
+              "0%": { boxShadow: "0px 0px 10px 2px rgb(62, 209, 214)" },
+              "50%": { boxShadow: "0px 0px 20px 5px rgb(54, 216, 94)" },
+              "100%": { boxShadow: "0px 0px 30px 8px rgb(74, 161, 211)" },
             },
-          }}
+          }} // Circular like Avatar
         />
 
         <Typography
           variant="h6"
           component={Link}
           href="/"
-          sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
+          sx={{ flexGrow: 1, textDecoration: "none", color: "inherit", ml: 7 }}
         >
           Iranian Doctors Hub
         </Typography>
