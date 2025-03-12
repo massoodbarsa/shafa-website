@@ -7,9 +7,9 @@ class MyDocument extends Document {
         <Head>
           <title>Iranian Doctors Hub</title>
           {/* Favicon Link */}
-          <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+          <link rel="icon" href="/logo.png" type="image/x-icon" />
           {/* Optional: You can add multiple sizes/formats for better compatibility */}
-          <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+          <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
         </Head>
         <body>
           <Main />
