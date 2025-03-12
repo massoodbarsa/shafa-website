@@ -292,23 +292,35 @@ export default function Home() {
   return (
     <>
       <NextSeo
-        title="Doctor Directory - Find Farsi-speaking Doctors"
-        description="Browse through a list of Farsi-speaking doctors outside Iran. Filter by specialty, location, and rating."
+        title="Find Farsi-Speaking Doctors"
+        description="Discover a directory of Farsi-speaking doctors worldwide. Browse by specialty, country, and rating."
         openGraph={{
-          url: `${process.env.NEXT_PUBLIC_BASE_URL}/list`,
-          title: "Doctor Directory - Find Farsi-speaking Doctors",
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/list`, // Adjust the URL as per your base URL
+          title: "Find Farsi-Speaking Doctors",
           description:
             "Browse through a list of Farsi-speaking doctors outside Iran. Filter by specialty, location, and rating.",
           images: [
             {
-              url: "/main.jpeg",
+              url: "/main.jpeg", // Adjust the image as per your content
               width: 800,
               height: 600,
               alt: "Doctor Directory Image",
             },
           ],
         }}
+        additionalMetaTags={[
+          {
+            name: "keywords",
+            content:
+              "farsi-speaking doctors, doctor directory, healthcare, medical professionals, find doctors, persian doctors,iranian doctors,persian speaking doctors",
+          },
+          {
+            name: "robots",
+            content: "index, follow",
+          },
+        ]}
       />
+
       <Container
         sx={{ display: "flex", flexDirection: "column" }}
         maxWidth="xl"
