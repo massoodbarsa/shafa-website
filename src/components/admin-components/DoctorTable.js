@@ -25,7 +25,7 @@ import { Edit, Delete } from "@mui/icons-material";
 import { supabase } from "../../utils/supabase";
 import { useSnackbar } from "notistack";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
-import { UserRole } from "@/src/enums/UserRole";
+
 import { Status } from "@/src/enums/PackageTypes";
 import { formatDate } from "../../utils/formatDate";
 import AdminSpecialitySelect from "./AdminSpecialitySelect";
@@ -158,7 +158,6 @@ const DoctorTable = () => {
   };
 
   const handleOpenEmailDialog = (doctor) => {
-    console.log(doctor);
     setEmailTo(doctor.email);
     setEmailToFullname(doctor.full_name);
     setOpenEmailDialog(true);
@@ -261,7 +260,7 @@ const DoctorTable = () => {
       setOpenDeleteDialog(false); // Close the confirmation dialog
     } catch (error) {
       setDeleteLoading(false);
-      console.log(error);
+
       enqueueSnackbar(`Error: ${error.message}`, {
         variant: "error",
       });

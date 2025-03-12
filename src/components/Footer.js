@@ -10,7 +10,7 @@ const Footer = () => {
         backgroundColor: "primary.main",
         color: "white",
         display: "flex",
-        justifyContent: "center", // Center the copyright text
+        justifyContent: "center",
         alignItems: "center",
         px: 3,
         position: "relative",

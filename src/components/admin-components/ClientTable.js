@@ -49,7 +49,6 @@ const ClientTable = () => {
 
   // Open delete confirmation dialog
   const handleOPenDelteDialog = (client) => {
-    console.log(client);
     setClientToDelete(client);
     setOpenDialog(true);
   };
@@ -122,8 +121,6 @@ const ClientTable = () => {
         throw new Error(error.message);
       }
 
-      console.log(data);
-
       // Update the client in the local state
       setClients((prevClients) =>
         prevClients.map((client) =>
@@ -150,7 +147,6 @@ const ClientTable = () => {
       if (error) {
         console.error(error);
       } else {
-        console.log(data);
         // Filter out clients with the role 'admin'
         const nonAdminClients = data.filter(
           (client) => client.role !== UserRole.Admin
