@@ -31,11 +31,8 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log("✅ Webhook received:", event.type);
-
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    console.log("✅ Checkout Session Data:", session);
 
     const { userId, packageId } = session.metadata || {};
 
@@ -66,9 +63,6 @@ export default async function handler(req, res) {
     if (packageId === PackageTypes.GOLD)
       endDate.setFullYear(endDate.getFullYear() + 1);
 
-    console.log("📅 Subscription Start:", startDate);
-    console.log("📅 Subscription End:", endDate);
-
     // Determine if the doctor should be featured
     const isFeatured = packageId === PackageTypes.GOLD;
 
@@ -88,8 +82,6 @@ export default async function handler(req, res) {
       console.error("❌ Error updating subscription:", updateError);
       return res.status(500).json({ error: "Failed to update subscription" });
     }
-
-    console.log("✅ Subscription updated successfully");
   }
 
   res.json({ received: true });

@@ -7,24 +7,17 @@ export default async function handler(req, res) {
   try {
     const { token, newPassword } = req.body;
 
-    console.log("Password reset request received", {
-      token: token ? `${token.substring(0, 15)}...` : "missing",
-      newPassword: newPassword ? "******" : "missing",
-    });
-
     if (!token || !newPassword) {
       throw new Error("Missing token or newPassword");
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded JWT:", decoded);
 
     if (!decoded?.email) {
       throw new Error("Invalid token: missing email");
     }
 
     const userEmail = decoded.email;
-    console.log("Searching for user with email:", userEmail);
 
     const { data: users, error: fetchError } =
       await supabaseAdmin.auth.admin.listUsers();
@@ -33,12 +26,6 @@ export default async function handler(req, res) {
       throw new Error(`Failed to fetch user data: ${fetchError.message}`);
     }
 
-    console.log("Total users fetched:", users.users.length);
-    console.log(
-      "User emails in Supabase:",
-      users.users.map((u) => u.email)
-    );
-
     const user = users?.users.find((u) => u.email === userEmail);
     if (!user) {
       console.error("User not found for email:", userEmail);
@@ -46,7 +33,6 @@ export default async function handler(req, res) {
     }
 
     const userId = user.id;
-    console.log("User found with ID:", userId);
 
     const { error: updateError } =
       await supabaseAdmin.auth.admin.updateUserById(userId, {
@@ -58,7 +44,6 @@ export default async function handler(req, res) {
       throw new Error(`Password update failed: ${updateError.message}`);
     }
 
-    console.log("Password updated successfully for user ID:", userId);
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Password reset error:", {

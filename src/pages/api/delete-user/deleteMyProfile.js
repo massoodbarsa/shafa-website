@@ -8,13 +8,10 @@ export default async function handler(req, res) {
   const { userId } = req.body;
 
   if (!userId) {
-    console.log("No userId provided in request body"); // Debug log
     return res.status(400).json({ error: "User ID is required" });
   }
 
   try {
-    console.log("Attempting to delete user with ID:", userId); // Debug log
-
     // Optional: Check if user exists first
     const { data: userData, error: fetchError } =
       await supabaseAdmin.auth.admin.getUserById(userId);
@@ -25,7 +22,6 @@ export default async function handler(req, res) {
       );
       throw new Error("User not found in auth");
     }
-    console.log("User exists in auth:", userData.user); // Debug log
 
     // Delete the auth user
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
@@ -36,10 +32,8 @@ export default async function handler(req, res) {
       throw deleteError; // Throw the raw Supabase error
     }
 
-    console.log("User deleted successfully from auth"); // Debug log
     res.status(200).json({ success: true, message: "User deleted from auth" });
   } catch (error) {
-    console.error("Delete user error:", error); // Debug log
     res.status(500).json({
       error: error.message || "Failed to delete user from auth",
       details: error.details || {},

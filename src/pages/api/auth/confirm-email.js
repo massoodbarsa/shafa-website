@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { UserRole } from "@/src/enums/UserRole"; // Ensure this path is correct
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,

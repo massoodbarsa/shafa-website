@@ -7,15 +7,9 @@ export default async function handler(req, res) {
   const { email } = req.body;
 
   try {
-    console.log("Received email for reset:", email); // Log the input email
-
     const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    console.log(
-      "Generated resetToken (JWT):",
-      resetToken.substring(0, 20) + "..."
-    );
 
     const resetLink = new URL(
       "/auth/update-password",
@@ -23,8 +17,6 @@ export default async function handler(req, res) {
     );
     resetLink.searchParams.set("token", resetToken);
     resetLink.searchParams.set("email", email);
-
-    console.log("Reset link:", resetLink.toString());
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -61,7 +53,6 @@ export default async function handler(req, res) {
     `,
     });
 
-    console.log("Email sent successfully to:", email);
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Password reset error:", error);
