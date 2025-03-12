@@ -125,26 +125,26 @@ const Homepage = () => {
               layout="fill"
               objectFit="cover"
             />
-            <Avatar
+
+            <Image
+              src="/logo.png" // Replace with "/logo.webp" if pre-converted
               alt="Contact Us Image"
-              src="/logo.png"
-              sx={{
-                width: isMobile ? 50 : 150,
-                height: isMobile ? 50 : 150,
-                boxShadow: "0px 0px 20px 5px rgba(255, 165, 0, 0.8)", // Initial glow
+              width={isMobile ? 50 : 150}
+              height={isMobile ? 50 : 150}
+              quality={85}
+              style={{
+                borderRadius: "50%",
+                position: "absolute",
+                top: 10,
+                left: 10,
+                boxShadow: "0px 0px 20px 5px rgba(255, 165, 0, 0.8)",
                 animation: "glow 2s infinite alternate",
                 "@keyframes glow": {
-                  "0%": {
-                    boxShadow: "0px 0px 10px 2px rgb(62, 209, 214)",
-                  }, // cane glow
-                  "50%": {
-                    boxShadow: "0px 0px 20px 5px rgb(54, 216, 94)",
-                  }, // More greenglow
-                  "100%": {
-                    boxShadow: "0px 0px 30px 8px rgb(74, 161, 211)",
-                  }, // Bright blue glow
+                  "0%": { boxShadow: "0px 0px 10px 2px rgb(62, 209, 214)" },
+                  "50%": { boxShadow: "0px 0px 20px 5px rgb(54, 216, 94)" },
+                  "100%": { boxShadow: "0px 0px 30px 8px rgb(74, 161, 211)" },
                 },
-              }}
+              }} // Circular like Avatar
             />
           </Box>
         </Box>
