@@ -9,6 +9,7 @@ import {
   Container,
 } from "@mui/material";
 import { NextSeo } from "next-seo";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useBreakpointDown from "../hooks/useBreakpointDown.hook";
@@ -19,6 +20,27 @@ const Homepage = () => {
 
   return (
     <>
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Iranian Doctors Hub",
+              url: "https://www.iraniandoctorshub.com", // Replace with your homepage URL
+              logo: "https://www.iraniandoctorshub.com/logo.png", // Replace with your logo URL
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                areaServed: "Worldwide", // You can change this to specific countries or regions
+                availableLanguage: "Farsi, English", // Add languages available for customer support
+              },
+              sameAs: ["https://www.instagram.com/i.dr.hub"],
+            }),
+          }}
+        />
+      </Head>
       {/* Later on featured doctores should land here .use getServerSideProps */}
       <NextSeo
         title="Find Farsi-speaking Doctors for Iranians Abroad"

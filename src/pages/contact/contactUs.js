@@ -16,6 +16,7 @@ import { useSnackbar } from "notistack";
 import { NextSeo } from "next-seo";
 
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
+import Head from "next/head";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -79,6 +80,21 @@ export default function ContactUs() {
 
   return (
     <>
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ContactPage",
+              name: "Contact Iranian Doctors Hub",
+              url: "https://www.iraniandoctorshub.com/contactUs",
+              contactType: "Customer Service",
+              email: "IranianDoctorsHub@gmail.com",
+            }),
+          }}
+        />
+      </Head>
       <NextSeo
         title="Contact Us | Farsi-Speaking Doctors"
         description="Get in touch with us to find more information about our services, or for any inquiries you may have."
