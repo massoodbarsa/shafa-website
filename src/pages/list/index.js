@@ -25,6 +25,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { supabase } from "../../utils/supabase";
 import StarIcon from "@mui/icons-material/Star";
 
+import { NextSeo } from "next-seo";
+
 import NoRecords from "../../components/NoRecords";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
@@ -287,151 +289,176 @@ export default function Home() {
   );
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column" }} maxWidth="xl">
-      <Toolbar
-        sx={{
-          display: "flex",
-          gap: 3,
-          mb: 6,
-          bgcolor: "ButtonFace",
-          p: 3,
-          justifyContent: "space-around",
+    <>
+      <NextSeo
+        title="Doctor Directory - Find Farsi-speaking Doctors"
+        description="Browse through a list of Farsi-speaking doctors outside Iran. Filter by specialty, location, and rating."
+        openGraph={{
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/list`,
+          title: "Doctor Directory - Find Farsi-speaking Doctors",
+          description:
+            "Browse through a list of Farsi-speaking doctors outside Iran. Filter by specialty, location, and rating.",
+          images: [
+            {
+              url: "/main.jpeg",
+              width: 800,
+              height: 600,
+              alt: "Doctor Directory Image",
+            },
+          ],
         }}
+      />
+      <Container
+        sx={{ display: "flex", flexDirection: "column" }}
+        maxWidth="xl"
       >
-        {isMobile ? (
-          <IconButton
-            onClick={() => setMobileFiltersOpen(true)}
-            aria-label="open filters"
-            color="primary"
-            size="large"
-          >
-            <FilterListIcon />
-          </IconButton>
-        ) : (
-          filterContent
-        )}
-      </Toolbar>
-
-      {isMobile && (
-        <Drawer
-          anchor="bottom"
-          open={mobileFiltersOpen}
-          onClose={() => setMobileFiltersOpen(false)}
+        <Toolbar
+          sx={{
+            display: "flex",
+            gap: 3,
+            mb: 6,
+            bgcolor: "ButtonFace",
+            p: 3,
+            justifyContent: "space-around",
+          }}
         >
-          <Box sx={{ p: 2 }}>
-            {filterContent}
-            <Button
-              onClick={() => setMobileFiltersOpen(false)}
-              variant="contained"
-              fullWidth
-              sx={{ mt: 2 }}
+          {isMobile ? (
+            <IconButton
+              onClick={() => setMobileFiltersOpen(true)}
+              aria-label="open filters"
+              color="primary"
+              size="large"
             >
-              Apply Filters
-            </Button>
-          </Box>
-        </Drawer>
-      )}
+              <FilterListIcon />
+            </IconButton>
+          ) : (
+            filterContent
+          )}
+        </Toolbar>
 
-      <Grid2 container spacing={5} justifyContent="center">
-        {loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "100vh",
-            }}
+        {isMobile && (
+          <Drawer
+            anchor="bottom"
+            open={mobileFiltersOpen}
+            onClose={() => setMobileFiltersOpen(false)}
           >
-            <CircularProgress />
-          </Box>
-        ) : paginatedDoctors.length > 0 ? (
-          paginatedDoctors.map((doctor) => {
-            const farsiSpeciality =
-              specialities.find((spec) => spec.name === doctor.speciality)
-                ?.farsi_name || "";
-            return (
-              <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
-                <Card
-                  sx={{
-                    width: 250,
-                    height: 400,
-                    display: "flex",
-                    flexDirection: "column",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleRouteToProfile(doctor.id)}
-                >
-                  <Box p={1}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <StarIcon
-                        key={index}
-                        sx={{
-                          color:
-                            index < Math.round(doctor.averageRating)
-                              ? "gold"
-                              : "gray",
-                        }}
-                      />
-                    ))}
-                  </Box>
-                  {doctor.profile_image ? (
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={doctor.profile_image}
-                      alt={`${doctor.first_name} ${doctor.last_name}`}
-                      sx={{ objectFit: "contain", objectPosition: "top" }}
-                    />
-                  ) : (
-                    <Avatar
-                      sx={{ width: 170, height: 200, mx: "auto", mb: 2 }}
-                    />
-                  )}
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="body1">
-                      {doctor.first_name} {doctor.last_name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {doctor.speciality || "Specialty not available"}
-                    </Typography>
-                    {farsiSpeciality && (
-                      <Typography variant="body2" color="text.secondary">
-                        ({farsiSpeciality})
-                      </Typography>
-                    )}
-                    <Box display="flex" alignItems="center" mt={2}>
-                      {doctor.location_flag && (
-                        <img
-                          src={doctor.location_flag}
-                          alt={doctor.location}
-                          width="20"
-                          height="14"
-                          style={{ marginRight: 8 }}
-                        />
-                      )}
-                      <Typography variant="body2">{doctor.location}</Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid2>
-            );
-          })
-        ) : (
-          <Box width="100%">
-            <NoRecords />
-          </Box>
+            <Box sx={{ p: 2 }}>
+              {filterContent}
+              <Button
+                onClick={() => setMobileFiltersOpen(false)}
+                variant="contained"
+                fullWidth
+                sx={{ mt: 2 }}
+              >
+                Apply Filters
+              </Button>
+            </Box>
+          </Drawer>
         )}
-      </Grid2>
-      {Math.ceil(filteredDoctors.length / itemsPerPage) > 1 && (
-        <Pagination
-          count={Math.ceil(filteredDoctors.length / itemsPerPage)}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-          sx={{ mt: 5, display: "flex", justifyContent: "center" }}
-        />
-      )}
-    </Container>
+
+        <Grid2 container spacing={5} justifyContent="center">
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : paginatedDoctors.length > 0 ? (
+            paginatedDoctors.map((doctor) => {
+              const farsiSpeciality =
+                specialities.find((spec) => spec.name === doctor.speciality)
+                  ?.farsi_name || "";
+              return (
+                <Grid2 item xs={12} sm={6} md={4} key={doctor.id}>
+                  <Card
+                    sx={{
+                      width: 250,
+                      height: 400,
+                      display: "flex",
+                      flexDirection: "column",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleRouteToProfile(doctor.id)}
+                  >
+                    <Box p={1}>
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <StarIcon
+                          key={index}
+                          sx={{
+                            color:
+                              index < Math.round(doctor.averageRating)
+                                ? "gold"
+                                : "gray",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                    {doctor.profile_image ? (
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={doctor.profile_image}
+                        alt={`${doctor.first_name} ${doctor.last_name}`}
+                        sx={{ objectFit: "contain", objectPosition: "top" }}
+                      />
+                    ) : (
+                      <Avatar
+                        sx={{ width: 170, height: 200, mx: "auto", mb: 2 }}
+                      />
+                    )}
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography variant="body1">
+                        {doctor.first_name} {doctor.last_name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {doctor.speciality || "Specialty not available"}
+                      </Typography>
+                      {farsiSpeciality && (
+                        <Typography variant="body2" color="text.secondary">
+                          ({farsiSpeciality})
+                        </Typography>
+                      )}
+                      <Box display="flex" alignItems="center" mt={2}>
+                        {doctor.location_flag && (
+                          <img
+                            src={doctor.location_flag}
+                            alt={doctor.location}
+                            width="20"
+                            height="14"
+                            style={{ marginRight: 8 }}
+                          />
+                        )}
+                        <Typography variant="body2">
+                          {doctor.location}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid2>
+              );
+            })
+          ) : (
+            <Box width="100%">
+              <NoRecords />
+            </Box>
+          )}
+        </Grid2>
+        {Math.ceil(filteredDoctors.length / itemsPerPage) > 1 && (
+          <Pagination
+            count={Math.ceil(filteredDoctors.length / itemsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            sx={{ mt: 5, display: "flex", justifyContent: "center" }}
+          />
+        )}
+      </Container>
+    </>
   );
 }
