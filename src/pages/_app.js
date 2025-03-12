@@ -12,6 +12,12 @@ import Head from "next/head";
 function MyApp({ Component, pageProps }) {
   return (
     <>
+      <Head>
+        <title>Iranian Doctors Hub</title>
+        <link rel="canonical" href="https://iraniandoctorshub.com" />
+        <link rel="icon" href="/logo.png" />
+        <meta name="robots" content="index, follow" />
+      </Head>
       <DefaultSeo
         title="Find Farsi-Speaking Doctors - Iranian Doctors Hub"
         description="Connect with trusted Farsi-speaking doctors worldwide. Read reviews, check credentials, and book appointments with ease."
@@ -32,12 +38,7 @@ function MyApp({ Component, pageProps }) {
       />
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Head>
-          <title>Iranian Doctors Hub</title>
-          <link rel="canonical" href="https://iraniandoctorshub.com" />
-          <link rel="icon" href="/logo.png" />
-          <meta name="robots" content="index, follow" />
-        </Head>
+
         <SnackbarProvider
           maxSnack={3}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
