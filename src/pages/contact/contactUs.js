@@ -86,7 +86,7 @@ export default function ContactUs() {
           title: "Contact Us | Farsi-Speaking Doctors",
           description:
             "Get in touch with us to find more information about our services, or for any inquiries you may have.",
-          url: `${process.env.NEXT_PUBLIC_BASE_UR}/contact`,
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/contact`,
           images: [
             {
               url: "/main.jpeg", // Use an appropriate image URL for the contact page
@@ -95,6 +95,10 @@ export default function ContactUs() {
               alt: "Contact Us Image",
             },
           ],
+        }}
+        robotsProps={{
+          index: true, // Ensure the page is indexed
+          follow: true, // Ensure links on the page are followed
         }}
       />
 

@@ -43,6 +43,18 @@ export default function AboutUs() {
 
   return (
     <>
+      <Head>
+        <link
+          rel="alternate"
+          hrefLang="en"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/about-us`}
+        />
+        <link
+          rel="alternate"
+          hrefLang="fa"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/about-us?lang=fa`}
+        />
+      </Head>
       <NextSeo
         title="About Us | Farsi-Speaking Doctors"
         description="Our platform connects Iranians outside of Iran with trusted Farsi-speaking doctors, making healthcare more accessible and personalized."
@@ -50,17 +62,22 @@ export default function AboutUs() {
           title: "About Us | Farsi-Speaking Doctors",
           description:
             "Our platform connects Iranians outside of Iran with trusted Farsi-speaking doctors, making healthcare more accessible and personalized.",
-          url: `${process.env.NEXT_PUBLIC_BASE_UR}/about-us`,
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/about-us`,
           images: [
             {
-              url: "/main.jpeg", // Use an appropriate image for the about us page
+              url: "/main.jpeg",
               width: 1200,
               height: 630,
               alt: "About Us Image",
             },
           ],
         }}
+        robotsProps={{
+          index: true, // Ensure the page will be indexed
+          follow: true, // Ensure links on the page will be followed
+        }}
       />
+
       <Container maxWidth="md">
         <Paper
           elevation={3}
