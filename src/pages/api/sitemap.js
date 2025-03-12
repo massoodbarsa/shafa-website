@@ -1,25 +1,14 @@
-import { SitemapStream, streamToPromise } from "sitemap";
-import { Readable } from "stream";
-
-export default async function handler(req, res) {
-  const links = [
-    { url: "/", changefreq: "weekly", priority: 1.0 },
-    { url: "/about", changefreq: "monthly", priority: 0.8 },
-    { url: "/contact", changefreq: "monthly", priority: 0.8 },
-  ];
-
-  const stream = new SitemapStream({
-    hostname: "https://iraniandoctorshub.com",
-  });
-
-  links.forEach((link) => stream.write(link));
-  stream.end();
-
-  const sitemap = await streamToPromise(Readable.from(stream)).then((data) =>
-    data.toString()
-  );
+export async function handler(req, res) {
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://iraniandoctorshub.com/</loc>
+        <lastmod>2025-03-12</lastmod>
+        <priority>1.00</priority>
+      </url>
+      <!-- Add other pages here -->
+    </urlset>`;
 
   res.setHeader("Content-Type", "application/xml");
-  res.write(sitemap);
-  res.end();
+  res.status(200).send(sitemap);
 }
