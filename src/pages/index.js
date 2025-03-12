@@ -58,7 +58,7 @@ const Homepage = () => {
               alt: "Doctors Connecting with Iranians Abroad",
             },
           ],
-          site_name: "Your Platform Name", // Replace with your platform name
+          site_name: "Iranian doctors hub", // Replace with your platform name
         }}
         jsonLd={{
           "@context": "https://schema.org",
@@ -74,6 +74,17 @@ const Homepage = () => {
             availableLanguage: "Farsi, English", // Add languages available for customer support
           },
         }}
+        additionalMetaTags={[
+          {
+            name: "keywords",
+            content:
+              "farsi-speaking doctors, doctor directory, healthcare, medical professionals, find doctors, persian doctors,iranian doctors,persian speaking doctors,iranian outside,iranian abroad",
+          },
+          {
+            name: "robots",
+            content: "index, follow",
+          },
+        ]}
       />
 
       <Container maxWidth="lg">
