@@ -9,9 +9,8 @@ import {
   TextField,
   Button,
   IconButton,
-  Avatar,
 } from "@mui/material";
-import { Twitter, Instagram, Email, Phone } from "@mui/icons-material";
+import { Instagram, Email, Phone } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import { NextSeo } from "next-seo";
 

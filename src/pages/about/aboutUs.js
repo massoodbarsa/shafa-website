@@ -7,10 +7,9 @@ import {
   Box,
   Paper,
   Button,
-  Avatar,
   IconButton,
 } from "@mui/material";
-import { Twitter, Instagram } from "@mui/icons-material";
+import { Instagram } from "@mui/icons-material";
 import { NextSeo } from "next-seo";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import Head from "next/head";
@@ -91,7 +90,7 @@ export default function AboutUs() {
           }}
         >
           <Image
-            src="/logo.png" // Replace with "/logo.webp" if pre-converted
+            src="/logo.png"
             alt="Contact Us Image"
             width={isMobile ? 50 : 100}
             height={isMobile ? 50 : 100}
@@ -133,9 +132,6 @@ export default function AboutUs() {
               gap: 1,
             }}
           >
-            {/* <IconButton href="https://twitter.com" target="_blank">
-              <Twitter color="primary" />
-            </IconButton> */}
             <IconButton
               href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
               target="_blank"
