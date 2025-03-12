@@ -14,6 +14,7 @@ import { Twitter, Instagram } from "@mui/icons-material";
 import { NextSeo } from "next-seo";
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import Head from "next/head";
+import Image from "next/image";
 
 export default function AboutUs() {
   const [language, setLanguage] = useState("en");
@@ -89,10 +90,17 @@ export default function AboutUs() {
             position: "relative",
           }}
         >
-          <Avatar
+          <Image
+            src="/logo.png" // Replace with "/logo.webp" if pre-converted
             alt="Contact Us Image"
-            src="/logo.png"
-            sx={{ width: isMobile ? 50 : 100, height: isMobile ? 50 : 100 }}
+            width={isMobile ? 50 : 100}
+            height={isMobile ? 50 : 100}
+            quality={85}
+            style={{
+              width: isMobile ? 50 : 100,
+              height: isMobile ? 50 : 100,
+              borderRadius: "50%",
+            }}
           />
           <Box sx={{ position: "absolute", top: 16, right: 16 }}>
             <Button

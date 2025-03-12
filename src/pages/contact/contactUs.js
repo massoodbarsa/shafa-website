@@ -17,6 +17,7 @@ import { NextSeo } from "next-seo";
 
 import useBreakpointDown from "@/src/hooks/useBreakpointDown.hook";
 import Head from "next/head";
+import Image from "next/image";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -120,10 +121,17 @@ export default function ContactUs() {
 
       <Container maxWidth="md">
         <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 2 }}>
-          <Avatar
+          <Image
+            src="/logo.png" // Replace with "/logo.webp" if pre-converted
             alt="Contact Us Image"
-            src="/logo.png"
-            sx={{ width: isMobile ? 50 : 100, height: isMobile ? 50 : 100 }}
+            width={isMobile ? 50 : 100}
+            height={isMobile ? 50 : 100}
+            quality={85}
+            style={{
+              width: isMobile ? 50 : 100,
+              height: isMobile ? 50 : 100,
+              borderRadius: "50%",
+            }}
           />
           <Box textAlign="center" mb={3}>
             <Typography variant="h4">Contact Us</Typography>
@@ -131,16 +139,6 @@ export default function ContactUs() {
 
           {/* Contact Info */}
           <Box textAlign="center" mb={5}>
-            {/* <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              gap={1}
-              mb={2}
-            >
-              <Phone color="success" />
-              <Typography variant="body1">+123 456 7890</Typography>
-            </Box> */}
             <Box
               display="flex"
               justifyContent="center"
@@ -154,9 +152,6 @@ export default function ContactUs() {
             </Box>
           </Box>
           <Box display="flex" justifyContent="center" gap={2} mb={3}>
-            {/* <IconButton href="https://twitter.com" target="_blank">
-              <Twitter color="primary" />
-            </IconButton> */}
             <IconButton
               href="https://www.instagram.com/i.dr.hub?igsh=eWo2eDBkaXhsNG1w&utm_source=qr"
               target="_blank"
