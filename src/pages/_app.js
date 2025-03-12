@@ -6,7 +6,6 @@ import Layout from "../components/Layout"; // Your custom layout component
 import { DefaultSeo } from "next-seo";
 import { Analytics } from "@vercel/analytics/react";
 import { SnackbarProvider } from "notistack";
-
 import AuthGuard from "../hooks/AuthGuard";
 import Head from "next/head";
 
@@ -14,32 +13,29 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <DefaultSeo
-        title="Find Farsi-Speaking Doctors"
-        description="Find and connect with top Farsi-speaking doctors worldwide."
+        title="Find Farsi-Speaking Doctors - Iranian Doctors Hub"
+        description="Connect with trusted Farsi-speaking doctors worldwide. Read reviews, check credentials, and book appointments with ease."
         openGraph={{
           type: "website",
           locale: "en_US",
-          url: "https://IranianDoctorsHub.com",
+          url: "https://iraniandoctorshub.com",
           siteName: "Iranian Doctors Hub",
           images: [
             {
-              url: "/main.jpeg",
+              url: "https://iraniandoctorshub.com/main.jpeg", // Ensure this image exists
               width: 1200,
               height: 630,
-              alt: "Find Farsi-speaking doctors",
+              alt: "Find Farsi-speaking doctors worldwide",
             },
           ],
         }}
-        // twitter={{
-        //   handle: "@yourhandle",
-        //   site: "@yourhandle",
-        //   cardType: "summary_large_image",
-        // }}
       />
       <ThemeProvider theme={theme}>
-        <CssBaseline /> {/* Normalize CSS */}
+        <CssBaseline />
         <Head>
-          <link rel="icon" href="/logo.png" style={{ borderRadius: "50%" }} />
+          <link rel="canonical" href="https://iraniandoctorshub.com" />
+          <link rel="icon" href="/logo.png" />
+          <meta name="robots" content="index, follow" />
         </Head>
         <SnackbarProvider
           maxSnack={3}
@@ -48,7 +44,7 @@ function MyApp({ Component, pageProps }) {
         >
           <AuthGuard>
             <Layout>
-              <Component {...pageProps} /> {/* Render the current page */}
+              <Component {...pageProps} />
             </Layout>
           </AuthGuard>
         </SnackbarProvider>
