@@ -154,7 +154,12 @@ const Header = () => {
 
         {isMobile ? (
           <Box>
-            <IconButton size="large" color="inherit" onClick={handleMenuOpen}>
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={handleMenuOpen}
+              aria-label="Open navigation menu"
+            >
               <MenuIcon />
             </IconButton>
             <Menu
@@ -163,6 +168,7 @@ const Header = () => {
               onClose={handleMenuClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
+              aria-labelledby="mobile-menu-button"
             >
               {renderMenuItems()}
             </Menu>
