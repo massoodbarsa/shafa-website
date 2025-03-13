@@ -74,16 +74,7 @@ export default async function handler(req, res) {
                       <p style="margin:0 0 8px;">
                         © ${new Date().getFullYear()} IDH. All rights reserved.
                       </p>
-                      // <p style="margin:0;">
-                      //   <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" 
-                      //      style="color:#6b7280;text-decoration:none;margin-right:12px;">
-                      //     Privacy Policy
-                      //   </a>
-                      //   <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" 
-                      //      style="color:#6b7280;text-decoration:none;">
-                      //     Terms of Service
-                      //   </a>
-                      // </p>
+                  
                     </td>
                   </tr>
                 </table>
