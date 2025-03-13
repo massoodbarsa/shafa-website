@@ -6,12 +6,12 @@ const pages = [
     priority: "1.00",
   },
   {
-    loc: "https://iraniandoctorshub.com/about",
+    loc: "https://iraniandoctorshub.com/about-us",
     lastmod: "2025-03-12",
     priority: "0.80",
   },
   {
-    loc: "https://iraniandoctorshub.com/contact",
+    loc: "https://iraniandoctorshub.com/contact-us",
     lastmod: "2025-03-12",
     priority: "0.80",
   },
