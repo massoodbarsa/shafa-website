@@ -111,7 +111,14 @@ export default function AboutUs() {
             </Button>
           </Box>
           <Box textAlign="center" mb={3}>
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography
+              variant="h1"
+              fontWeight={700}
+              gutterBottom
+              sx={{
+                fontSize: { xs: "1.5rem", md: "2rem" }, // Smaller: 28px mobile, 40px desktop
+              }}
+            >
               {content[language].title}
             </Typography>
           </Box>

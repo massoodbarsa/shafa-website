@@ -43,7 +43,7 @@ const nextConfig = {
       },
       {
         // Cache ContactUs page
-        source: "/contact",
+        source: "/contact-us",
         headers: [
           {
             key: "Cache-Control",

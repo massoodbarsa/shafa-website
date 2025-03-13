@@ -88,7 +88,7 @@ export default function ContactUs() {
               "@context": "https://schema.org",
               "@type": "ContactPage",
               name: "Contact Iranian Doctors Hub",
-              url: "https://www.iraniandoctorshub.com/contactUs",
+              url: "https://www.iraniandoctorshub.com/contact-us",
               contactType: "Customer Service",
               email: "IranianDoctorsHub@gmail.com",
             }),
@@ -133,7 +133,16 @@ export default function ContactUs() {
             }}
           />
           <Box textAlign="center" mb={3}>
-            <Typography variant="h4">Contact Us</Typography>
+            <Typography
+              variant="h1"
+              fontWeight={700}
+              gutterBottom
+              sx={{
+                fontSize: { xs: "1.5rem", md: "2rem" }, // Smaller: 28px mobile, 40px desktop
+              }}
+            >
+              Contact Us
+            </Typography>
           </Box>
 
           {/* Contact Info */}
