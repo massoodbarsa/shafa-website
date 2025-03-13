@@ -5,9 +5,8 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* Favicon Link */}
+          <title>Iranian Doctors Hub</title>
           <link rel="icon" href="/logo.png" type="image/x-icon" />
-          {/* Optional: You can add multiple sizes/formats for better compatibility */}
           <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
         </Head>
         <body>
