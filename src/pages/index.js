@@ -42,8 +42,8 @@ const Homepage = () => {
       </Head>
       {/* Later on featured doctores should land here .use getServerSideProps */}
       <NextSeo
-        title="Find Farsi-speaking Doctors for Iranians Abroad"
-        description="Our platform connects Iranians living outside of Iran with Farsi-speaking doctors, making healthcare more accessible and personalized."
+        title="Find Verified Farsi-Speaking Doctors for Iranians Abroad"
+        description="Quickly find trusted, verified Farsi-speaking Iranian doctors worldwide. Connect to the right medical professional for your needs."
         openGraph={{
           url: "https://www.iraniandoctorshub.com", // Replace with your homepage URL
           title: "Find Farsi-speaking doctors for Iranians abroad",
@@ -61,15 +61,16 @@ const Homepage = () => {
         }}
         jsonLd={{
           "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Iranian Doctors Hub", // Replace with your platform's name
-          url: "https://www.iraniandoctorshub.com", // Replace with your website's URL
-          logo: "https://www.iraniandoctorshub.com/logo.png", // Replace with your logo URL
+          "@type": "MedicalOrganization",
+          name: "Iranian Doctors Hub",
+          url: "https://www.iraniandoctorshub.com",
+          logo: "https://www.iraniandoctorshub.com/logo.png",
+          sameAs: ["https://www.instagram.com/i.dr.hub"],
           contactPoint: {
             "@type": "ContactPoint",
-            contactType: "customer service",
-            areaServed: "Worldwide", // You can change this to specific countries or regions
-            availableLanguage: "Farsi, English", // Add languages available for customer support
+            contactType: "Customer Support",
+            areaServed: "Worldwide",
+            availableLanguage: ["Farsi", "English"],
           },
         }}
         additionalMetaTags={[
