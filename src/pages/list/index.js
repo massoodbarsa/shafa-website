@@ -127,6 +127,7 @@ export default function Home() {
     //   });
     //   return;
     // }
+
     router.push(`/dashboard/doctor/${doctorId}`);
   };
 
@@ -384,6 +385,7 @@ export default function Home() {
             </Box>
           ) : paginatedDoctors.length > 0 ? (
             paginatedDoctors.map((doctor) => {
+              console.log(doctor);
               const farsiSpeciality =
                 specialities.find((spec) => spec.name === doctor.speciality)
                   ?.farsi_name || "";
