@@ -4,9 +4,9 @@ const nextConfig = {
     ignoreDuringBuilds: true, // From your config
   },
   reactStrictMode: true, // From your config
-  images: {
-    domains: ["mxdedvyiejcorhyosvud.supabase.co"], // From your config
-  },
+  // images: {
+  //   domains: ["mxdedvyiejcorhyosvud.supabase.co"], // From your config
+  // },
   headers: async () => {
     return [
       {
