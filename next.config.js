@@ -1,16 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true, // From your config
+    ignoreDuringBuilds: true,
   },
-  reactStrictMode: true, // From your config
+  reactStrictMode: true,
   images: {
-    domains: ["mxdedvyiejcorhyosvud.supabase.co"], // From your config
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mxdedvyiejcorhyosvud.supabase.co",
+      },
+    ],
   },
   headers: async () => {
     return [
       {
-        // Cache static assets (images, JS, CSS)
         source: "/:path*.(png|jpg|jpeg|webp|avif|js|css)",
         headers: [
           {
@@ -20,7 +24,6 @@ const nextConfig = {
         ],
       },
       {
-        // Cache Homepage (root URL)
         source: "/",
         headers: [
           {
@@ -31,7 +34,6 @@ const nextConfig = {
         ],
       },
       {
-        // Cache AboutUs page
         source: "/about-us",
         headers: [
           {
@@ -42,7 +44,6 @@ const nextConfig = {
         ],
       },
       {
-        // Cache ContactUs page
         source: "/contact-us",
         headers: [
           {
