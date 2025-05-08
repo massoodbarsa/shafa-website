@@ -28,7 +28,7 @@ const LoginPage = () => {
   const [userType, setUserType] = useState(UserRole.Doctor);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [medicalLicense, setMedicalLicense] = useState("");
+  const [Pin, setPin] = useState("");
 
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
@@ -200,12 +200,12 @@ const LoginPage = () => {
         {userType === UserRole.Doctor && (
           <TextField
             fullWidth
-            label="Medical License Number"
+            label="Pin"
             variant="outlined"
             margin="normal"
             required
-            value={medicalLicense}
-            onChange={(e) => setMedicalLicense(e.target.value)}
+            value={Pin}
+            onChange={(e) => setPin(e.target.value)}
           />
         )}
 

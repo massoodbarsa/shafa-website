@@ -66,10 +66,10 @@ const RegisterForm = () => {
     ...(userType === UserRole.Doctor
       ? {
           speciality: yup.string().required("speciality is required"),
-          license_number: yup
+          pin: yup
             .string()
-            .matches(/^[A-Za-z0-9-]+$/, "Invalid license number format")
-            .required("Medical license number is required"),
+            .matches(/^[A-Za-z0-9-]+$/, "Invalid pin format")
+            .required("Pin is required"),
         }
       : {}),
   });
@@ -87,7 +87,7 @@ const RegisterForm = () => {
       email: "",
       password: "",
       speciality: "",
-      license_number: "",
+      pin: "",
     },
   });
 
@@ -178,7 +178,7 @@ const RegisterForm = () => {
 
         if (userType === UserRole.Doctor) {
           insertData.speciality = formData.speciality;
-          insertData.license_nr = formData.license_number;
+          insertData.pin = formData.pin;
           insertData.role = UserRole.Doctor;
           insertData.status = Status.FREE;
           insertData.start_date = formatDate(new Date());
@@ -346,16 +346,16 @@ const RegisterForm = () => {
             />
 
             <Controller
-              name="license_number"
+              name="pin"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Medical License Number"
+                  label="Pin"
                   fullWidth
                   margin="normal"
-                  error={!!errors.license_number}
-                  helperText={errors.license_number?.message}
+                  error={!!errors.pin}
+                  helperText={errors.pin?.message}
                   disabled={isSubmitting}
                 />
               )}
