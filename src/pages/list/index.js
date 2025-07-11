@@ -121,12 +121,12 @@ export default function Home() {
   };
 
   const handleRouteToProfile = (doctorId) => {
-    // if (!user) {
-    //   enqueueSnackbar("Register to see doctor page.", {
-    //     variant: "warning",
-    //   });
-    //   return;
-    // }
+    if (!user) {
+      enqueueSnackbar("Register to see doctor page.", {
+        variant: "warning",
+      });
+      return;
+    }
 
     router.push(`/dashboard/doctor/${doctorId}`);
   };
