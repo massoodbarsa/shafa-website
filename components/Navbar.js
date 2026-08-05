@@ -1,6 +1,6 @@
 "use client";
 
-import { AppBar, Toolbar, Button, Stack, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Button, Stack, Typography } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Navbar() {
@@ -34,7 +34,7 @@ export default function Navbar() {
         </Stack>
 
         {/* Language + Book Now */}
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1}>
           <Button
             size="small"
             variant={lang === "en" ? "contained" : "outlined"}
