@@ -1,6 +1,6 @@
 "use client";
-
-import { AppBar, Toolbar, Button, Stack, Typography } from "@mui/material";
+import React from "react";
+import { AppBar, Toolbar, Button, Stack, Typography, Box } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Navbar() {
@@ -8,67 +8,185 @@ export default function Navbar() {
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       elevation={0}
-      sx={{ bgcolor: "primary.main", direction: "ltr" }} // force whole navbar LTR
+      sx={{
+        background: "rgba(29, 19, 55, 0.8)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(197, 168, 128, 0.15)",
+        // Standardizes row direction globally so elements do not mirror positions
+        direction: "ltr !important",
+      }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", py: 1 }}>
-        {/* Logo */}
-        <Typography variant="h6" sx={{ color: "white", fontWeight: 700 }}>
-          SHAFA
-        </Typography>
+      <Toolbar
+        sx={{ justifyContent: "space-between", px: { xs: 2, md: 6 }, py: 1 }}
+      >
+        {/* Logo Branding Structure */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: "#C5A880",
+              fontWeight: 500,
+              letterSpacing: "0.15em",
+              lineHeight: 1.1,
+              fontFamily: "serif",
+            }}
+          >
+            SHAFA
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              fontSize: "0.55rem",
+              letterSpacing: "0.05em",
+              color: "#7C6A9F",
+            }}
+          >
+            HYPNOTHERAPY & WELLNESS
+          </Typography>
+        </Box>
 
-        {/* Menu Links */}
+        {/* Dynamic Navigation Row Menu */}
         <Stack
           direction="row"
           spacing={1}
-          sx={{ display: { xs: "none", md: "flex" } }}
+          sx={{
+            display: { xs: "none", md: "flex" },
+            // Ensures text orientation aligns with the language setting
+            direction: lang === "fa" ? "rtl" : "ltr",
+          }}
         >
-          <Button sx={{ color: "white" }}>{texts.nav.home}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.about}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.services}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.packages}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.resources}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.workshops}</Button>
-          <Button sx={{ color: "white" }}>{texts.nav.contact}</Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.home}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.about}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.services}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.packages}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.resources}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.workshops}
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              fontSize: "0.85rem",
+              fontWeight: 300,
+              "&:hover": { color: "#C5A880" },
+            }}
+          >
+            {texts.nav.contact}
+          </Button>
         </Stack>
 
-        {/* Language + Book Now */}
-        <Stack direction="row" spacing={1}>
-          <Button
-            size="small"
-            variant={lang === "en" ? "contained" : "outlined"}
-            onClick={() => changeLanguage("en")}
-            sx={{
-              color: lang === "en" ? "primary.main" : "white",
-              borderColor: "white",
-              bgcolor: lang === "en" ? "white" : "transparent",
-              minWidth: 40,
-            }}
-          >
-            EN
-          </Button>
-          <Button
-            size="small"
-            variant={lang === "fa" ? "contained" : "outlined"}
-            onClick={() => changeLanguage("fa")}
-            sx={{
-              color: lang === "fa" ? "primary.main" : "white",
-              borderColor: "white",
-              bgcolor: lang === "fa" ? "white" : "transparent",
-              minWidth: 40,
-            }}
-          >
-            FA
-          </Button>
+        {/* Translation Options & Call to Action (CTA) */}
+        <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+          <Stack direction="row" spacing={0.5} sx={{ mr: 1 }}>
+            <Button
+              size="small"
+              onClick={() => changeLanguage("en")}
+              sx={{
+                color: lang === "en" ? "#120B24" : "white",
+                bgcolor: lang === "en" ? "#C5A880" : "transparent",
+                borderRadius: 0,
+                fontSize: "0.75rem",
+                minWidth: 35,
+                p: "4px 8px",
+                "&:hover": {
+                  bgcolor: lang === "en" ? "#B3966E" : "rgba(255,255,255,0.08)",
+                },
+              }}
+            >
+              EN
+            </Button>
+            <Button
+              size="small"
+              onClick={() => changeLanguage("fa")}
+              sx={{
+                color: lang === "fa" ? "#120B24" : "white",
+                bgcolor: lang === "fa" ? "#C5A880" : "transparent",
+                borderRadius: 0,
+                fontSize: "0.75rem",
+                minWidth: 35,
+                p: "4px 8px",
+                "&:hover": {
+                  bgcolor: lang === "fa" ? "#B3966E" : "rgba(255,255,255,0.08)",
+                },
+              }}
+            >
+              FA
+            </Button>
+          </Stack>
 
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{
-              bgcolor: "white",
-              color: "primary.main",
-              ml: 1,
-              "&:hover": { bgcolor: "#f0e6f7" },
+              borderColor: "#C5A880",
+              color: "#C5A880",
+              borderRadius: 0,
+              fontSize: "0.8rem",
+              p: "6px 16px",
+              "&:hover": {
+                borderColor: "white",
+                color: "white",
+                bgcolor: "rgba(255,255,255,0.05)",
+              },
             }}
           >
             {texts.nav.bookNow}
