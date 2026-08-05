@@ -1,0 +1,17 @@
+{
+  "title": "SHAFA",
+  "subtitle": "HYPNOTHERAPY & WELLNESS",
+  "tagline": "Healing begins within.",
+  "bookSession": "Book a Session",
+  "exploreServices": "Explore Services",
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "packages": "Packages",
+    "resources": "Resources",
+    "workshops": "Workshops",
+    "contact": "Contact",
+    "bookNow": "Book Now"
+  }
+}
