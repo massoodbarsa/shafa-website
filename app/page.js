@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import Hero from "@/components/Hero";
 import Welcome from "@/components/Welcome";
 import HowICanHelp from "@/components/HowICanHelp";
+import CallToAction from "@/components/CallToAction";
 
 export default function Home() {
   const { texts } = useLanguage();
@@ -19,6 +20,8 @@ export default function Home() {
       <Welcome />
 
       <HowICanHelp />
+
+      <CallToAction />
     </Box>
   );
 }

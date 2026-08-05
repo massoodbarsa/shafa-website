@@ -35,5 +35,9 @@
     "workshops": "Workshops",
     "contact": "Contact",
     "bookNow": "Book Now"
+  },
+  "banner": {
+    "bannerText": "Your journey to healing and transformation starts now",
+    "bannerBtn": "Book a Session"
   }
 }

@@ -61,9 +61,8 @@ export default function HowICanHelp() {
   ];
 
   return (
-    <Box sx={{ py: 10, bgcolor: "white" }}>
+    <Box sx={{ py: 5, bgcolor: "white" }}>
       <Container maxWidth="xl">
-        {" "}
         {/* Shifted to xl container layout to give more horizontal breath space for long sentences */}
         <Typography
           variant="h4"
