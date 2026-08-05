@@ -2,12 +2,14 @@
 
 import { Box, Typography, Button, Stack } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   const { texts, lang, changeLanguage } = useLanguage();
 
   return (
     <Box sx={{ p: 4, textAlign: "center", minHeight: "100vh" }}>
+      <Navbar />
       {/* Language Switcher - always stays on the right */}
       <Box
         sx={{
