@@ -75,6 +75,6 @@
     "email": "info@shafa-wellness.com",
     "phone": "+31 6 12345678",
     "address": "Amsterdam, Netherlands",
-    "copyright": "`© ${new Date().getFullYear()} SHAFA Hypnotherapy & Wellness. All rights reserved.`"
+    "copyright": "© 2026 SHAFA Hypnotherapy & Wellness. All rights reserved."
   }
 }
