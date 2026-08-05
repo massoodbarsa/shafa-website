@@ -39,5 +39,42 @@
   "banner": {
     "bannerText": "Your journey to healing and transformation starts now",
     "bannerBtn": "Book a Session"
+  },
+  "testomonials": {
+    "testimonialsTitle": "What My Clients Say",
+
+    "reviews": [
+      {
+        "text": "\"Shabnam's sessions changed my life. I feel more peaceful and confident than ever.\"",
+        "author": "– Sara M."
+      },
+      {
+        "text": "\"The inner child therapy helped me heal deep wounds I didn't even know I had.\"",
+        "author": "– Ali R."
+      },
+      {
+        "text": "\"Professional, kind and so supportive. Highly recommended!\"",
+        "author": "– Neda K."
+      }
+    ]
+  },
+  "footer": {
+    "tagline": "Healing begins within.",
+    "col1Title": "Quick Links",
+    "col2Title": "Resources",
+    "col3Title": "Contact Info",
+    "links1": [
+      "About",
+      "Services",
+      "Packages",
+      "Resources",
+      "Workshops",
+      "Contact"
+    ],
+    "links2": ["Free Meditations", "Self-Hypnosis", "Articles", "Guides"],
+    "email": "info@shafa-wellness.com",
+    "phone": "+31 6 12345678",
+    "address": "Amsterdam, Netherlands",
+    "copyright": "`© ${new Date().getFullYear()} SHAFA Hypnotherapy & Wellness. All rights reserved.`"
   }
 }
