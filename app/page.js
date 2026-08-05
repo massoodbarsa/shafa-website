@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Typography,
-  Button,
-  Stack,
-  Container,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
 import Hero from "@/components/Hero";
@@ -22,12 +14,10 @@ export default function Home() {
     <Box sx={{ minHeight: "100vh" }}>
       <Navbar />
 
-      {/* ===== HERO SECTION ===== */}
       <Hero />
-      {/* ===== WELCOME SECTION ===== */}
+
       <Welcome />
 
-      {/* ===== HOW I CAN HELP YOU ===== */}
       <HowICanHelp />
     </Box>
   );
