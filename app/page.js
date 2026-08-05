@@ -5,12 +5,13 @@ import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
 
 export default function Home() {
-  const { texts, lang, changeLanguage } = useLanguage();
+  const { texts } = useLanguage();
 
   return (
-    <Box sx={{ p: 4, textAlign: "center", minHeight: "100vh" }}>
+    <Box sx={{ minHeight: "100vh" }}>
       <Navbar />
-      {/* Hero Section */}
+
+      {/* ===== HERO SECTION ===== */}
       <Box
         sx={{
           minHeight: "85vh",
@@ -49,14 +50,7 @@ export default function Home() {
             {texts.subtitle}
           </Typography>
 
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 5,
-              opacity: 0.85,
-              fontWeight: 400,
-            }}
-          >
+          <Typography variant="h6" sx={{ mb: 5, opacity: 0.85 }}>
             {texts.tagline}
           </Typography>
 
@@ -73,7 +67,6 @@ export default function Home() {
                 color: "primary.main",
                 px: 4,
                 py: 1.5,
-                fontSize: "1rem",
                 "&:hover": { bgcolor: "#f0e6f7" },
               }}
             >
@@ -88,7 +81,6 @@ export default function Home() {
                 color: "white",
                 px: 4,
                 py: 1.5,
-                fontSize: "1rem",
                 "&:hover": {
                   borderColor: "white",
                   bgcolor: "rgba(255,255,255,0.1)",
@@ -100,54 +92,38 @@ export default function Home() {
           </Stack>
         </Container>
       </Box>
-      {/* Language Switcher - always stays on the right */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          mb: 4,
-          direction: "ltr", // force left-to-right
-        }}
-      >
-        <Stack direction="row" spacing={1}>
-          <Button
-            variant={lang === "en" ? "contained" : "outlined"}
-            size="small"
-            onClick={() => changeLanguage("en")}
+
+      {/* ===== WELCOME SECTION ===== */}
+      <Box sx={{ py: 10, bgcolor: "#f8f5fc" }}>
+        <Container maxWidth="md" sx={{ textAlign: "center" }}>
+          <Typography
+            variant="h4"
+            color="primary"
+            fontWeight={700}
+            gutterBottom
           >
-            English
-          </Button>
-          <Button
-            variant={lang === "fa" ? "contained" : "outlined"}
-            size="small"
-            onClick={() => changeLanguage("fa")}
+            {texts.welcomeTitle}
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "1.15rem",
+              color: "text.secondary",
+              maxWidth: 600,
+              mx: "auto",
+              mb: 4,
+              lineHeight: 1.8,
+            }}
           >
-            فارسی
+            {texts.welcomeText}
+          </Typography>
+
+          <Button variant="contained" size="large" color="primary">
+            {texts.learnMore}
           </Button>
-        </Stack>
+        </Container>
       </Box>
-
-      {/* Main Content */}
-      <Typography variant="h2" color="primary" gutterBottom fontWeight={700}>
-        {texts.title}
-      </Typography>
-
-      <Typography variant="h5" color="text.secondary" gutterBottom>
-        {texts.subtitle}
-      </Typography>
-
-      <Typography variant="h6" sx={{ mb: 4, mt: 2 }}>
-        {texts.tagline}
-      </Typography>
-
-      <Stack direction="row" spacing={2} justifyContent="center">
-        <Button variant="contained" size="large">
-          {texts.bookSession}
-        </Button>
-        <Button variant="outlined" size="large">
-          {texts.exploreServices}
-        </Button>
-      </Stack>
     </Box>
   );
 }
