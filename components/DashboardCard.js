@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function DashboardCard({ title, icon, onClick }) {
+export default function DashboardCard({ title, subtitle, icon, onClick }) {
   const { lang } = useLanguage();
   const isRtl = lang === "fa";
 
@@ -12,27 +12,20 @@ export default function DashboardCard({ title, icon, onClick }) {
       elevation={0}
       onClick={onClick}
       sx={{
-        // ─── INCREASED INNER PADDING FOR A ROOMIER, PRETTIER FEEL ───
-        p: { xs: 2, md: 3 },
-
-        // ─── OPTIMIZED WIDE WIDTH CONFIGURATION FOR 4 AND 2 COLUMNS ───
+        p: { xs: 2.5, md: 3.5 },
         width: {
-          xs: "calc(50% - 12px)", // Perfect wide distribution for 2 columns on mobile
-          sm: "calc(50% - 12px)", // Perfect wide distribution for 2 columns on tablet
-          md: "calc(25% - 20px)", // Perfect wide distribution for 4 columns on desktop
+          xs: "calc(50% - 12px)",
+          sm: "calc(50% - 12px)",
+          md: "calc(25% - 20px)",
         },
-        minHeight: "170px", // Slightly boosted height to stay proportional to the new wider design
+        minHeight: "200px", // Balanced height to handle cards with or without subtitles gracefully
         cursor: onClick ? "pointer" : "default",
-
         backgroundColor: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(12px)",
-        borderRadius: "32px", // Smooth rounded frame matching the design
-
-        // Premium Double-Border Setup
+        borderRadius: "32px",
         border: "2px solid #E9C59A",
         outline: "1px solid rgba(110, 80, 140, 0.15)",
-        outlineOffset: "-8px", // Pushed deeper inward to frame the wider canvas beautifully
-
+        outlineOffset: "-8px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -41,7 +34,6 @@ export default function DashboardCard({ title, icon, onClick }) {
         boxSizing: "border-box",
         position: "relative",
         transition: "all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)",
-
         "&:hover": {
           transform: "translateY(-6px)",
           borderColor: "#C99745",
@@ -50,14 +42,13 @@ export default function DashboardCard({ title, icon, onClick }) {
         },
       }}
     >
-      {/* Unified Text & Symbol Alignment Block */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          gap: 1.5, // Expanded layout gap space between icon and text title
+          gap: 1.2,
           mt: 0.5,
         }}
       >
@@ -68,9 +59,6 @@ export default function DashboardCard({ title, icon, onClick }) {
             alignItems: "center",
             justifyContent: "center",
             color: "primary.main",
-            border: "1px solid",
-            borderColor: "secondary.light",
-            borderRadius: "50%",
           }}
         >
           {icon}
@@ -82,9 +70,9 @@ export default function DashboardCard({ title, icon, onClick }) {
           sx={{
             color: "#4A1C6B",
             fontWeight: 600,
-            fontSize: { xs: "0.95rem", md: "1.15rem" }, // Boosted text sizes slightly to fit the wider cards
-            lineHeight: 1.4,
-            px: 1, // Sideways padding padding stops letters from hitting lines
+            fontSize: { xs: "0.95rem", md: "1.1rem" },
+            lineHeight: 1.3,
+            px: 0.5,
             fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
             m: 0,
           }}
@@ -92,14 +80,33 @@ export default function DashboardCard({ title, icon, onClick }) {
           {title}
         </Typography>
 
-        {/* ─── EXPANDED GOLD DIAMOND UNDERLINE SEPARATOR ─── */}
+        {/* ─── DYNAMIC SUBTITLE ENGINE (SMALLER AND CLEANER) ─── */}
+        {subtitle && (
+          <Typography
+            variant="caption"
+            sx={{
+              color: "primary.main", // Tied to your gold theme vector accent
+              fontWeight: isRtl ? 400 : 300,
+              fontStyle: isRtl ? "normal" : "italic", // Beautiful elegant slant for English text
+              fontSize: { xs: "0.75rem", md: "0.85rem" },
+              lineHeight: 1.2,
+              fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "serif",
+              mt: -0.5, // Tucks it right tightly underneath the primary title
+              px: 1,
+            }}
+          >
+            ( {subtitle})
+          </Typography>
+        )}
+
+        {/* Thin Gold Star/Diamond Indicator Rule Below Text */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            maxWidth: "115px", // Widened line length to balance the prettier horizontal layout
+            maxWidth: "100px",
             mt: 0.5,
           }}
         >
@@ -112,7 +119,9 @@ export default function DashboardCard({ title, icon, onClick }) {
               opacity: 0.6,
             }}
           />
-          <Box sx={{ display: "flex", alignItems: "center", mx: 1, gap: 0.4 }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", mx: 0.8, gap: 0.3 }}
+          >
             <Box
               sx={{
                 width: 4,

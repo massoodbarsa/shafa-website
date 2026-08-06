@@ -16,7 +16,10 @@
       { "title": "What is Hypnotherapy?" },
       { "title": "Certificates" },
       { "title": "Meditation from Basic to Advanced" },
-      { "title": "Inner Child Healing Package (Connecting with Higher Self)" },
+      {
+        "title": "Inner Child Healing Package ",
+        "subtitle": "Connecting with Higher Self"
+      },
       { "title": "Services" },
       { "title": "Workshops" },
       { "title": "Self-Hypnosis Training" },

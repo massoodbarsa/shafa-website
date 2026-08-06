@@ -90,6 +90,7 @@ export default function DashboardGrid() {
           <DashboardCard
             key={index}
             title={card.title}
+            subtitle={card.subtitle || ""}
             icon={icons[index]}
             onClick={() => {
               router.push(`/${lang}/${routes[index]}`);
