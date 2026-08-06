@@ -117,17 +117,41 @@ export default function LayoutWrapper({ children }) {
         {children}
 
         {/* ─── SHARED FIXED IMMUTABLE BOTTOM MOTTO BLOCK ─── */}
-        <Box sx={{ textAlign: "center", mt: { xs: 2, md: 4 } }}>
+        {/* ─── FIXED IMMUTABLE BOTTOM MOTTO BLOCK WITH THEMED GLASS PANEL ─── */}
+        <Box
+          sx={{
+            textAlign: "center",
+            mt: { xs: 4, md: 6 },
+            px: { xs: 4, md: 8 },
+            py: 3,
+            width: "100%",
+            maxWidth: "500px",
+            mx: "auto",
+
+            // ─── THEMED BACKGROUND AND BORDER INTEGRATION ───
+            // Uses primary.light (light purple) with 0.25 transparency
+            backgroundColor: (theme) =>
+              `rgba(${parseInt(theme.palette.primary.light.slice(1, 3), 16)}, ${parseInt(theme.palette.primary.dark.slice(3, 5), 16)}, ${parseInt(theme.palette.primary.light.slice(5, 7), 16)}, 0.25)`,
+            backdropFilter: "blur(2px)",
+
+            // Uses secondary.main (gold) for the border stroke vector lines [INDEX]
+            border: "2px solid",
+            borderColor: "secondary.main",
+
+            borderRadius: "24px",
+            boxShadow: "0px 10px 30px rgba(18, 11, 36, 0.35)",
+          }}
+        >
           <Typography
             variant="h4"
             sx={{
               fontStyle: "italic",
               fontWeight: 300,
               letterSpacing: "0.05em",
-              color: "rgba(255,255,255,0.95)",
-              fontSize: { xs: "1.5rem", md: "2rem" },
+              color: "#FFFFFF",
+              fontSize: { xs: "1.35rem", md: "1.75rem" },
               fontFamily: "serif",
-              mb: 1,
+              mb: 1.5,
               textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
             }}
           >
@@ -140,14 +164,22 @@ export default function LayoutWrapper({ children }) {
               fontFamily: '"Noto Naskh Arabic", serif',
               color: "#FFFFFF",
               fontWeight: 300,
-              fontSize: { xs: "1.25rem", md: "1.45rem" },
+              fontSize: { xs: "1.15rem", md: "1.35rem" },
+              mb: 2.5,
               textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
             }}
           >
-            شفا از درون آغاز می‌شود
+            شفا از درون آغاز می‌شود.
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5 }}>
+          {/* Decorative Bottom Rule */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Box
               sx={{
                 width: 35,
@@ -159,7 +191,7 @@ export default function LayoutWrapper({ children }) {
             <SpaIcon
               sx={{
                 color: "secondary.main",
-                fontSize: "0.9rem",
+                fontSize: "1.1rem",
                 mx: 1.5,
                 transform: "scale(0.85)",
               }}
