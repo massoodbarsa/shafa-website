@@ -146,7 +146,7 @@ export default function LayoutWrapper({ children }) {
           >
             شفا از درون آغاز می‌شود
           </Typography>
-
+          {/* 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5 }}>
             <Box
               sx={{
@@ -172,7 +172,7 @@ export default function LayoutWrapper({ children }) {
                 alignSelf: "center",
               }}
             />
-          </Box>
+          </Box> */}
         </Box>
       </Container>
     </Box>

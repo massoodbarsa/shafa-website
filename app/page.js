@@ -100,7 +100,7 @@ export default function Home() {
 
           {/* ─── COMPACT LANGUAGE SELECTION TRACKS ─── */}
           <Stack
-            direction={{ xs: "column", sm: "row" }}
+            direction={{ xs: "row", sm: "row" }}
             spacing={2}
             sx={{
               width: "100%",
