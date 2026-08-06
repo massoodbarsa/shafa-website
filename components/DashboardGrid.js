@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useRouter } from "next/navigation";
 import DashboardCard from "./DashboardCard";
 
-import HelpIcon from "@mui/icons-material/Help";
+import PsychologyIcon from "@mui/icons-material/Psychology";
 import PersonIcon from "@mui/icons-material/Person";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
@@ -13,20 +13,24 @@ import ChildCareIcon from "@mui/icons-material/ChildCare";
 import HealingIcon from "@mui/icons-material/Healing";
 import SchoolIcon from "@mui/icons-material/School";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import AnimationIcon from "@mui/icons-material/Animation";
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
+import InfoIcon from "@mui/icons-material/Info";
 
 export default function DashboardGrid() {
   const { texts, lang } = useLanguage();
   const router = useRouter();
 
   const icons = [
-    <HelpIcon sx={{ fontSize: "2.5rem" }} />,
-    <PersonIcon sx={{ fontSize: "2.5rem" }} />,
+    <PsychologyIcon sx={{ fontSize: "2.5rem" }} />,
     <WorkspacePremiumIcon sx={{ fontSize: "2.5rem" }} />,
     <SelfImprovementIcon sx={{ fontSize: "2.5rem" }} />,
     <ChildCareIcon sx={{ fontSize: "2.5rem" }} />,
-    <HealingIcon sx={{ fontSize: "2.5rem" }} />,
+    <DesignServicesIcon sx={{ fontSize: "2.5rem" }} />,
+
     <SchoolIcon sx={{ fontSize: "2.5rem" }} />,
-    <AutoAwesomeIcon sx={{ fontSize: "2.5rem" }} />,
+    <AnimationIcon sx={{ fontSize: "2.5rem" }} />,
+    <InfoIcon sx={{ fontSize: "2.5rem" }} />,
   ];
 
   const routes = [

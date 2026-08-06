@@ -34,7 +34,7 @@ export default function LayoutWrapper({ children }) {
       }}
     >
       <Container
-        maxWidth="sm"
+        maxWidth="xl"
         sx={{
           display: "flex",
           flexDirection: "column",

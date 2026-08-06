@@ -12,24 +12,26 @@ export default function DashboardCard({ title, icon, onClick }) {
       elevation={0}
       onClick={onClick}
       sx={{
-        p: 3,
+        // ─── INCREASED INNER PADDING FOR A ROOMIER, PRETTIER FEEL ───
+        p: { xs: 2.5, md: 4 },
 
-        // ─── STRIKT RESPONSIVE COLUMNS BLUEPRINT ───
+        // ─── OPTIMIZED WIDE WIDTH CONFIGURATION FOR 4 AND 2 COLUMNS ───
         width: {
-          xs: "calc(50% - 12px)", // FIXED: Forces exactly 2 columns across on mobile screens
-          sm: "calc(50% - 12px)", // Keeps 2 columns across on tablet viewports
-          md: "calc(25% - 18px)", // FIXED: Forces exactly 4 columns across on desktop screens
+          xs: "calc(50% - 12px)", // Perfect wide distribution for 2 columns on mobile
+          sm: "calc(50% - 12px)", // Perfect wide distribution for 2 columns on tablet
+          md: "calc(25% - 20px)", // Perfect wide distribution for 4 columns on desktop
         },
-        minHeight: "180px", // Optimally balanced height for clean text distribution
+        minHeight: "190px", // Slightly boosted height to stay proportional to the new wider design
         cursor: onClick ? "pointer" : "default",
 
         backgroundColor: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(12px)",
-        borderRadius: "32px",
+        borderRadius: "32px", // Smooth rounded frame matching the design
 
+        // Premium Double-Border Setup
         border: "2px solid #E9C59A",
         outline: "1px solid rgba(110, 80, 140, 0.15)",
-        outlineOffset: "-6px",
+        outlineOffset: "-8px", // Pushed deeper inward to frame the wider canvas beautifully
 
         display: "flex",
         flexDirection: "column",
@@ -55,7 +57,7 @@ export default function DashboardCard({ title, icon, onClick }) {
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          gap: 1.2,
+          gap: 1.5, // Expanded layout gap space between icon and text title
           mt: 0.5,
         }}
       >
@@ -77,9 +79,9 @@ export default function DashboardCard({ title, icon, onClick }) {
           sx={{
             color: "#4A1C6B",
             fontWeight: 600,
-            fontSize: { xs: "0.95rem", md: "1.1rem" }, // Scaled down text slightly on mobile to look sleek in 2 columns
-            lineHeight: 1.3,
-            px: 0.5,
+            fontSize: { xs: "0.95rem", md: "1.15rem" }, // Boosted text sizes slightly to fit the wider cards
+            lineHeight: 1.4,
+            px: 1, // Sideways padding padding stops letters from hitting lines
             fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
             m: 0,
           }}
@@ -87,15 +89,15 @@ export default function DashboardCard({ title, icon, onClick }) {
           {title}
         </Typography>
 
-        {/* Thin Gold Star/Diamond Indicator Rule Below Text */}
+        {/* ─── EXPANDED GOLD DIAMOND UNDERLINE SEPARATOR ─── */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            maxWidth: "90px",
-            mt: 0.2,
+            maxWidth: "115px", // Widened line length to balance the prettier horizontal layout
+            mt: 0.5,
           }}
         >
           <Box
@@ -107,9 +109,7 @@ export default function DashboardCard({ title, icon, onClick }) {
               opacity: 0.6,
             }}
           />
-          <Box
-            sx={{ display: "flex", alignItems: "center", mx: 0.8, gap: 0.3 }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", mx: 1, gap: 0.4 }}>
             <Box
               sx={{
                 width: 4,
