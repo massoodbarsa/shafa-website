@@ -8,24 +8,22 @@
   "welcomeText": "I'm Shabnam Amiri, a certified hypnotherapist dedicated to helping you heal, grow and transform your life.",
   "learnMore": "Learn More About Me",
   "howTitle": "How I Can Help You",
-  "howItems": {
-    "whatIs": "What is Hypnotherapy?",
-    "whatIsDesc": "Discover the power of your mind",
-    "services": "Services",
-    "servicesDesc": "Explore all my therapeutic services",
-    "innerChild": "Inner Child Package",
-    "innerChildDesc": "Heal your inner child, transform your life",
-    "meditations": "Meditations & Free Resources",
-    "meditationsDesc": "Free audios and guided meditations",
-    "workshops": "Workshops",
-    "workshopsDesc": "Join live events & workshops",
-    "booking": "Booking",
-    "bookingDesc": "Book your session easily",
-    "certificates": "Certificates",
-    "certificatesDesc": "My certifications & qualifications",
-    "contact": "Contact",
-    "contactDesc": "Get in touch with me"
+
+  "homeDashboard": {
+    "greeting": "Welcome to SHAFA",
+    "subGreeting": "A journey towards peace, awareness, and transformation",
+    "cards": [
+      { "title": "What is Hypnotherapy?" },
+      { "title": "About Me" },
+      { "title": "Certificates" },
+      { "title": "Meditation from Basic to Advanced" },
+      { "title": "Inner Child Healing Package (Connecting with Higher Self)" },
+      { "title": "Services" },
+      { "title": "Workshops" },
+      { "title": "Self-Hypnosis Training" }
+    ]
   },
+
   "nav": {
     "home": "Home",
     "about": "About",
@@ -42,7 +40,6 @@
   },
   "testomonials": {
     "testimonialsTitle": "What My Clients Say",
-
     "reviews": [
       {
         "text": "\"Shabnam's sessions changed my life. I feel more peaceful and confident than ever.\"",
