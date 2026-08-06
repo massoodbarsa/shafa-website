@@ -13,7 +13,7 @@ export default function DashboardCard({ title, icon, onClick }) {
       onClick={onClick}
       sx={{
         // ─── INCREASED INNER PADDING FOR A ROOMIER, PRETTIER FEEL ───
-        p: { xs: 2.5, md: 4 },
+        p: { xs: 2, md: 3 },
 
         // ─── OPTIMIZED WIDE WIDTH CONFIGURATION FOR 4 AND 2 COLUMNS ───
         width: {
@@ -21,7 +21,7 @@ export default function DashboardCard({ title, icon, onClick }) {
           sm: "calc(50% - 12px)", // Perfect wide distribution for 2 columns on tablet
           md: "calc(25% - 20px)", // Perfect wide distribution for 4 columns on desktop
         },
-        minHeight: "190px", // Slightly boosted height to stay proportional to the new wider design
+        minHeight: "170px", // Slightly boosted height to stay proportional to the new wider design
         cursor: onClick ? "pointer" : "default",
 
         backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -68,6 +68,9 @@ export default function DashboardCard({ title, icon, onClick }) {
             alignItems: "center",
             justifyContent: "center",
             color: "primary.main",
+            border: "1px solid",
+            borderColor: "secondary.light",
+            borderRadius: "50%",
           }}
         >
           {icon}
