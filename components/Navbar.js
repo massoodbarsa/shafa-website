@@ -174,7 +174,7 @@ export default function Navbar() {
             </Button>
           </Stack>
 
-          <Button
+          {/* <Button
             variant="outlined"
             sx={{
               borderColor: "#C5A880",
@@ -190,7 +190,7 @@ export default function Navbar() {
             }}
           >
             {texts.nav.bookNow}
-          </Button>
+          </Button> */}
         </Stack>
       </Toolbar>
     </AppBar>

@@ -1,9 +1,17 @@
 "use client";
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
+import { usePathname } from "next/navigation"; // Added to detect current route URL track
 import SpaIcon from "@mui/icons-material/Spa";
+import Navbar from "./Navbar"; // Imports your sticky navigation bar component
+import Footer from "./Footer";
 
 export default function LayoutWrapper({ children }) {
+  const pathname = usePathname();
+
+  // Checks if the user is currently at the root landing page path
+  const isLandingPage = pathname === "/";
+
   return (
     <Box
       sx={{
@@ -29,10 +37,11 @@ export default function LayoutWrapper({ children }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        py: { xs: 4, md: 6 },
-        px: 2,
       }}
     >
+      {/* Conditionally renders the Navbar strictly on inner dashboard tracks, NOT on the landing page */}
+      {!isLandingPage && <Navbar />}
+
       <Container
         maxWidth="xl"
         sx={{
@@ -40,7 +49,14 @@ export default function LayoutWrapper({ children }) {
           flexDirection: "column",
           alignItems: "center",
           gap: { xs: 2.5, md: 4 },
+          // Dynamically sets top padding margins depending on navbar visibility state
+          pt: isLandingPage ? { xs: 4, md: 6 } : { xs: 3, md: 5 },
+          pb: { xs: 4, md: 6 },
+          px: 2,
           my: "auto",
+          width: "100%",
+          flexGrow: 1,
+          justifyContent: "space-between",
         }}
       >
         {/* ─── SHARED BRANDING HEADER GROUP ─── */}
@@ -114,7 +130,18 @@ export default function LayoutWrapper({ children }) {
         </Box>
 
         {/* ─── COMPONENT CHILDREN CONTENT INJECTION SPECTRUM ─── */}
-        {children}
+        <Box
+          sx={{
+            width: "100%",
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {children}
+        </Box>
 
         {/* ─── SHARED FIXED IMMUTABLE BOTTOM MOTTO BLOCK ─── */}
         <Box sx={{ textAlign: "center", mt: { xs: 2, md: 4 } }}>
@@ -146,35 +173,9 @@ export default function LayoutWrapper({ children }) {
           >
             شفا از درون آغاز می‌شود
           </Typography>
-          {/* 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5 }}>
-            <Box
-              sx={{
-                width: 35,
-                height: "1px",
-                bgcolor: "rgba(201,151,105,0.35)",
-                alignSelf: "center",
-              }}
-            />
-            <SpaIcon
-              sx={{
-                color: "secondary.main",
-                fontSize: "0.9rem",
-                mx: 1.5,
-                transform: "scale(0.85)",
-              }}
-            />
-            <Box
-              sx={{
-                width: 35,
-                height: "1px",
-                bgcolor: "rgba(201,151,105,0.35)",
-                alignSelf: "center",
-              }}
-            />
-          </Box> */}
         </Box>
       </Container>
+      {!isLandingPage && <Footer />}
     </Box>
   );
 }
