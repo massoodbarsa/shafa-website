@@ -81,7 +81,7 @@ export default function Navbar() {
               "&:hover": { color: "#C5A880" },
             }}
           >
-            {texts.nav.about}
+            {texts.nav.hypnotherapy}
           </Button>
           <Button
             sx={{
