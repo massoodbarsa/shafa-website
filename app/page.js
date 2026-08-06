@@ -82,7 +82,7 @@ export default function Home() {
                   color: "secondary.main", // Preserved exact theme color link
                   fontWeight: 300,
                   fontSize: { xs: "1.6rem", md: "1.8rem" },
-                  letterSpacing: "0.22em",
+                  wordSpacing: { xs: "8px", md: "10px" },
                   textTransform: "uppercase",
                   fontFamily: "serif",
 
@@ -100,9 +100,9 @@ export default function Home() {
                 variant="caption"
                 sx={{
                   color: "secondary.main",
-                  fontWeight: 100, // Slightly increased from 100 to make the italic slant clearly visible
+                  fontWeight: 200, // Slightly increased from 100 to make the italic slant clearly visible
                   fontStyle: "italic", // FIXED: Forces an elegant italic angle
-                  fontSize: { xs: "0.6rem", md: "0.8rem" }, // FIXED: Scaled to look like a true sub-caption label
+                  fontSize: { xs: "0.8rem", md: "1rem" }, // FIXED: Scaled to look like a true sub-caption label
                   letterSpacing: "0.15em", // Balanced letter spacing for wide readability
                   fontFamily: '"Playfair Display", "Georgia", "Didot", serif', // FIXED: Premium unique font pairing
                   filter: "drop-shadow(0px 1px 4px rgba(18, 11, 36, 0.4))",

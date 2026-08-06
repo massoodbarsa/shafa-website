@@ -13,13 +13,14 @@ export default function DashboardCard({ title, icon, onClick }) {
       onClick={onClick}
       sx={{
         p: 3,
-        // Responsive width layout system targets 3 columns across on desktop windows
+
+        // ─── STRIKT RESPONSIVE COLUMNS BLUEPRINT ───
         width: {
-          xs: "100%",
-          sm: "calc(50% - 12px)",
-          md: "calc(33.33% - 16px)",
+          xs: "calc(50% - 12px)", // FIXED: Forces exactly 2 columns across on mobile screens
+          sm: "calc(50% - 12px)", // Keeps 2 columns across on tablet viewports
+          md: "calc(25% - 18px)", // FIXED: Forces exactly 4 columns across on desktop screens
         },
-        minHeight: "220px",
+        minHeight: "180px", // Optimally balanced height for clean text distribution
         cursor: onClick ? "pointer" : "default",
 
         backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -34,7 +35,7 @@ export default function DashboardCard({ title, icon, onClick }) {
         flexDirection: "column",
         alignItems: "center",
         textAlign: "center",
-        justifyContent: "center", // Perfectly centers the unified content stack vertically
+        justifyContent: "center",
         boxSizing: "border-box",
         position: "relative",
         transition: "all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)",
@@ -47,18 +48,18 @@ export default function DashboardCard({ title, icon, onClick }) {
         },
       }}
     >
-      {/* ─── UNIFIED BLOCK WRAPPER ─── */}
+      {/* Unified Text & Symbol Alignment Block */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          gap: 1.5, // Tight spacing between icon, text header, and lines
+          gap: 1.2,
           mt: 0.5,
         }}
       >
-        {/* Centered Graphic Symbol Frame */}
+        {/* Centered Graphic Icon Frame */}
         <Box
           sx={{
             display: "flex",
@@ -70,15 +71,15 @@ export default function DashboardCard({ title, icon, onClick }) {
           {icon}
         </Box>
 
-        {/* Card Content Heading Typography */}
+        {/* Card Content Title */}
         <Typography
           variant="h6"
           sx={{
             color: "#4A1C6B",
             fontWeight: 600,
-            fontSize: "1.1rem",
+            fontSize: { xs: "0.95rem", md: "1.1rem" }, // Scaled down text slightly on mobile to look sleek in 2 columns
             lineHeight: 1.3,
-            px: 1,
+            px: 0.5,
             fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
             m: 0,
           }}
@@ -86,18 +87,17 @@ export default function DashboardCard({ title, icon, onClick }) {
           {title}
         </Typography>
 
-        {/* ─── FIXED POSITION: GOLD RULE WITH DIAMONDS RIGHT BELOW TEXT ─── */}
+        {/* Thin Gold Star/Diamond Indicator Rule Below Text */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            maxWidth: "110px",
-            mt: 0.2, // Tiny space directly underneath your text line
+            maxWidth: "90px",
+            mt: 0.2,
           }}
         >
-          {/* Left Horizontal Accent Fade */}
           <Box
             sx={{
               flex: 1,
@@ -107,9 +107,9 @@ export default function DashboardCard({ title, icon, onClick }) {
               opacity: 0.6,
             }}
           />
-
-          {/* Tiny Triple Center Diamond Cluster */}
-          <Box sx={{ display: "flex", alignItems: "center", mx: 1, gap: 0.4 }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", mx: 0.8, gap: 0.3 }}
+          >
             <Box
               sx={{
                 width: 4,
@@ -137,8 +137,6 @@ export default function DashboardCard({ title, icon, onClick }) {
               }}
             />
           </Box>
-
-          {/* Right Horizontal Accent Fade */}
           <Box
             sx={{
               flex: 1,

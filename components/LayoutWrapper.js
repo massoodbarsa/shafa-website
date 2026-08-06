@@ -138,7 +138,7 @@ export default function LayoutWrapper({ children }) {
             variant="h6"
             sx={{
               fontFamily: '"Noto Naskh Arabic", serif',
-              color: "primary.light",
+              color: "#fff",
               fontWeight: 300,
               fontSize: { xs: "1.25rem", md: "1.45rem" },
               textShadow: "0px 2px 10px rgba(0,0,0,0.5)",

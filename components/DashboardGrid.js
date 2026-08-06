@@ -76,7 +76,7 @@ export default function DashboardGrid() {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: 3,
+          gap: { xs: 2, md: 3 }, // FIXED: 2 unit gaps on mobile screens prevents overflowing or squishing
           width: "100%",
           justifyContent: "center",
           direction: lang === "fa" ? "rtl" : "ltr",
