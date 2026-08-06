@@ -61,29 +61,41 @@ export default function Home() {
                   lineHeight: 1.2,
                   letterSpacing: "0.1em",
                   background:
-                    "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)",
+                    "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)", // Preserved exact gradient colors
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  filter: "drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.8))",
                   mb: 0.2,
+
+                  // ─── ADDED A SUNLIGHT SHINE back-glow while preserving exact contrast ───
+                  filter: `
+      drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.4)) 
+      drop-shadow(0px 0px 8px rgba(235, 232, 228, 0.7))
+    `,
                 }}
               >
                 شبنم امیری
               </Typography>
+
               <Typography
                 variant="subtitle1"
                 sx={{
-                  color: "secondary.main",
+                  color: "secondary.main", // Preserved exact theme color link
                   fontWeight: 300,
                   fontSize: { xs: "1.6rem", md: "1.8rem" },
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   fontFamily: "serif",
-                  // filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
+
+                  // ─── ADDED SUNLIGHT SHINE BACK-GLOW MATCHED TO METALLIC GOLD VEIN ───
+                  filter: `
+      drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.4))
+      drop-shadow(0px 0px 6px rgba(233, 197, 154, 0.45))
+    `,
                 }}
               >
                 Shabnam Amiri
               </Typography>
+
               <Typography
                 variant="caption"
                 sx={{
