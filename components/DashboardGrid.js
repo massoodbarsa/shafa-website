@@ -53,7 +53,7 @@ export default function DashboardGrid() {
           sx={{
             fontWeight: 400,
             fontFamily: lang === "fa" ? '"Noto Naskh Arabic", serif' : "serif",
-            color: "#FFFFFF",
+            color: "primary.main",
             mb: 1.5,
             fontSize: { xs: "1.6rem", md: "2.4rem" },
           }}
@@ -64,7 +64,7 @@ export default function DashboardGrid() {
         <Typography
           variant="body1"
           sx={{
-            color: "secondary.light",
+            color: "primary.light",
             fontWeight: 300,
             fontSize: { xs: "0.85rem", md: "1.05rem" },
             fontFamily:
