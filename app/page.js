@@ -90,7 +90,7 @@ export default function Home() {
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
                 fontFamily: "serif",
-                filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.6))",
+                filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
               }}
             >
               Shabnam Amiri
