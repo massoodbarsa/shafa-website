@@ -59,6 +59,7 @@ export default function Home() {
                   fontWeight: 500,
                   fontSize: { xs: "1.8rem", md: "2.5rem" },
                   lineHeight: 1.2,
+                  letterSpacing: "0.1em",
                   background:
                     "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)",
                   WebkitBackgroundClip: "text",
@@ -74,7 +75,7 @@ export default function Home() {
                 sx={{
                   color: "secondary.main",
                   fontWeight: 300,
-                  fontSize: { xs: "1.1rem", md: "1.35rem" },
+                  fontSize: { xs: "1.6rem", md: "1.8rem" },
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   fontFamily: "serif",
@@ -82,6 +83,21 @@ export default function Home() {
                 }}
               >
                 Shabnam Amiri
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "secondary.main",
+                  fontWeight: 100, // Slightly increased from 100 to make the italic slant clearly visible
+                  fontStyle: "italic", // FIXED: Forces an elegant italic angle
+                  fontSize: { xs: "0.6rem", md: "0.8rem" }, // FIXED: Scaled to look like a true sub-caption label
+                  letterSpacing: "0.15em", // Balanced letter spacing for wide readability
+                  fontFamily: '"Playfair Display", "Georgia", "Didot", serif', // FIXED: Premium unique font pairing
+                  filter: "drop-shadow(0px 1px 4px rgba(18, 11, 36, 0.4))",
+                  opacity: 0.85, // Softens the visibility slightly to stand out from primary titles
+                }}
+              >
+                Certified Hypnotherapist
               </Typography>
             </Box>
             <Avatar
