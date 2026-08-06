@@ -32,7 +32,7 @@ export default function Home() {
         height: "100vh",
         zIndex: 9999,
         overflowY: "auto",
-        backgroundColor: "background.default", // Connected globally to your theme palette
+        backgroundColor: "background.default",
 
         backgroundImage: 'url("/landing-bg.jpeg")',
         backgroundSize: {
@@ -61,8 +61,8 @@ export default function Home() {
           my: "auto",
         }}
       >
-        {/* ─── BRANDING HEADER GROUP ─── */}
-        <Box sx={{ textAlign: "center" }}>
+        {/* ─── BRANDING HEADER GROUP (MATCHES PHOTO) ─── */}
+        <Box sx={{ textAlign: "center", width: "100%" }}>
           <Typography
             variant="h2"
             sx={{
@@ -77,23 +77,64 @@ export default function Home() {
           >
             SHAFA
           </Typography>
+
           <Typography
             variant="h3"
             sx={{
-              fontWeight: 500,
+              fontWeight: 400,
               letterSpacing: "0.15em",
-              color: "secondary.main", // Tied directly to your secondary theme gold
-              fontSize: { xs: "0.9rem", md: "1.5rem" },
+              color: "#4A1C6B", // Using your dark theme primary purple for the photo look
+              fontSize: { xs: "0.9rem", md: "1.6rem" },
+              fontFamily: "serif",
+              textTransform: "uppercase",
+              mb: 2,
             }}
           >
             HYPNOTHERAPY & WELLNESS
           </Typography>
         </Box>
 
-        {/* GOLD BRAND LOGO SEPARATOR BAR */}
-        <SpaIcon
-          sx={{ color: "secondary.main", opacity: 0.8, fontSize: "1.4rem" }}
-        />
+        {/* ─── GOLD THIN LINE DIVIDER WITH LOTUS (MATCHES PHOTO) ─── */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            maxWidth: "450px",
+            mb: 1,
+          }}
+        >
+          {/* Left Decorative Line Accent */}
+          <Box
+            sx={{
+              flex: 1,
+              height: "1px",
+              background:
+                "linear-gradient(90deg, rgba(201,151,69,0) 0%, rgba(201,151,69,0.6) 100%)",
+            }}
+          />
+
+          {/* Central Lotus Accent */}
+          <SpaIcon
+            sx={{
+              color: "secondary.main",
+              mx: 2,
+              fontSize: "1.6rem",
+              transform: "scaleY(0.9)",
+            }}
+          />
+
+          {/* Right Decorative Line Accent */}
+          <Box
+            sx={{
+              flex: 1,
+              height: "1px",
+              background:
+                "linear-gradient(270deg, rgba(201,151,69,0) 0%, rgba(201,151,69,0.6) 100%)",
+            }}
+          />
+        </Box>
 
         {/* ─── PROFILE CARD NODE ─── */}
         <Box
@@ -119,10 +160,10 @@ export default function Home() {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: '"Noto Naskh Arabic", serif', // Triggers Noto Naskh dynamically
+              fontFamily: '"Noto Naskh Arabic", serif',
               color: "secondary.main",
               fontWeight: 400,
-              fontSize: { xs: "0.9rem", md: "1.7rem" },
+              fontSize: { xs: "1.3rem", md: "1.7rem" },
               lineHeight: 1.2,
             }}
           >
@@ -133,7 +174,7 @@ export default function Home() {
             sx={{
               color: "secondary.main",
               fontWeight: 300,
-              fontSize: { xs: "0.9rem", md: "1.5rem" },
+              fontSize: { xs: "1.1rem", md: "1.3rem" },
               letterSpacing: "0.05em",
               mt: 0.5,
             }}
@@ -153,7 +194,7 @@ export default function Home() {
             onClick={() => handleSelectLanguage("fa")}
             sx={{
               flex: 1,
-              background: "rgba(84, 18, 131, 0.45)", // Soft custom primary dark tint layout
+              background: "rgba(84, 18, 131, 0.45)",
               backdropFilter: "blur(12px)",
               border: "1px solid",
               borderColor: "secondary.light",
@@ -183,7 +224,9 @@ export default function Home() {
               >
                 فارسی
               </Typography>
-              <Typography sx={{ fontSize: "0.75rem", color: "fff" }}>
+              <Typography
+                sx={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)" }}
+              >
                 Persian
               </Typography>
             </Box>
@@ -208,7 +251,7 @@ export default function Home() {
             onClick={() => handleSelectLanguage("en")}
             sx={{
               flex: 1,
-              background: "rgba(84, 18, 131, 0.45)", // Soft custom primary dark tint layout
+              background: "rgba(84, 18, 131, 0.45)",
               backdropFilter: "blur(12px)",
               border: "1px solid",
               borderColor: "secondary.light",
@@ -229,7 +272,18 @@ export default function Home() {
             }}
           >
             <Box sx={{ textAlign: "left" }}>
-              <Typography sx={{ fontSize: "1.25rem", fontWeight: 500 }}>
+              <Typography
+                sx={{
+                  fontSize: "1.25rem",
+                  fontWeight: 500,
+                  fontFamily: "serif",
+                }}
+              >
+                English
+              </Typography>
+              <Typography
+                sx={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)" }}
+              >
                 English
               </Typography>
             </Box>
@@ -270,8 +324,8 @@ export default function Home() {
             شفا از درون آغاز می‌شود.
           </Typography>
 
-          {/* ─── ALL CLOSING TAGS AND DESIGN RULES COMPLETELY RESTORED ─── */}
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          {/* Decorative Bottom Rule */}
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5 }}>
             <Box
               sx={{
                 width: 35,
