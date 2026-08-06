@@ -5,26 +5,44 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#6B2D8B",
-      light: "#9B59B6",
-      dark: "#4A1C6B",
+      main: "#6E508C", // Exact requested primary deep purple
+      light: "#9B59B6", // Exact requested primary light purple
+      dark: "#4A1C6B", // Exact requested primary dark purple
     },
     secondary: {
-      main: "#E8D5F2",
+      main: "#C99745", // Exact requested secondary gold
+      light: "#E9C59A", // Exact requested secondary light gold
+      dark: "#B17D47", // Exact requested secondary dark gold
     },
     background: {
-      default: "#F8F5FC",
-      paper: "#FFFFFF",
+      default: "#120B24", // Deep background canvas purple matching layout
+      paper: "#1D1337", // Inner card purple container blocks
+    },
+    text: {
+      primary: "#FFFFFF",
+      secondary: "#E9C59A",
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontWeight: 700 },
-    h2: { fontWeight: 600 },
-    button: { textTransform: "none", fontWeight: 600 },
+    // Integrates Noto Naskh Arabic as the primary font family handler
+    fontFamily:
+      '"Noto Naskh Arabic", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontWeight: 300,
+      letterSpacing: "0.15em",
+    },
+    h2: {
+      fontWeight: 400,
+      letterSpacing: "0.1em",
+    },
+    button: {
+      textTransform: "none",
+      fontWeight: 500,
+      letterSpacing: "0.05em",
+    },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 16, // Clean rounded card vectors matching your landing page frame
   },
 });
 

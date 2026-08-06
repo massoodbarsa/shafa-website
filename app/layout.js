@@ -3,8 +3,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../theme/theme";
 import { LanguageProvider } from "../context/LanguageContext";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "SHAFA Hypnotherapy & Wellness",
@@ -14,13 +12,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <head>
+        {/* Connection link nodes for Google Fonts: Noto Naskh Arabic */}
+        <link rel="preconnect" href="https://googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body style={{ margin: 0, backgroundColor: "#120B24" }}>
         <LanguageProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Navbar />
             {children}
-            <Footer />
           </ThemeProvider>
         </LanguageProvider>
       </body>

@@ -1,30 +1,304 @@
 "use client";
-
-import { Box } from "@mui/material";
+import React from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  Stack,
+  Avatar,
+} from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
-import Navbar from "../components/Navbar";
-import Hero from "@/components/Hero";
-import Welcome from "@/components/Welcome";
-import HowICanHelp from "@/components/HowICanHelp";
-import CallToAction from "@/components/CallToAction";
-import Testimonials from "@/components/Testimonials";
+import { useRouter } from "next/navigation";
+import SpaIcon from "@mui/icons-material/Spa";
+import LanguageIcon from "@mui/icons-material/Language";
 
 export default function Home() {
-  const { texts } = useLanguage();
+  const { changeLanguage } = useLanguage();
+  const router = useRouter();
+
+  const handleSelectLanguage = (targetLang) => {
+    changeLanguage(targetLang);
+    router.push("/home");
+  };
 
   return (
-    <Box sx={{ minHeight: "100vh" }}>
-      {/* <Navbar /> */}
+    <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 9999,
+        overflowY: "auto",
+        backgroundColor: "background.default", // Connected globally to your theme palette
 
-      <Hero />
+        backgroundImage: 'url("/landing-bg.jpeg")',
+        backgroundSize: {
+          xs: "cover",
+          sm: "100% 100%",
+        },
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        color: "#FFFFFF",
 
-      <Welcome />
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        py: { xs: 4, md: 6 },
+        px: 2,
+      }}
+    >
+      <Container
+        maxWidth="sm"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: { xs: 2.5, md: 4 },
+          my: "auto",
+        }}
+      >
+        {/* ─── BRANDING HEADER GROUP ─── */}
+        <Box sx={{ textAlign: "center" }}>
+          <Typography
+            variant="h2"
+            sx={{
+              fontWeight: 400,
+              letterSpacing: "0.25em",
+              color: "#FFFFFF",
+              fontSize: { xs: "3rem", md: "4.5rem" },
+              fontFamily: "serif",
+              mb: 0.5,
+              textShadow: "0px 4px 15px rgba(29, 19, 55, 0.6)",
+            }}
+          >
+            SHAFA
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 500,
+              letterSpacing: "0.15em",
+              color: "secondary.main", // Tied directly to your secondary theme gold
+              fontSize: { xs: "0.75rem", md: "0.85rem" },
+            }}
+          >
+            HYPNOTHERAPY & WELLNESS
+          </Typography>
+        </Box>
 
-      <HowICanHelp />
+        {/* GOLD BRAND LOGO SEPARATOR BAR */}
+        <SpaIcon
+          sx={{ color: "secondary.main", opacity: 0.8, fontSize: "1.4rem" }}
+        />
 
-      <CallToAction />
+        {/* ─── PROFILE CARD NODE ─── */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <Avatar
+            src="/shabnam-avatar.jpg"
+            sx={{
+              width: { xs: 100, md: 120 },
+              height: { xs: 100, md: 120 },
+              border: "2px solid",
+              borderColor: "secondary.main",
+              boxShadow: "0px 8px 24px rgba(18, 11, 36, 0.4)",
+              mb: 2,
+              backgroundColor: "background.paper",
+            }}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              fontFamily: '"Noto Naskh Arabic", serif', // Triggers Noto Naskh dynamically
+              color: "secondary.main",
+              fontWeight: 400,
+              fontSize: "1.7rem",
+              lineHeight: 1.2,
+            }}
+          >
+            شبنم امیری
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: "secondary.main",
+              fontWeight: 300,
+              fontSize: "1.1rem",
+              letterSpacing: "0.05em",
+              mt: 0.5,
+            }}
+          >
+            Shabnam Amiri
+          </Typography>
+        </Box>
 
-      <Testimonials />
+        {/* ─── DUAL LANGUAGE GATEWAY SELECTION BUTTONS ─── */}
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2.5}
+          sx={{ width: "100%", mt: 1, direction: "ltr" }}
+        >
+          {/* Persian Button Trigger */}
+          <Button
+            onClick={() => handleSelectLanguage("fa")}
+            sx={{
+              flex: 1,
+              background: "rgba(74, 28, 107, 0.45)", // Soft custom primary dark tint layout
+              backdropFilter: "blur(12px)",
+              border: "1px solid",
+              borderColor: "secondary.light",
+              borderRadius: "16px",
+              py: 2,
+              px: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              color: "#FFFFFF",
+              textTransform: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                borderColor: "secondary.main",
+                background: "rgba(110, 80, 140, 0.3)",
+                boxShadow: "0px 4px 25px rgba(201, 151, 69, 0.2)",
+              },
+            }}
+          >
+            <Box sx={{ textAlign: "left" }}>
+              <Typography
+                sx={{
+                  fontSize: "1.25rem",
+                  fontWeight: 500,
+                  fontFamily: '"Noto Naskh Arabic", serif',
+                }}
+              >
+                فارسی
+              </Typography>
+              <Typography sx={{ fontSize: "0.75rem", color: "fff" }}>
+                Persian
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: 32,
+                height: 32,
+                border: "1px solid",
+                borderColor: "secondary.light",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <SpaIcon sx={{ color: "secondary.main", fontSize: "1.1rem" }} />
+            </Box>
+          </Button>
+
+          {/* English Button Trigger */}
+          <Button
+            onClick={() => handleSelectLanguage("en")}
+            sx={{
+              flex: 1,
+              background: "rgba(74, 28, 107, 0.45)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid",
+              borderColor: "secondary.light",
+              borderRadius: "16px",
+              py: 2,
+              px: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              color: "#FFFFFF",
+              textTransform: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                borderColor: "secondary.main",
+                background: "rgba(110, 80, 140, 0.3)",
+                boxShadow: "0px 4px 25px rgba(201, 151, 69, 0.2)",
+              },
+            }}
+          >
+            <Box sx={{ textAlign: "left" }}>
+              <Typography sx={{ fontSize: "1.25rem", fontWeight: 500 }}>
+                English
+              </Typography>
+            </Box>
+            <LanguageIcon
+              sx={{ color: "secondary.main", fontSize: "1.6rem", opacity: 0.8 }}
+            />
+          </Button>
+        </Stack>
+
+        {/* ─── FIXED IMMUTABLE BOTTOM MOTTO BLOCK ─── */}
+        <Box sx={{ textAlign: "center", mt: { xs: 2, md: 4 } }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontStyle: "italic",
+              fontWeight: 300,
+              letterSpacing: "0.05em",
+              color: "rgba(255,255,255,0.95)",
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              fontFamily: "serif",
+              mb: 1,
+              textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
+            }}
+          >
+            Healing begins within.
+          </Typography>
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: '"Noto Naskh Arabic", serif',
+              color: "#FFFFFF",
+              fontWeight: 300,
+              fontSize: { xs: "1.25rem", md: "1.45rem" },
+              textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
+            }}
+          >
+            شفا از درون آغاز می‌شود.
+          </Typography>
+
+          {/* ─── ALL CLOSING TAGS AND DESIGN RULES COMPLETELY RESTORED ─── */}
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Box
+              sx={{
+                width: 35,
+                height: "1px",
+                bgcolor: "rgba(201,151,105,0.35)",
+                alignSelf: "center",
+              }}
+            />
+            <SpaIcon
+              sx={{
+                color: "secondary.main",
+                fontSize: "0.9rem",
+                mx: 1.5,
+                transform: "scale(0.85)",
+              }}
+            />
+            <Box
+              sx={{
+                width: 35,
+                height: "1px",
+                bgcolor: "rgba(201,151,105,0.35)",
+                alignSelf: "center",
+              }}
+            />
+          </Box>
+        </Box>
+      </Container>
     </Box>
   );
 }
