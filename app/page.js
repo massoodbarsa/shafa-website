@@ -71,7 +71,7 @@ export default function Home() {
                 fontSize: { xs: "1.8rem", md: "2.5rem" },
                 lineHeight: 1.2,
                 background:
-                  "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 40%, #C99745 100%)",
+                  "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 filter: "drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.8))",
