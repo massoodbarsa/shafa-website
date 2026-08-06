@@ -34,15 +34,13 @@ export default function LayoutWrapper({ children }) {
       }}
     >
       <Container
-        maxWidth="lg"
+        maxWidth="sm"
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-between", // Uniformly spreads elements top-to-bottom across 100vh
-          height: "100%", // Anchors layout strictly inside window height limitations
-          py: { xs: 2, md: 4 }, // Small vertical spacing padding
-          width: "100%",
+          gap: { xs: 2.5, md: 4 },
+          my: "auto",
         }}
       >
         {/* ─── SHARED BRANDING HEADER GROUP ─── */}
@@ -52,11 +50,11 @@ export default function LayoutWrapper({ children }) {
             sx={{
               fontWeight: 400,
               letterSpacing: "0.25em",
-              color: "#FFFFFF",
+              color: "primary.main",
               fontSize: { xs: "3rem", md: "4.5rem" },
               fontFamily: "serif",
               mb: 0.5,
-              textShadow: "0px 4px 15px rgba(29, 19, 55, 0.6)",
+              textShadow: "0px 4px 15px rgba(186, 179, 203, 0.6)",
             }}
           >
             SHAFA
@@ -67,7 +65,7 @@ export default function LayoutWrapper({ children }) {
             sx={{
               fontWeight: 400,
               letterSpacing: "0.15em",
-              color: "#4A1C6B",
+              color: "primary.main",
               fontSize: { xs: "0.9rem", md: "1.6rem" },
               fontFamily: "serif",
               textTransform: "uppercase",
@@ -119,69 +117,37 @@ export default function LayoutWrapper({ children }) {
         {children}
 
         {/* ─── SHARED FIXED IMMUTABLE BOTTOM MOTTO BLOCK ─── */}
-        {/* ─── FIXED IMMUTABLE BOTTOM MOTTO BLOCK WITH THEMED GLASS PANEL ─── */}
-        <Box
-          sx={{
-            textAlign: "center",
-            mt: { xs: 4, md: 6 },
-            px: { xs: 4, md: 8 },
-            py: 3,
-            width: "100%",
-            maxWidth: "500px",
-            mx: "auto",
-
-            // ─── THEMED BACKGROUND AND BORDER INTEGRATION ───
-            // Uses primary.light (light purple) with 0.25 transparency
-            backgroundColor: (theme) =>
-              `rgba(${parseInt(theme.palette.primary.light.slice(1, 3), 16)}, ${parseInt(theme.palette.primary.dark.slice(3, 5), 16)}, ${parseInt(theme.palette.primary.light.slice(5, 7), 16)}, 0.25)`,
-            backdropFilter: "blur(2px)",
-
-            // Uses secondary.main (gold) for the border stroke vector lines [INDEX]
-            border: "2px solid",
-            borderColor: "secondary.main",
-
-            borderRadius: "24px",
-            boxShadow: "0px 10px 30px rgba(18, 11, 36, 0.35)",
-          }}
-        >
+        <Box sx={{ textAlign: "center", mt: { xs: 2, md: 4 } }}>
           <Typography
             variant="h4"
             sx={{
               fontStyle: "italic",
               fontWeight: 300,
               letterSpacing: "0.05em",
-              color: "#FFFFFF",
-              fontSize: { xs: "1.35rem", md: "1.75rem" },
+              color: "primary.main",
+              fontSize: { xs: "1.5rem", md: "2rem" },
               fontFamily: "serif",
-              mb: 1.5,
+              mb: 1,
               textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
             }}
           >
-            Healing begins within.
+            Healing begins within
           </Typography>
 
           <Typography
             variant="h6"
             sx={{
               fontFamily: '"Noto Naskh Arabic", serif',
-              color: "#FFFFFF",
+              color: "primary.light",
               fontWeight: 300,
-              fontSize: { xs: "1.15rem", md: "1.35rem" },
-              mb: 2.5,
+              fontSize: { xs: "1.25rem", md: "1.45rem" },
               textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
             }}
           >
-            شفا از درون آغاز می‌شود.
+            شفا از درون آغاز می‌شود
           </Typography>
 
-          {/* Decorative Bottom Rule */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5 }}>
             <Box
               sx={{
                 width: 35,
@@ -193,7 +159,7 @@ export default function LayoutWrapper({ children }) {
             <SpaIcon
               sx={{
                 color: "secondary.main",
-                fontSize: "1.1rem",
+                fontSize: "0.9rem",
                 mx: 1.5,
                 transform: "scale(0.85)",
               }}

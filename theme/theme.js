@@ -5,9 +5,9 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#6E508C", // Exact requested primary deep purple
-      light: "#9B59B6", // Exact requested primary light purple
-      dark: "#4A1C6B", // Exact requested primary dark purple
+      main: "#583E93", // Exact requested primary deep purple
+      light: "#9D6BD9", // Exact requested primary light purple
+      dark: "#36306F", // Exact requested primary dark purple
     },
     secondary: {
       main: "#C99745", // Exact requested secondary gold

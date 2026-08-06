@@ -32,7 +32,7 @@ export default function Home() {
         {/* INNER HEIGHT MANAGEMENT LAYER - DISTRIBUTES CONTENT EVENLY NO SCROLL */}
         <Box
           sx={{
-            height: "52vh", // Strictly isolates upper card content to stay above bottom block limits
+            // height: "vh", // Strictly isolates upper card content to stay above bottom block limits
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -84,13 +84,13 @@ export default function Home() {
             <Typography
               variant="subtitle1"
               sx={{
-                color: "secondary.light",
+                color: "secondary.main",
                 fontWeight: 300,
                 fontSize: { xs: "1.1rem", md: "1.35rem" },
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
                 fontFamily: "serif",
-                filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
+                // filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
               }}
             >
               Shabnam Amiri
@@ -114,7 +114,7 @@ export default function Home() {
               onClick={() => handleSelectLanguage("fa")}
               sx={{
                 flex: 1,
-                background: "rgba(84, 18, 131, 0.85)",
+                background: "rgba(88, 62, 147, 0.85)",
                 backdropFilter: "blur(12px)",
                 border: "1px solid",
                 borderColor: "secondary.light",
@@ -176,7 +176,7 @@ export default function Home() {
               onClick={() => handleSelectLanguage("en")}
               sx={{
                 flex: 1,
-                background: "rgba(84, 18, 131, 0.85)",
+                background: "rgba(88, 62, 147, 0.85)",
                 backdropFilter: "blur(12px)",
                 border: "1px solid",
                 borderColor: "secondary.light",
