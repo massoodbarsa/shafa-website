@@ -227,15 +227,6 @@ export default function Home() {
                 >
                   English
                 </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "0.65rem",
-                    color: "rgba(255,255,255,0.6)",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  English
-                </Typography>
               </Box>
             </Button>
           </Stack>
