@@ -78,12 +78,12 @@ export default function Home() {
             SHAFA
           </Typography>
           <Typography
-            variant="subtitle2"
+            variant="h3"
             sx={{
               fontWeight: 500,
               letterSpacing: "0.15em",
               color: "secondary.main", // Tied directly to your secondary theme gold
-              fontSize: { xs: "0.75rem", md: "0.85rem" },
+              fontSize: { xs: "0.9rem", md: "1.5rem" },
             }}
           >
             HYPNOTHERAPY & WELLNESS
@@ -117,12 +117,12 @@ export default function Home() {
             }}
           />
           <Typography
-            variant="h5"
+            variant="h4"
             sx={{
               fontFamily: '"Noto Naskh Arabic", serif', // Triggers Noto Naskh dynamically
               color: "secondary.main",
               fontWeight: 400,
-              fontSize: "1.7rem",
+              fontSize: { xs: "0.9rem", md: "1.7rem" },
               lineHeight: 1.2,
             }}
           >
@@ -133,7 +133,7 @@ export default function Home() {
             sx={{
               color: "secondary.main",
               fontWeight: 300,
-              fontSize: "1.1rem",
+              fontSize: { xs: "0.9rem", md: "1.5rem" },
               letterSpacing: "0.05em",
               mt: 0.5,
             }}
@@ -153,7 +153,7 @@ export default function Home() {
             onClick={() => handleSelectLanguage("fa")}
             sx={{
               flex: 1,
-              background: "rgba(74, 28, 107, 0.45)", // Soft custom primary dark tint layout
+              background: "rgba(84, 18, 131, 0.45)", // Soft custom primary dark tint layout
               backdropFilter: "blur(12px)",
               border: "1px solid",
               borderColor: "secondary.light",
@@ -208,7 +208,7 @@ export default function Home() {
             onClick={() => handleSelectLanguage("en")}
             sx={{
               flex: 1,
-              background: "rgba(74, 28, 107, 0.45)",
+              background: "rgba(84, 18, 131, 0.45)", // Soft custom primary dark tint layout
               backdropFilter: "blur(12px)",
               border: "1px solid",
               borderColor: "secondary.light",
