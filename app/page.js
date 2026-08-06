@@ -45,13 +45,47 @@ export default function Home() {
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               alignItems: "center",
               textAlign: "center",
+              gap: 3, // Tightened horizontal spacing between avatar and text
             }}
           >
+            <Box>
+              <Typography
+                variant="h3"
+                sx={{
+                  fontFamily: '"Noto Naskh Arabic", serif',
+                  fontWeight: 500,
+                  fontSize: { xs: "1.8rem", md: "2.5rem" },
+                  lineHeight: 1.2,
+                  background:
+                    "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  filter: "drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.8))",
+                  mb: 0.2,
+                }}
+              >
+                شبنم امیری
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  color: "secondary.main",
+                  fontWeight: 300,
+                  fontSize: { xs: "1.1rem", md: "1.35rem" },
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  fontFamily: "serif",
+                  // filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
+                }}
+              >
+                Shabnam Amiri
+              </Typography>
+            </Box>
             <Avatar
-              src="/shabnam-avatar.jpg"
+              src="/shabnam.jpeg"
               sx={{
                 width: { xs: 95, md: 120 },
                 height: { xs: 95, md: 120 },
@@ -62,39 +96,6 @@ export default function Home() {
                 backgroundColor: "background.paper",
               }}
             />
-
-            <Typography
-              variant="h3"
-              sx={{
-                fontFamily: '"Noto Naskh Arabic", serif',
-                fontWeight: 500,
-                fontSize: { xs: "1.8rem", md: "2.5rem" },
-                lineHeight: 1.2,
-                background:
-                  "linear-gradient(180deg, #FFFFFF 0%, #d1882fff 30%, #C99745 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.8))",
-                mb: 0.2,
-              }}
-            >
-              شبنم امیری
-            </Typography>
-
-            <Typography
-              variant="subtitle1"
-              sx={{
-                color: "secondary.main",
-                fontWeight: 300,
-                fontSize: { xs: "1.1rem", md: "1.35rem" },
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                fontFamily: "serif",
-                // filter: "drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.2))",
-              }}
-            >
-              Shabnam Amiri
-            </Typography>
           </Box>
 
           {/* ─── COMPACT LANGUAGE SELECTION TRACKS ─── */}
