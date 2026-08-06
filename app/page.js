@@ -12,6 +12,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useRouter } from "next/navigation";
 import SpaIcon from "@mui/icons-material/Spa";
 import LanguageIcon from "@mui/icons-material/Language";
+import PersianIcon from "../components/svg-icons/PersianIcon";
 
 export default function Home() {
   const { changeLanguage } = useLanguage();
@@ -163,7 +164,7 @@ export default function Home() {
               fontFamily: '"Noto Naskh Arabic", serif',
               color: "secondary.main",
               fontWeight: 400,
-              fontSize: { xs: "1.3rem", md: "1.7rem" },
+              fontSize: { xs: "1.3rem", md: "1.8rem" },
               lineHeight: 1.2,
             }}
           >
@@ -194,7 +195,7 @@ export default function Home() {
             onClick={() => handleSelectLanguage("fa")}
             sx={{
               flex: 1,
-              background: "rgba(84, 18, 131, 0.45)",
+              background: "rgba(84, 18, 131, 0.85)",
               backdropFilter: "blur(12px)",
               border: "1px solid",
               borderColor: "secondary.light",
@@ -202,18 +203,33 @@ export default function Home() {
               py: 2,
               px: 3,
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "space-around",
               alignItems: "center",
               color: "#FFFFFF",
               textTransform: "none",
               transition: "all 0.3s ease",
               "&:hover": {
                 borderColor: "secondary.main",
-                background: "rgba(110, 80, 140, 0.3)",
+                background: "rgba(110, 80, 140, 0.6)",
                 boxShadow: "0px 4px 25px rgba(201, 151, 69, 0.2)",
               },
             }}
           >
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                border: "1px solid",
+                borderColor: "secondary.light",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* <SpaIcon sx={{ color: "secondary.main", fontSize: "1.5rem" }} /> */}
+              <PersianIcon size={40} color="#C99745" />
+            </Box>
             <Box sx={{ textAlign: "left" }}>
               <Typography
                 sx={{
@@ -230,10 +246,37 @@ export default function Home() {
                 Persian
               </Typography>
             </Box>
+          </Button>
+
+          {/* English Button Trigger */}
+          <Button
+            onClick={() => handleSelectLanguage("en")}
+            sx={{
+              flex: 1,
+              background: "rgba(84, 18, 131, 0.85)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid",
+              borderColor: "secondary.light",
+              borderRadius: "16px",
+              py: 2,
+              px: 3,
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              color: "#FFFFFF",
+              textTransform: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                borderColor: "secondary.main",
+                background: "rgba(110, 80, 140, 0.6)",
+                boxShadow: "0px 4px 25px rgba(201, 151, 69, 0.2)",
+              },
+            }}
+          >
             <Box
               sx={{
-                width: 32,
-                height: 32,
+                width: 40,
+                height: 40,
                 border: "1px solid",
                 borderColor: "secondary.light",
                 borderRadius: "50%",
@@ -242,35 +285,16 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              <SpaIcon sx={{ color: "secondary.main", fontSize: "1.1rem" }} />
+              {" "}
+              <LanguageIcon
+                sx={{
+                  color: "secondary.main",
+                  fontSize: "2.3rem",
+                  opacity: 0.8,
+                }}
+              />
             </Box>
-          </Button>
 
-          {/* English Button Trigger */}
-          <Button
-            onClick={() => handleSelectLanguage("en")}
-            sx={{
-              flex: 1,
-              background: "rgba(84, 18, 131, 0.45)",
-              backdropFilter: "blur(12px)",
-              border: "1px solid",
-              borderColor: "secondary.light",
-              borderRadius: "16px",
-              py: 2,
-              px: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              color: "#FFFFFF",
-              textTransform: "none",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                borderColor: "secondary.main",
-                background: "rgba(110, 80, 140, 0.3)",
-                boxShadow: "0px 4px 25px rgba(201, 151, 69, 0.2)",
-              },
-            }}
-          >
             <Box sx={{ textAlign: "left" }}>
               <Typography
                 sx={{
@@ -287,9 +311,6 @@ export default function Home() {
                 English
               </Typography>
             </Box>
-            <LanguageIcon
-              sx={{ color: "secondary.main", fontSize: "1.6rem", opacity: 0.8 }}
-            />
           </Button>
         </Stack>
 
