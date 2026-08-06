@@ -87,8 +87,8 @@ export default function Home() {
             <Avatar
               src="/shabnam.jpeg"
               sx={{
-                width: { xs: 95, md: 120 },
-                height: { xs: 95, md: 120 },
+                width: { xs: 120, md: 150 },
+                height: { xs: 120, md: 150 },
                 border: "2px solid",
                 borderColor: "secondary.main",
                 boxShadow: "0px 12px 32px rgba(74, 28, 107, 0.45)",
