@@ -39,8 +39,10 @@ export default function LayoutWrapper({ children }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: { xs: 2.5, md: 4 },
-          my: "auto",
+          justifyContent: "space-between", // Uniformly spreads elements top-to-bottom across 100vh
+          height: "100%", // Anchors layout strictly inside window height limitations
+          py: { xs: 2, md: 4 }, // Small vertical spacing padding
+          width: "100%",
         }}
       >
         {/* ─── SHARED BRANDING HEADER GROUP ─── */}
