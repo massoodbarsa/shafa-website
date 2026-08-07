@@ -16,6 +16,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import AnimationIcon from "@mui/icons-material/Animation";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import InfoIcon from "@mui/icons-material/Info";
+import EngineeringIcon from "@mui/icons-material/Engineering";
 
 export default function DashboardGrid() {
   const { texts, lang } = useLanguage();
@@ -30,18 +31,22 @@ export default function DashboardGrid() {
 
     <SchoolIcon sx={{ fontSize: "2.5rem" }} />,
     <AnimationIcon sx={{ fontSize: "2.5rem" }} />,
+    <EngineeringIcon sx={{ fontSize: "2.5rem" }} />,
+
     <InfoIcon sx={{ fontSize: "2.5rem" }} />,
   ];
 
   const routes = [
     "hypnotherapy",
-    "about",
     "certificates",
     "meditation",
+
     "inner-child",
-    "services",
+    "areas-of-focus",
     "workshops",
     "self-hypnosis",
+    "eft",
+    "about",
   ];
 
   return (

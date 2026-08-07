@@ -14,9 +14,9 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
       sx={{
         p: { xs: 2.5, md: 3.5 },
         width: {
-          xs: "calc(50% - 12px)",
-          sm: "calc(50% - 12px)",
-          md: "calc(25% - 20px)",
+          xs: "calc(50% - 12px)", // FIXED: Forces exactly 2 columns across on mobile viewports
+          sm: "calc(50% - 12px)", // Keeps 2 columns across on small tablet viewports
+          md: "calc(33.33% - 18px)", // FIXED: Forces exactly 3 columns across on desktop viewports (3x3 grid)
         },
         minHeight: "200px", // Balanced height to handle cards with or without subtitles gracefully
         cursor: onClick ? "pointer" : "default",

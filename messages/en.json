@@ -20,9 +20,10 @@
         "title": "Inner Child Healing Package ",
         "subtitle": "Connecting with Higher Self"
       },
-      { "title": "Services" },
+      { "title": "Hypnotherapy Areas of Focus" },
       { "title": "Workshops" },
       { "title": "Self-Hypnosis Training" },
+      { "title": "EFT" },
       { "title": "About Me" }
     ]
   },
@@ -30,7 +31,7 @@
   "nav": {
     "home": "Home",
     "hypnotherapy": "Hypnotherapy",
-    "services": "Services",
+    "areas": "Areas",
     "packages": "Packages",
     "workshops": "Workshops",
     "contact": "Contact",
