@@ -51,7 +51,7 @@ export default function Footer() {
               }}
             >
               <SpaIcon sx={{ color: "#C5A880", fontSize: "2.8rem" }} />
-              <Box textAlign="center">
+              <Box>
                 <Typography
                   variant="h5"
                   sx={{
