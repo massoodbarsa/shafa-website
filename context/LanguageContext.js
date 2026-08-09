@@ -1,38 +1,70 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import en from "../messages/en.json";
-import fa from "../messages/fa.json";
+import enData from "../messages/en.json";
+import faData from "../messages/fa.json";
 
-const LanguageContext = createContext();
+const LanguageContext = createContext(null);
 
 export function LanguageProvider({ children }) {
+  // 1. Establish standard default language variables safely for server prerendering
   const [lang, setLang] = useState("en");
-  const [texts, setTexts] = useState(en);
+  const [isMounted, setIsMounted] = useState(false); // Hydration mismatch blocker shield flag
 
   useEffect(() => {
-    const saved = localStorage.getItem("lang");
-    if (saved === "fa" || saved === "en") {
-      setLang(saved);
-      setTexts(saved === "fa" ? fa : en);
+    // 2. Executing here guarantees execution happens strictly on the client browser window
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("shafa_lang");
+
+      // Look at the current URL parameters as a secondary check
+      const currentUrlPath = window.location.pathname.split("/")[1];
+
+      if (currentUrlPath === "fa" || currentUrlPath === "en") {
+        setLang(currentUrlPath);
+      } else if (savedLang === "fa" || savedLang === "en") {
+        setLang(savedLang);
+      }
+
+      setIsMounted(true); // Safely unlatches the layout components tree now that hydration is done
     }
   }, []);
 
-  const changeLanguage = (newLang) => {
-    setLang(newLang);
-    setTexts(newLang === "fa" ? fa : en);
-    localStorage.setItem("lang", newLang);
-    document.documentElement.dir = newLang === "fa" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
+  const changeLanguage = (targetLang) => {
+    if (targetLang === "en" || targetLang === "fa") {
+      setLang(targetLang);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("shafa_lang", targetLang);
+      }
+    }
   };
 
+  // Maps the active translation vocabulary context
+  const texts = lang === "fa" ? faData : enData;
+
+  // 3. To stop hydration crashes, we return a blank hidden envelope state on the server pass
+  if (!isMounted) {
+    return (
+      <LanguageContext.Provider
+        value={{ lang: "en", changeLanguage, texts: enData }}
+      >
+        <div style={{ visibility: "hidden" }}>{children}</div>
+      </LanguageContext.Provider>
+    );
+  }
+
   return (
-    <LanguageContext.Provider value={{ lang, texts, changeLanguage }}>
+    <LanguageContext.Provider value={{ lang, changeLanguage, texts }}>
       {children}
     </LanguageContext.Provider>
   );
 }
 
 export function useLanguage() {
-  return useContext(LanguageContext);
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error(
+      "useLanguage must be wrapped inside a valid LanguageProvider block structure.",
+    );
+  }
+  return context;
 }

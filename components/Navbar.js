@@ -72,7 +72,12 @@ export default function Navbar() {
       >
         {/* Logo Branding Vector */}
         <Box
-          onClick={() => handleNavigation("home")}
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              // Clears Next.js routing memory buffer and forces the window back to the root entry
+              window.location.assign("/");
+            }
+          }}
           sx={{
             display: "flex",
             flexDirection: "column",
