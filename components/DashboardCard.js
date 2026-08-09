@@ -2,23 +2,58 @@
 import React from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { useLanguage } from "../context/LanguageContext";
+import { motion } from "framer-motion"; // 1. Import the motion library utility
 
-export default function DashboardCard({ title, subtitle, icon, onClick }) {
+// 2. Create an animated version of MUI's Paper component
+const MotionPaper = motion.create(Paper);
+
+export default function DashboardCard({
+  title,
+  subtitle,
+  icon,
+  onClick,
+  index,
+}) {
   const { lang } = useLanguage();
   const isRtl = lang === "fa";
 
+  // 3. Define the stagger reveal variants configuration
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1, // Staggers card entrances smoothly one after another
+        duration: 0.5,
+        ease: [0.25, 0.8, 0.25, 1],
+      },
+    }),
+  };
+
   return (
-    <Paper
+    <MotionPaper
       elevation={0}
       onClick={onClick}
+      custom={index} // Passes the array index down to handle the staggered delay calculation
+      initial="hidden" // Initial starting state
+      animate="visible" // Target state to trigger on mount
+      variants={cardVariants} // Connects the layout states mapping matrix
+      whileHover={{
+        y: -6,
+        borderColor: "#C99745",
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0px 12px 30px rgba(74, 28, 107, 0.15)",
+      }}
+      className="motion-fix"
       sx={{
         p: { xs: 2.5, md: 3.5 },
         width: {
-          xs: "calc(50% - 12px)", // FIXED: Forces exactly 2 columns across on mobile viewports
-          sm: "calc(50% - 12px)", // Keeps 2 columns across on small tablet viewports
-          md: "calc(33.33% - 18px)", // FIXED: Forces exactly 3 columns across on desktop viewports (3x3 grid)
+          xs: "calc(50% - 12px)",
+          sm: "calc(50% - 12px)",
+          md: "calc(33.33% - 18px)",
         },
-        minHeight: "200px", // Balanced height to handle cards with or without subtitles gracefully
+        minHeight: "200px",
         cursor: onClick ? "pointer" : "default",
         backgroundColor: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(12px)",
@@ -33,13 +68,6 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
         justifyContent: "center",
         boxSizing: "border-box",
         position: "relative",
-        transition: "all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)",
-        "&:hover": {
-          transform: "translateY(-6px)",
-          borderColor: "#C99745",
-          backgroundColor: "#FFFFFF",
-          boxShadow: "0px 12px 30px rgba(74, 28, 107, 0.15)",
-        },
       }}
     >
       <Box
@@ -52,7 +80,6 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
           mt: 0.5,
         }}
       >
-        {/* Centered Graphic Icon Frame */}
         <Box
           sx={{
             display: "flex",
@@ -63,14 +90,12 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
         >
           {icon}
         </Box>
-
-        {/* Card Content Title */}
         <Typography
           variant="h6"
           sx={{
             color: "#4A1C6B",
             fontWeight: 600,
-            fontSize: { xs: "0.95rem", md: "1.1rem" },
+            fontSize: "1.1rem",
             lineHeight: 1.3,
             px: 0.5,
             fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
@@ -79,27 +104,24 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
         >
           {title}
         </Typography>
-
-        {/* ─── DYNAMIC SUBTITLE ENGINE (SMALLER AND CLEANER) ─── */}
         {subtitle && (
           <Typography
             variant="caption"
             sx={{
-              color: "primary.main", // Tied to your gold theme vector accent
+              color: "secondary.main",
               fontWeight: isRtl ? 400 : 300,
-              fontStyle: isRtl ? "normal" : "italic", // Beautiful elegant slant for English text
+              fontStyle: isRtl ? "normal" : "italic",
               fontSize: { xs: "0.75rem", md: "0.85rem" },
               lineHeight: 1.2,
               fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "serif",
-              mt: -0.5, // Tucks it right tightly underneath the primary title
+              mt: -0.5,
               px: 1,
             }}
           >
-            ( {subtitle})
+            {subtitle}
           </Typography>
         )}
-
-        {/* Thin Gold Star/Diamond Indicator Rule Below Text */}
+        {/* Underline separator */}
         <Box
           sx={{
             display: "flex",
@@ -160,6 +182,6 @@ export default function DashboardCard({ title, subtitle, icon, onClick }) {
           />
         </Box>
       </Box>
-    </Paper>
+    </MotionPaper>
   );
 }

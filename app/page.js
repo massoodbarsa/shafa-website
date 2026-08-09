@@ -71,6 +71,9 @@ export default function Home() {
       drop-shadow(0px 4px 12px rgba(18, 11, 36, 0.4)) 
       drop-shadow(0px 0px 8px rgba(235, 232, 228, 0.7))
     `,
+
+                  animation:
+                    "fadeInUp 0.6s ease-out forwards, sunShineGlow 4s infinite ease-in-out",
                 }}
               >
                 شبنم امیری
@@ -91,6 +94,8 @@ export default function Home() {
       drop-shadow(0px 2px 8px rgba(18, 11, 36, 0.4))
       drop-shadow(0px 0px 6px rgba(233, 197, 154, 0.45))
     `,
+                  animation:
+                    "fadeInUp 0.8s ease-out forwards, sunShineGlow 4s infinite ease-in-out",
                 }}
               >
                 Shabnam Amiri
@@ -107,6 +112,9 @@ export default function Home() {
                   fontFamily: '"Playfair Display", "Georgia", "Didot", serif', // FIXED: Premium unique font pairing
                   filter: "drop-shadow(0px 1px 4px rgba(18, 11, 36, 0.4))",
                   opacity: 0.85, // Softens the visibility slightly to stand out from primary titles
+
+                  animation:
+                    "fadeInUp 0.9s ease-out forwards, sunShineGlow 4s infinite ease-in-out",
                 }}
               >
                 Certified Hypnotherapist
@@ -122,6 +130,8 @@ export default function Home() {
                 boxShadow: "0px 12px 32px rgba(74, 28, 107, 0.45)",
                 mb: 1.5,
                 backgroundColor: "background.paper",
+                animation:
+                  "fadeInUp 0.9s ease-out forwards, solarFlare 4s infinite ease-in-out",
               }}
             />
           </Box>

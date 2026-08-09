@@ -71,6 +71,9 @@ export default function LayoutWrapper({ children }) {
               fontFamily: "serif",
               mb: 0.5,
               textShadow: "0px 4px 15px rgba(186, 179, 203, 0.6)",
+              animation:
+                "shafaReveal 5s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+              animationDelay: "0.2s",
             }}
           >
             SHAFA
@@ -86,6 +89,9 @@ export default function LayoutWrapper({ children }) {
               fontFamily: "serif",
               textTransform: "uppercase",
               mb: 2,
+              animation:
+                "subtitleReveal 4s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+              animationDelay: "0.1s", // Staggers it cleanly right behind
             }}
           >
             HYPNOTHERAPY & WELLNESS
