@@ -29,12 +29,29 @@ export default function Navbar() {
     router.push(`/${lang}/${routePath}`);
   };
 
+  // Place this directly inside your Navbar component function block
   const handleLanguageSwitch = (targetLang) => {
-    changeLanguage(targetLang);
-    if (typeof window !== "undefined") {
-      const currentSubPath = window.location.pathname.split("/").pop();
-      router.push(`/${targetLang}/${currentSubPath || "home"}`);
-    }
+    // If the language is already matching, cancel early to prevent unnecessary re-renders
+    if (lang === targetLang) return;
+
+    // Wraps the execution inside a transition to prioritize URL routing over heavy state changes
+    React.startTransition(() => {
+      // 1. Update the translation context state silently
+      changeLanguage(targetLang);
+
+      // 2. Perform a clean, fluid address bar path redirect
+      if (typeof window !== "undefined") {
+        const currentSubPath = window.location.pathname.split("/").pop();
+
+        // Safety check to ensure we always fall back gracefully to the dashboard if subpath is lost
+        const safeDestination =
+          currentSubPath && currentSubPath !== targetLang
+            ? currentSubPath
+            : "home";
+
+        router.push(`/${targetLang}/${safeDestination}`);
+      }
+    });
   };
 
   return (
