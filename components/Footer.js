@@ -18,10 +18,14 @@ import PhoneIcon from "@mui/icons-material/Phone"; // Fixed replacement
 import RoomIcon from "@mui/icons-material/Room"; // Fixed replacement
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TelegramIcon from "@mui/icons-material/Telegram";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { LinkedIn } from "@mui/icons-material";
 
 export default function Footer() {
   const { texts, lang } = useLanguage();
+
+  const linkedInUrl = "https://www.linkedin.com/in/shabnam-amiri-573a71166/"; // Replace with your actual LinkedIn username
+  const instagramUrl = "https://www.instagram.com/your-instagram-username"; // Replace with your actual Instagram username
+  const telegramUrl = "https://t.me/your-telegram-username"; // Replace with your actual Telegram username
 
   return (
     <Box
@@ -109,26 +113,34 @@ export default function Footer() {
               spacing={1.5}
               sx={{ justifyContent: "flex-start", direction: "ltr" }}
             >
-              {[<InstagramIcon />, <TelegramIcon />, <WhatsAppIcon />].map(
-                (icon, idx) => (
-                  <IconButton
-                    key={idx}
-                    sx={{
-                      color: "#C5A880",
-                      border: "1px solid rgba(197, 168, 128, 0.4)",
-                      p: 1.2,
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        borderColor: "#FFFFFF",
-                        color: "#FFFFFF",
-                        bgcolor: "rgba(197, 168, 128, 0.1)",
-                      },
-                    }}
-                  >
-                    {icon}
-                  </IconButton>
-                ),
-              )}
+              {[
+                { icon: <LinkedIn />, url: linkedInUrl }, // Replace with your international number format
+
+                { icon: <InstagramIcon />, url: linkedInUrl }, // Replace with your actual username
+                { icon: <TelegramIcon />, url: "https://t.me" }, // Replace with your actual username
+              ].map((item, idx) => (
+                <IconButton
+                  key={idx}
+                  component="a" // FIXED: Converts the Material UI button into a functional native anchor link tag
+                  href={item.url} // FIXED: Passes the targeted web link cleanly
+                  target="_blank" // FIXED: Forces the browser to open the link in a fresh, separate tab layer
+                  rel="noopener noreferrer" // FIXED: Standard security configuration guard for safe outbound routing hooks
+                  sx={{
+                    color: "#C5A880",
+                    border: "1px solid rgba(197, 168, 128, 0.4)",
+                    p: 1.2,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      borderColor: "#FFFFFF",
+                      color: "#FFFFFF",
+                      bgcolor: "rgba(197, 168, 128, 0.1)",
+                      transform: "translateY(-2px)", // Tiny elegant micro-interaction slide-up animation
+                    },
+                  }}
+                >
+                  {item.icon}
+                </IconButton>
+              ))}
             </Stack>
           </Box>
         </Grid>
