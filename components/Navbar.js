@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   AppBar,
@@ -8,51 +9,74 @@ import {
   Typography,
   Box,
   Collapse,
+  IconButton,
+  Divider,
 } from "@mui/material";
+
 import { useLanguage } from "../context/LanguageContext";
 import { useRouter } from "next/navigation";
+
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Navbar() {
   const { texts, lang, changeLanguage } = useLanguage();
   const router = useRouter();
 
-  // Unified inline state toggle engine for the sub-link group
-  const [subLinksOpen, setSubLinksOpen] = useState(false);
+  const [subLinksOpen, setSubLinksOpen] = useState(false); // desktop packages
+  const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
+  const [mobilePackagesOpen, setMobilePackagesOpen] = useState(false);
 
-  const handleToggleSubLinks = () => {
-    setSubLinksOpen((prev) => !prev);
-  };
+  const isRtl = lang === "fa";
 
   const handleNavigation = (routePath) => {
-    setSubLinksOpen(false); // Collapses sub-menus securely during routing hops
+    setSubLinksOpen(false);
+    setMobileOpen(false);
+    setMobilePackagesOpen(false);
     router.push(`/${lang}/${routePath}`);
   };
 
-  // Place this directly inside your Navbar component function block
   const handleLanguageSwitch = (targetLang) => {
-    // If the language is already matching, cancel early to prevent unnecessary re-renders
     if (lang === targetLang) return;
 
-    // Wraps the execution inside a transition to prioritize URL routing over heavy state changes
+    setMobileOpen(false);
+    setMobilePackagesOpen(false);
+    setSubLinksOpen(false);
+
     React.startTransition(() => {
-      // 1. Update the translation context state silently
       changeLanguage(targetLang);
 
-      // 2. Perform a clean, fluid address bar path redirect
       if (typeof window !== "undefined") {
-        const currentSubPath = window.location.pathname.split("/").pop();
-
-        // Safety check to ensure we always fall back gracefully to the dashboard if subpath is lost
-        const safeDestination =
-          currentSubPath && currentSubPath !== targetLang
-            ? currentSubPath
-            : "home";
-
-        router.push(`/${targetLang}/${safeDestination}`);
+        const pathParts = window.location.pathname.split("/").filter(Boolean);
+        const currentSubPath = pathParts[1] || "home";
+        router.push(`/${targetLang}/${currentSubPath}`);
       }
     });
   };
+
+  const packageItems = [
+    {
+      label:
+        lang === "fa"
+          ? "مدیتیشن از پایه تا پیشرفته"
+          : "Meditation from Basic to Advanced",
+      path: "meditation",
+    },
+    {
+      label:
+        lang === "fa" ? "پکیج شفای کودک درون" : "Inner Child Healing Package",
+      path: "inner-child",
+    },
+    {
+      label: lang === "fa" ? "آموزش خودهیپنوتیزم" : "Self-Hypnosis Training",
+      path: "self-hypnosis",
+    },
+    {
+      label: lang === "fa" ? "ای اف تی" : "EFT",
+      path: "eft",
+    },
+  ];
 
   return (
     <AppBar
@@ -62,27 +86,25 @@ export default function Navbar() {
         background: "rgba(29, 19, 55, 0.85)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(197, 168, 128, 0.15)",
-        // Standardizes the full navbar to use LTR positioning at all times, no RTL mirroring
         direction: "ltr !important",
       }}
     >
-      {/* ─── MAIN HEADER ROW NAVIGATION TRACK ─── */}
       <Toolbar
-        sx={{ justifyContent: "space-between", px: { xs: 2, md: 6 }, py: 1 }}
+        sx={{
+          justifyContent: "space-between",
+          px: { xs: 2, md: 6 },
+          py: 1,
+        }}
       >
-        {/* Logo Branding Vector */}
+        {/* LOGO */}
         <Box
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              // Clears Next.js routing memory buffer and forces the window back to the root entry
-              window.location.assign("/");
-            }
-          }}
+          onClick={() => router.push(`/${lang}/home`)}
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             cursor: "pointer",
+            flexShrink: 0,
           }}
         >
           <Typography
@@ -103,13 +125,14 @@ export default function Navbar() {
               fontSize: "0.55rem",
               letterSpacing: "0.05em",
               color: "#7C6A9F",
+              whiteSpace: "nowrap",
             }}
           >
             HYPNOTHERAPY & WELLNESS
           </Typography>
         </Box>
 
-        {/* Navigation Action Buttons Group */}
+        {/* ================= DESKTOP NAV ================= */}
         <Stack
           direction="row"
           spacing={1}
@@ -124,6 +147,7 @@ export default function Navbar() {
               color: "white",
               fontSize: "0.85rem",
               fontWeight: 300,
+              fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
               "&:hover": { color: "#C5A880" },
             }}
           >
@@ -136,6 +160,7 @@ export default function Navbar() {
               color: "white",
               fontSize: "0.85rem",
               fontWeight: 300,
+              fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
               "&:hover": { color: "#C5A880" },
             }}
           >
@@ -148,23 +173,24 @@ export default function Navbar() {
               color: "white",
               fontSize: "0.85rem",
               fontWeight: 300,
+              fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
               "&:hover": { color: "#C5A880" },
             }}
           >
             {texts.nav.areas}
           </Button>
 
-          {/* ─── SECURE TOGGLE ANCHOR: PACKAGES LINK BUTTON ─── */}
+          {/* Desktop Packages */}
           <Button
-            onClick={handleToggleSubLinks}
-            onMouseEnter={() => setSubLinksOpen(true)} // Opens inline panel immediately on mouse entry
+            onClick={() => setSubLinksOpen((p) => !p)}
+            onMouseEnter={() => setSubLinksOpen(true)}
             endIcon={
               <KeyboardArrowDownIcon
                 sx={{
                   color: "#C5A880",
                   fontSize: "0.9rem",
-                  transform: subLinksOpen ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "transform 0.2s ease",
+                  transform: subLinksOpen ? "rotate(180deg)" : "none",
+                  transition: "transform 0.2s",
                 }}
               />
             }
@@ -172,6 +198,7 @@ export default function Navbar() {
               color: subLinksOpen ? "#C5A880" : "white",
               fontSize: "0.85rem",
               fontWeight: 300,
+              fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
               "&:hover": { color: "#C5A880" },
             }}
           >
@@ -215,22 +242,207 @@ export default function Navbar() {
           </Button>
         </Stack>
 
-        {/* Translation Switches Bar */}
-        <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-          <Stack direction="row" spacing={0.5} sx={{ mr: 1 }}>
+        {/* Desktop Language */}
+        <Stack
+          direction="row"
+          spacing={0.5}
+          sx={{ display: { xs: "none", md: "flex" } }}
+        >
+          <Button
+            size="small"
+            onClick={() => handleLanguageSwitch("en")}
+            sx={{
+              color: lang === "en" ? "#120B24" : "white",
+              bgcolor: lang === "en" ? "#C5A880" : "transparent",
+              borderRadius: 0,
+              fontSize: "0.75rem",
+              minWidth: 35,
+              p: "4px 8px",
+            }}
+          >
+            EN
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleLanguageSwitch("fa")}
+            sx={{
+              color: lang === "fa" ? "#120B24" : "white",
+              bgcolor: lang === "fa" ? "#C5A880" : "transparent",
+              borderRadius: 0,
+              fontSize: "0.75rem",
+              minWidth: 35,
+              p: "4px 8px",
+            }}
+          >
+            FA
+          </Button>
+        </Stack>
+
+        {/* ========== HAMBURGER ========== */}
+        <IconButton
+          onClick={() => setMobileOpen((prev) => !prev)}
+          sx={{
+            display: { xs: "flex", md: "none" },
+            color: "#C5A880",
+            border: "1px solid rgba(197, 168, 128, 0.35)",
+            borderRadius: "8px",
+            width: 44,
+            height: 44,
+          }}
+        >
+          {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+        </IconButton>
+      </Toolbar>
+
+      {/* ================= DESKTOP PACKAGES DROPDOWN ================= */}
+      <Collapse in={subLinksOpen} timeout="auto" unmountOnExit>
+        <Box
+          onMouseEnter={() => setSubLinksOpen(true)}
+          onMouseLeave={() => setSubLinksOpen(false)}
+          sx={{
+            display: { xs: "none", md: "flex" },
+            width: "100%",
+            backgroundColor: "rgba(29, 19, 55, 0.95)",
+            borderBottom: "1px solid rgba(197, 168, 128, 0.25)",
+            py: 1.5,
+            justifyContent: "center",
+            gap: 4,
+            flexWrap: "wrap",
+          }}
+        >
+          {packageItems.map((item) => (
+            <Button
+              key={item.path}
+              onClick={() => handleNavigation(item.path)}
+              sx={{
+                color: "rgba(255,255,255,0.85)",
+                fontSize: "0.8rem",
+                fontWeight: 300,
+                textTransform: "none",
+                fontFamily: isRtl ? '"Noto Naskh Arabic", serif' : "inherit",
+                "&:hover": { color: "#C5A880" },
+              }}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </Box>
+      </Collapse>
+
+      {/* ================= MOBILE MENU (expands under navbar) ================= */}
+      <Collapse in={mobileOpen} timeout="auto" unmountOnExit>
+        <Box
+          sx={{
+            display: { xs: "block", md: "none" },
+            background: "rgba(29, 19, 55, 0.97)",
+            borderBottom: "1px solid rgba(197, 168, 128, 0.25)",
+            px: 2,
+            py: 1.5,
+          }}
+        >
+          <Stack spacing={0.5}>
+            {[
+              { label: texts.nav.home, path: "home" },
+              { label: texts.nav.hypnotherapy, path: "hypnotherapy" },
+              { label: texts.nav.areas, path: "areas-of-focus" },
+            ].map((item) => (
+              <Button
+                key={item.path}
+                fullWidth
+                onClick={() => handleNavigation(item.path)}
+                sx={{
+                  justifyContent: isRtl ? "flex-end" : "flex-start",
+                  color: "white",
+                  fontWeight: 300,
+                  fontFamily: isRtl ? '"Noto Naskh Arabic", serif' : "inherit",
+                  "&:hover": { color: "#C5A880" },
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+
+            {/* Packages accordion */}
+            <Button
+              fullWidth
+              onClick={() => setMobilePackagesOpen((p) => !p)}
+              endIcon={
+                <KeyboardArrowDownIcon
+                  sx={{
+                    color: "#C5A880",
+                    transform: mobilePackagesOpen ? "rotate(180deg)" : "none",
+                    transition: "0.2s",
+                  }}
+                />
+              }
+              sx={{
+                justifyContent: isRtl ? "flex-end" : "flex-start",
+                color: "white",
+                fontWeight: 300,
+                fontFamily: isRtl ? '"Noto Naskh Arabic", serif' : "inherit",
+                "&:hover": { color: "#C5A880" },
+              }}
+            >
+              {texts.nav.packages}
+            </Button>
+
+            <Collapse in={mobilePackagesOpen}>
+              <Box sx={{ pl: isRtl ? 0 : 2, pr: isRtl ? 2 : 0 }}>
+                {packageItems.map((item) => (
+                  <Button
+                    key={item.path}
+                    fullWidth
+                    onClick={() => handleNavigation(item.path)}
+                    sx={{
+                      justifyContent: isRtl ? "flex-end" : "flex-start",
+                      color: "rgba(255,255,255,0.75)",
+                      fontSize: "0.85rem",
+                      fontWeight: 300,
+                      fontFamily: isRtl
+                        ? '"Noto Naskh Arabic", serif'
+                        : "inherit",
+                      "&:hover": { color: "#C5A880" },
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </Box>
+            </Collapse>
+
+            {[
+              { label: texts.nav.workshops, path: "workshops" },
+              { label: texts.nav.about, path: "about" },
+              { label: texts.nav.contact, path: "contact" },
+            ].map((item) => (
+              <Button
+                key={item.path}
+                fullWidth
+                onClick={() => handleNavigation(item.path)}
+                sx={{
+                  justifyContent: isRtl ? "flex-end" : "flex-start",
+                  color: "white",
+                  fontWeight: 300,
+                  fontFamily: isRtl ? '"Noto Naskh Arabic", serif' : "inherit",
+                  "&:hover": { color: "#C5A880" },
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Stack>
+
+          <Divider sx={{ my: 1.5, borderColor: "rgba(197,168,128,0.2)" }} />
+
+          {/* Language switch */}
+          <Stack direction="row" spacing={1} justifyContent="center">
             <Button
               size="small"
               onClick={() => handleLanguageSwitch("en")}
               sx={{
+                minWidth: 70,
                 color: lang === "en" ? "#120B24" : "white",
-                bgcolor: lang === "en" ? "#C5A880" : "transparent",
-                borderRadius: 0,
-                fontSize: "0.75rem",
-                minWidth: 35,
-                p: "4px 8px",
-                "&:hover": {
-                  bgcolor: lang === "en" ? "#B3966E" : "rgba(255,255,255,0.08)",
-                },
+                bgcolor: lang === "en" ? "#C5A880" : "rgba(255,255,255,0.05)",
               }}
             >
               EN
@@ -239,103 +451,14 @@ export default function Navbar() {
               size="small"
               onClick={() => handleLanguageSwitch("fa")}
               sx={{
+                minWidth: 70,
                 color: lang === "fa" ? "#120B24" : "white",
-                bgcolor: lang === "fa" ? "#C5A880" : "transparent",
-                borderRadius: 0,
-                fontSize: "0.75rem",
-                minWidth: 35,
-                p: "4px 8px",
-                "&:hover": {
-                  bgcolor: lang === "fa" ? "#B3966E" : "rgba(255,255,255,0.08)",
-                },
+                bgcolor: lang === "fa" ? "#C5A880" : "rgba(255,255,255,0.05)",
               }}
             >
               FA
             </Button>
           </Stack>
-        </Stack>
-      </Toolbar>
-
-      {/* ─── INLINE COLLAPSIBLE ACCORDIAN-FLEX DRAWER FOR PACKAGES (ZERO DROPS) ─── */}
-      <Collapse in={subLinksOpen} timeout="auto" unmountOnExit>
-        <Box
-          onMouseLeave={() => setSubLinksOpen(false)} // Safely closes when the cursor leaves the panel boundary
-          sx={{
-            width: "100%",
-            backgroundColor: "rgba(29, 19, 55, 0.95)",
-            borderBottom: "1px solid rgba(197, 168, 128, 0.25)",
-            py: 1.5,
-            display: "flex",
-            justifyContent: "center",
-            gap: { xs: 2, md: 4 },
-          }}
-        >
-          {/* Sub Option 1: Meditation */}
-          <Button
-            onClick={() => handleNavigation("meditation")}
-            sx={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "0.8rem",
-              fontWeight: 300,
-              textTransform: "none",
-              fontFamily:
-                lang === "fa" ? '"Noto Naskh Arabic", serif' : "inherit",
-              "&:hover": { color: "#C5A880" },
-            }}
-          >
-            {lang === "fa"
-              ? "مدیتیشن از پایه تا پیشرفته"
-              : "Meditation from Basic to Advanced"}
-          </Button>
-
-          {/* Sub Option 2: Inner Child Healing */}
-          <Button
-            onClick={() => handleNavigation("inner-child")}
-            sx={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "0.8rem",
-              fontWeight: 300,
-              textTransform: "none",
-              fontFamily:
-                lang === "fa" ? '"Noto Naskh Arabic", serif' : "inherit",
-              "&:hover": { color: "#C5A880" },
-            }}
-          >
-            {lang === "fa"
-              ? "پکیج شفای کودک درون"
-              : "Inner Child Healing Package"}
-          </Button>
-
-          {/* Sub Option 3: Self-Hypnosis Training */}
-          <Button
-            onClick={() => handleNavigation("self-hypnosis")}
-            sx={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "0.8rem",
-              fontWeight: 300,
-              textTransform: "none",
-              fontFamily:
-                lang === "fa" ? '"Noto Naskh Arabic", serif' : "inherit",
-              "&:hover": { color: "#C5A880" },
-            }}
-          >
-            {lang === "fa" ? "آموزش خودهیپنوتیزم" : "Self-Hypnosis Training"}
-          </Button>
-
-          <Button
-            onClick={() => handleNavigation("eft")}
-            sx={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "0.8rem",
-              fontWeight: 300,
-              textTransform: "none",
-              fontFamily:
-                lang === "fa" ? '"Noto Naskh Arabic", serif' : "inherit",
-              "&:hover": { color: "#C5A880" },
-            }}
-          >
-            {lang === "fa" ? " ای اف تی" : "EFT"}
-          </Button>
         </Box>
       </Collapse>
     </AppBar>
