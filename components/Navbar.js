@@ -98,7 +98,7 @@ export default function Navbar() {
       >
         {/* LOGO */}
         <Box
-          onClick={() => router.push(`/${lang}/home`)}
+          onClick={() => router.push(`/`)}
           sx={{
             display: "flex",
             flexDirection: "column",
