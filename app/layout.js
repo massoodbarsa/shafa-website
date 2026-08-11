@@ -29,6 +29,7 @@ export default function RootLayout({ children }) {
         <LanguageProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+
             {children}
           </ThemeProvider>
         </LanguageProvider>

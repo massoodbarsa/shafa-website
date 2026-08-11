@@ -10,6 +10,7 @@ import {
   Paper,
   Stack,
   Link,
+  CircularProgress,
 } from "@mui/material";
 import SpaIcon from "@mui/icons-material/Spa";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -17,8 +18,11 @@ import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import SendIcon from "@mui/icons-material/Send";
+// import { useSnackbar } from "notistack";
 
 export default function ContactPage() {
+  // const { enqueueSnackbar } = useSnackbar();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,16 +32,57 @@ export default function ContactPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace with your actual form handling
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
+
+    try {
+      setLoading(true);
+
+      const response = await fetch("../api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to send message");
+      }
+
+      setSubmitted(true);
+
+      // enqueueSnackbar("Thank you! Your message has been sent successfully.", {
+      //   variant: "success",
+      // });
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Contact form error:", error);
+
+      enqueueSnackbar("Something went wrong. Please try again later.", {
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,6 +112,7 @@ export default function ContactPage() {
         >
           CONTACT
         </Typography>
+
         <Typography
           sx={{
             fontFamily: "serif",
@@ -99,6 +145,7 @@ export default function ContactPage() {
               "linear-gradient(90deg, rgba(201,151,69,0) 0%, rgba(201,151,69,0.55) 100%)",
           }}
         />
+
         <SpaIcon
           sx={{
             color: "secondary.main",
@@ -107,6 +154,7 @@ export default function ContactPage() {
             transform: "scaleY(0.9)",
           }}
         />
+
         <Box
           sx={{
             flex: 1,
@@ -117,7 +165,7 @@ export default function ContactPage() {
         />
       </Box>
 
-      {/* Side-by-side row: Info + Form */}
+      {/* Contact info + Form */}
       <Box
         sx={{
           width: "100%",
@@ -139,8 +187,12 @@ export default function ContactPage() {
             <Box>
               <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
                 <LocationOnOutlinedIcon
-                  sx={{ color: "secondary.main", fontSize: "1.4rem" }}
+                  sx={{
+                    color: "secondary.main",
+                    fontSize: "1.4rem",
+                  }}
                 />
+
                 <Typography
                   sx={{
                     fontFamily: "serif",
@@ -153,6 +205,7 @@ export default function ContactPage() {
                   Studio
                 </Typography>
               </Stack>
+
               <Typography
                 sx={{
                   color: "rgba(255,255,255,0.88)",
@@ -173,8 +226,12 @@ export default function ContactPage() {
             <Box>
               <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
                 <PhoneOutlinedIcon
-                  sx={{ color: "secondary.main", fontSize: "1.4rem" }}
+                  sx={{
+                    color: "secondary.main",
+                    fontSize: "1.4rem",
+                  }}
                 />
+
                 <Typography
                   sx={{
                     fontFamily: "serif",
@@ -187,6 +244,7 @@ export default function ContactPage() {
                   Phone
                 </Typography>
               </Stack>
+
               <Typography
                 sx={{
                   color: "rgba(255,255,255,0.88)",
@@ -208,8 +266,12 @@ export default function ContactPage() {
             <Box>
               <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
                 <EmailOutlinedIcon
-                  sx={{ color: "secondary.main", fontSize: "1.4rem" }}
+                  sx={{
+                    color: "secondary.main",
+                    fontSize: "1.4rem",
+                  }}
                 />
+
                 <Typography
                   sx={{
                     fontFamily: "serif",
@@ -222,6 +284,7 @@ export default function ContactPage() {
                   Email
                 </Typography>
               </Stack>
+
               <Typography
                 sx={{
                   color: "rgba(255,255,255,0.88)",
@@ -243,8 +306,12 @@ export default function ContactPage() {
             <Box>
               <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
                 <AccessTimeOutlinedIcon
-                  sx={{ color: "secondary.main", fontSize: "1.4rem" }}
+                  sx={{
+                    color: "secondary.main",
+                    fontSize: "1.4rem",
+                  }}
                 />
+
                 <Typography
                   sx={{
                     fontFamily: "serif",
@@ -257,6 +324,7 @@ export default function ContactPage() {
                   Hours
                 </Typography>
               </Stack>
+
               <Typography
                 sx={{
                   color: "rgba(255,255,255,0.88)",
@@ -311,6 +379,7 @@ export default function ContactPage() {
                     mb: 2,
                   }}
                 />
+
                 <Typography
                   sx={{
                     fontFamily: "serif",
@@ -321,6 +390,7 @@ export default function ContactPage() {
                 >
                   Thank you
                 </Typography>
+
                 <Typography
                   sx={{
                     color: "rgba(255,255,255,0.85)",
@@ -332,6 +402,17 @@ export default function ContactPage() {
                   Your message has been received. We will respond with care
                   shortly.
                 </Typography>
+
+                <Button
+                  onClick={() => setSubmitted(false)}
+                  sx={{
+                    mt: 3,
+                    color: "secondary.main",
+                    fontFamily: "serif",
+                  }}
+                >
+                  Send another message
+                </Button>
               </Box>
             ) : (
               <Box component="form" onSubmit={handleSubmit}>
@@ -342,11 +423,14 @@ export default function ContactPage() {
                     gap: 2.5,
                   }}
                 >
-                  {/* Name + Email row */}
+                  {/* Name + Email */}
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: { xs: "column", sm: "row" },
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                      },
                       gap: 2.5,
                     }}
                   >
@@ -358,8 +442,10 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={loading}
                       sx={fieldStyles}
                     />
+
                     <TextField
                       fullWidth
                       name="email"
@@ -369,15 +455,19 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={loading}
                       sx={fieldStyles}
                     />
                   </Box>
 
-                  {/* Phone + Subject row */}
+                  {/* Phone + Subject */}
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: { xs: "column", sm: "row" },
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                      },
                       gap: 2.5,
                     }}
                   >
@@ -388,8 +478,10 @@ export default function ContactPage() {
                       value={formData.phone}
                       onChange={handleChange}
                       variant="outlined"
+                      disabled={loading}
                       sx={fieldStyles}
                     />
+
                     <TextField
                       fullWidth
                       name="subject"
@@ -397,6 +489,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleChange}
                       variant="outlined"
+                      disabled={loading}
                       sx={fieldStyles}
                     />
                   </Box>
@@ -412,6 +505,7 @@ export default function ContactPage() {
                     multiline
                     rows={5}
                     variant="outlined"
+                    disabled={loading}
                     sx={fieldStyles}
                   />
 
@@ -419,7 +513,14 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     fullWidth
-                    endIcon={<SendIcon />}
+                    disabled={loading}
+                    endIcon={
+                      loading ? (
+                        <CircularProgress size={20} sx={{ color: "#1a1a1a" }} />
+                      ) : (
+                        <SendIcon />
+                      )
+                    }
                     sx={{
                       mt: 0.5,
                       py: 1.6,
@@ -436,9 +537,15 @@ export default function ContactPage() {
                         background:
                           "linear-gradient(135deg, #b8863a 0%, #d4b87a 100%)",
                       },
+                      "&.Mui-disabled": {
+                        color: "#1a1a1a",
+                        opacity: 0.7,
+                        background:
+                          "linear-gradient(135deg, #c99745 0%, #e8c98a 100%)",
+                      },
                     }}
                   >
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
                 </Box>
               </Box>
@@ -458,20 +565,25 @@ const fieldStyles = {
     fontWeight: 300,
     backgroundColor: "rgba(255,255,255,0.04)",
     borderRadius: 2,
+
     "& fieldset": {
       borderColor: "rgba(201,151,69,0.35)",
     },
+
     "&:hover fieldset": {
       borderColor: "rgba(201,151,69,0.6)",
     },
+
     "&.Mui-focused fieldset": {
       borderColor: "secondary.main",
     },
   },
+
   "& .MuiInputLabel-root": {
     color: "rgba(255,255,255,0.6)",
     fontFamily: "serif",
     fontWeight: 300,
+
     "&.Mui-focused": {
       color: "secondary.main",
     },
