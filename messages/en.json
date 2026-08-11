@@ -77,5 +77,16 @@
     "phone": "+31 6 12345678",
     "address": "Torronto, Canada",
     "copyright": "© 2026 SHAFA Hypnotherapy & Wellness. All rights reserved."
+  },
+  "contactPage": {
+    "title": "CONTACT",
+    "subtitle": "Begin your journey toward inner calm. Reach out and we will respond with care.",
+    "labelName": "Name",
+    "labelEmail": "Email",
+    "labelPhone": "Phone",
+    "labelSubject": "Subject",
+    "labelMessage": "Message",
+    "btnSend": "Send Message",
+    "btnSending": "Sending..."
   }
 }
