@@ -9,6 +9,9 @@ import {
   Button,
   Stack,
   Paper,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
@@ -39,11 +42,22 @@ export default function ContactPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleCloseNotification = (event, reason) => {
+    if (reason === "clickaway") return;
+    setNotification((prev) => ({ ...prev, open: false }));
   };
 
   const handleSubmit = async (e) => {
@@ -59,9 +73,24 @@ export default function ContactPage() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Error");
 
+      setNotification({
+        open: true,
+        message: isRtl
+          ? "پیام شما با موفقیت ارسال شد. سپاسگزاریم!"
+          : "Your message has been sent successfully. Thank you!",
+        severity: "success",
+      });
+
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (error) {
       console.error("Submission error:", error);
+      setNotification({
+        open: true,
+        message: isRtl
+          ? "متأسفانه مشکلی در سرور یا ارسال پیام پیش آمده است. دوباره تلاش کنید."
+          : "Server error occurred. Something went wrong. Please try again later.",
+        severity: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -81,32 +110,19 @@ export default function ContactPage() {
     },
   };
 
-  // Shared responsive styles for deep container card components
-  const cardStyles = {
-    p: 35,
-    backgroundColor: "background.paper", // Pulls custom #1D1337 theme layer
+  const glassCardStyles = {
+    p: { xs: 2.5, md: 3.5 },
+    backgroundColor: "rgba(29, 19, 55, 0.75)",
+    backdropFilter: "blur(16px)",
     borderRadius: "24px",
-    border: "1px solid rgba(233, 197, 154, 0.2)", // Subtle translucent secondary.light stroke
-    outline: "1px solid rgba(157, 107, 217, 0.1)", // Subtle primary.light inner layout track
-    outlineOffset: "-6px",
-    boxShadow: "0px 10px 40px rgba(0, 0, 0, 0.35)",
-    transition:
-      "transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+    borderTop: "3px solid #E9C59A",
+    borderLeft: "1px solid rgba(233, 197, 154, 0.08)",
+    borderRight: "1px solid rgba(233, 197, 154, 0.08)",
+    borderBottom: "1px solid rgba(233, 197, 154, 0.05)",
+    boxShadow: "0px 15px 35px rgba(0, 0, 0, 0.25)",
+    transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
   };
 
-  const anchorCardStyles = {
-    p: 3.5,
-    backgroundColor: "rgba(29, 19, 55, 0.6)", // Slight transparency layer
-    backdropFilter: "blur(8px)",
-    borderRadius: "20px",
-    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
-    border: "1px solid rgba(255, 255, 255, 0.04)",
-    // Adds a thick solid gold strip indicator bar onto one side
-    borderLeft: isRtl ? "none" : "4px solid #C99745",
-    borderRight: isRtl ? "4px solid #C99745" : "none",
-  };
-
-  // Shared input override configurations for perfect dark theme integration
   const inputStyles = {
     "& .MuiOutlinedInput-root": {
       color: "text.primary",
@@ -174,7 +190,6 @@ export default function ContactPage() {
             </Typography>
           </Box>
 
-          {/* Core Content Body Flexbox row elements layout split wrapper */}
           <Box
             sx={{
               width: "100%",
@@ -184,7 +199,7 @@ export default function ContactPage() {
               alignItems: "flex-start",
             }}
           >
-            {/* Info Cards Column Layout Panels */}
+            {/* Info Cards Column Layout Panel */}
             <Stack
               spacing={3}
               component={MotionBox}
@@ -198,11 +213,11 @@ export default function ContactPage() {
               <MotionPaper
                 elevation={0}
                 whileHover={{
-                  y: -5,
-                  borderColor: "secondary.main",
-                  boxShadow: "0px 15px 30px rgba(157, 107, 219, 0.15)",
+                  scale: 1.02,
+                  borderTopColor: "#C99745",
+                  boxShadow: "0px 20px 45px rgba(0, 0, 0, 0.45)",
                 }}
-                sx={anchorCardStyles}
+                sx={glassCardStyles}
               >
                 <Stack
                   direction="row"
@@ -241,11 +256,11 @@ export default function ContactPage() {
               <MotionPaper
                 elevation={0}
                 whileHover={{
-                  y: -5,
-                  borderColor: "secondary.main",
-                  boxShadow: "0px 15px 30px rgba(157, 107, 219, 0.15)",
+                  scale: 1.02,
+                  borderTopColor: "#C99745",
+                  boxShadow: "0px 20px 45px rgba(0, 0, 0, 0.45)",
                 }}
-                sx={anchorCardStyles}
+                sx={glassCardStyles}
               >
                 <Stack
                   direction="row"
@@ -285,11 +300,11 @@ export default function ContactPage() {
               <MotionPaper
                 elevation={0}
                 whileHover={{
-                  y: -5,
-                  borderColor: "secondary.main",
-                  boxShadow: "0px 15px 30px rgba(157, 107, 219, 0.15)",
+                  scale: 1.02,
+                  borderTopColor: "#C99745",
+                  boxShadow: "0px 20px 45px rgba(0, 0, 0, 0.45)",
                 }}
-                sx={anchorCardStyles}
+                sx={glassCardStyles}
               >
                 <Stack
                   direction="row"
@@ -325,7 +340,7 @@ export default function ContactPage() {
                 </Typography>
               </MotionPaper>
             </Stack>
-            {/* Interactive Dark Submission Form Layout Component */}
+            {/* Dark Interactive Submission Input Panel */}
             <MotionPaper
               elevation={0}
               variants={itemVariants}
@@ -333,7 +348,7 @@ export default function ContactPage() {
                 flex: 1,
                 width: "100%",
                 p: { xs: 3, md: 5 },
-                backgroundColor: "background.paper", // Perfect #1D1337 color assignment mapped automatically
+                backgroundColor: "background.paper",
                 borderRadius: "32px",
                 border: "1px solid rgba(233, 197, 154, 0.25)",
                 outline: "1px solid rgba(157, 107, 217, 0.15)",
@@ -341,7 +356,7 @@ export default function ContactPage() {
                 boxShadow: "0px 15px 50px rgba(0, 0, 0, 0.4)",
               }}
             >
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <Stack spacing={3.5}>
                   <TextField
                     label={t.contactPage.labelName}
@@ -436,9 +451,16 @@ export default function ContactPage() {
                     variant="contained"
                     disabled={loading}
                     endIcon={
-                      <SendIcon
-                        sx={{ transform: isRtl ? "rotate(180deg)" : "none" }}
-                      />
+                      loading ? (
+                        <CircularProgress
+                          size={18}
+                          sx={{ color: "rgba(255,255,255,0.7)" }}
+                        />
+                      ) : (
+                        <SendIcon
+                          sx={{ transform: isRtl ? "rotate(180deg)" : "none" }}
+                        />
+                      )
                     }
                     sx={{
                       alignSelf: "flex-start",
@@ -448,8 +470,14 @@ export default function ContactPage() {
                       backgroundColor: "primary.main",
                       color: "#FFFFFF",
                       fontWeight: 600,
+                      gap: 1.5,
                       boxShadow: "0px 4px 20px rgba(157, 107, 217, 0.3)",
                       transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                      "&.Mui-disabled": {
+                        backgroundColor: "primary.main", // or your brand color
+                        color: "#fff", // white text
+                        opacity: 0.8,
+                      },
                       "&:hover": {
                         backgroundColor: "primary.light",
                         transform: "translateY(-2px)",
@@ -465,6 +493,43 @@ export default function ContactPage() {
           </Box>
         </Container>
       </LayoutWrapper>
+
+      {/* Floating Status Popup Snackbar Alerts hoisted outside to protect context state */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={5000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: isRtl ? "left" : "right",
+        }}
+        sx={{ zIndex: 9999 }}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          variant="filled"
+          sx={{
+            width: "100%",
+            borderRadius: "12px",
+            backgroundColor:
+              notification.severity === "success"
+                ? "secondary.main"
+                : "#36306F",
+            color: "#FFFFFF",
+            fontWeight: 500,
+            boxShadow: "0px 10px 30px rgba(0,0,0,0.3)",
+            fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
+            direction: isRtl ? "rtl" : "ltr",
+            "& .MuiAlert-icon": {
+              marginLeft: isRtl ? 1.5 : 0,
+              marginRight: isRtl ? 0 : 1.5,
+            },
+          }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
