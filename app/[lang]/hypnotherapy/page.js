@@ -196,7 +196,7 @@ export default function HypnotherapyPage() {
                     key={idx}
                     variant="body1"
                     sx={{
-                      color: "primary.dark", // Elegant deep purple font tone
+                      color: "text.primary", // Elegant deep purple font tone
                       fontSize: { xs: "1.05rem", md: "1.2rem" },
                       lineHeight: { xs: 1.9, md: 2.1 },
                       fontWeight: 400,
@@ -214,7 +214,7 @@ export default function HypnotherapyPage() {
             <Typography
               variant="subtitle1"
               sx={{
-                color: "primary.dark", // Elegant deep purple font tone
+                color: "text.primary", // Elegant deep purple font tone
                 fontSize: { xs: "1.05rem", md: "1.2rem" },
                 lineHeight: { xs: 1.9, md: 2.1 },
                 fontWeight: 700,

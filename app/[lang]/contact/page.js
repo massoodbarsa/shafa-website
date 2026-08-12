@@ -113,6 +113,7 @@ export default function ContactPage() {
   const glassCardStyles = {
     p: { xs: 2.5, md: 3.5 },
     backgroundColor: "rgba(29, 19, 55, 0.75)",
+
     backdropFilter: "blur(16px)",
     borderRadius: "24px",
     borderTop: "3px solid #E9C59A",
@@ -125,7 +126,7 @@ export default function ContactPage() {
 
   const inputStyles = {
     "& .MuiOutlinedInput-root": {
-      color: "text.primary",
+      color: "text.secondary",
       "& fieldset": { borderColor: "rgba(233, 197, 154, 0.3)" },
       "&:hover fieldset": { borderColor: "secondary.light" },
       "&.Mui-focused fieldset": { borderColor: "secondary.main" },
@@ -236,12 +237,12 @@ export default function ContactPage() {
                       fontSize: "1.05rem",
                     }}
                   >
-                    {t.contactPage.studio}
+                    {t.contactPage.labelPlace}
                   </Typography>
                 </Stack>
                 <Typography
                   sx={{
-                    color: "text.primary",
+                    color: "text.secondary",
                     fontWeight: 300,
                     pl: isRtl ? 0 : 4,
                     pr: isRtl ? 4 : 0,
@@ -279,13 +280,13 @@ export default function ContactPage() {
                       fontSize: "1.05rem",
                     }}
                   >
-                    {t.contactPage.phone}
+                    {t.contactPage.labelPhone}
                   </Typography>
                 </Stack>
                 <Typography
                   dir="ltr"
                   sx={{
-                    color: "text.primary",
+                    color: "text.secondary",
                     fontWeight: 300,
                     textAlign: isRtl ? "right" : "left",
                     pl: isRtl ? 0 : 4,
@@ -323,13 +324,13 @@ export default function ContactPage() {
                       fontSize: "1.05rem",
                     }}
                   >
-                    {t.contactPage.email}
+                    {t.contactPage.labelEmail}
                   </Typography>
                 </Stack>
                 <Typography
                   dir="ltr"
                   sx={{
-                    color: "text.primary",
+                    color: "text.secondary",
                     fontWeight: 300,
                     textAlign: isRtl ? "right" : "left",
                     pl: isRtl ? 0 : 4,
@@ -359,6 +360,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <Stack spacing={3.5}>
                   <TextField
+                    color="text.secondary"
                     label={t.contactPage.labelName}
                     name="name"
                     value={formData.name}
@@ -377,6 +379,7 @@ export default function ContactPage() {
                   />
                   <TextField
                     label={t.contactPage.labelEmail}
+                    color="text.secondary"
                     name="email"
                     type="email"
                     value={formData.email}

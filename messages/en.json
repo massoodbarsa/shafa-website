@@ -85,6 +85,7 @@
     "labelEmail": "Email",
     "labelPhone": "Phone",
     "labelSubject": "Subject",
+    "labelPlace": "Place",
     "labelMessage": "Message",
     "btnSend": "Send Message",
     "btnSending": "Sending..."
