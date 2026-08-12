@@ -182,7 +182,7 @@ export default function ContactPage() {
             <Typography
               sx={{
                 fontWeight: 300,
-                color: "rgba(255, 255, 255, 0.75)",
+                color: "primary.dark",
                 fontSize: { xs: "1rem", md: "1.15rem" },
                 lineHeight: 1.75,
               }}
