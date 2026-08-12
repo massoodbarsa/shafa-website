@@ -7,12 +7,12 @@ const theme = createTheme({
     primary: {
       main: "#583E93", // Exact requested primary deep purple
       light: "#9D6BD9", // Exact requested primary light purple
-      dark: "#36306F", // Exact requested primary dark purple
+      dark: "#0a0a0cff", // Exact requested primary dark purple
     },
     secondary: {
       main: "#C99745", // Exact requested secondary gold
       light: "#E9C59A", // Exact requested secondary light gold
-      dark: "#B17D47", // Exact requested secondary dark gold
+      dark: "#432607ff", // Exact requested secondary dark gold
     },
     background: {
       default: "#120B24", // Deep background canvas purple matching layout
