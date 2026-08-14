@@ -140,5 +140,29 @@
     "conclusion": "Hypnotherapy is a guided, collaborative, and goal-oriented process that uses hypnosis to work with thoughts, perceptions, emotions, habits, and behavioral patterns. Throughout the process, you remain yourself, aware, and capable of making choices. The purpose of hypnotherapy is not to take control of your mind. Rather, it can create a supportive state in which you can explore mental and behavioral patterns with greater focus and work toward constructive changes that align with your own goals.",
     "shafaBeliefTitle": "At SHAFA, we believe:",
     "shafaBelief": "No one can change your mind for you. But we can help you begin the journey of change from within."
+  },
+  "certificatesPage": {
+    "title": "Certificates & Credentials",
+    "subtitle": "Professional training and qualifications",
+    "intro": "I am committed to maintaining the highest standards of professional practice. Below are the certifications and training programs that form the foundation of my work.",
+    "certificates": [
+      {
+        "title": "Clinical Hypnotherapy Certification",
+        "description": "Comprehensive training in clinical hypnotherapy, covering advanced techniques, client assessment, and ethical practice."
+      },
+      {
+        "title": "Advanced Inner Child Therapy",
+        "description": "Specialized training in inner child work, trauma-informed approaches, and parts therapy to facilitate deep emotional healing."
+      },
+      {
+        "title": "Cognitive Behavioral Hypnotherapy (CBH)",
+        "description": "Integrating CBT principles with hypnosis to effectively address negative thought patterns and behavioral changes."
+      },
+      {
+        "title": "Mindfulness and Meditation Instructor",
+        "description": "Certified to guide individuals in mindfulness practices, breathwork, and meditation for stress reduction and mental clarity."
+      }
+    ],
+    "conclusion": "These credentials reflect my dedication to evidence-based practice and continuous professional development."
   }
 }
