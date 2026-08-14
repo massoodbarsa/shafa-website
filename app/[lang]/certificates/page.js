@@ -161,7 +161,7 @@ export default function CertificatesPage() {
               <Typography
                 variant="subtitle1"
                 sx={{
-                  color: "text.secondary",
+                  color: "text.primary",
                   fontSize: { xs: "1.1rem", md: "1.3rem" },
                   textAlign: "center",
                   fontWeight: 400,

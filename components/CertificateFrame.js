@@ -34,17 +34,17 @@ export default function CertificateFrame({
         },
       }}
     >
-      {/* Image frame */}
+      {/* Image frame with responsive aspect ratio */}
       <Box
         sx={{
           position: "relative",
           width: "100%",
-          aspectRatio: "4/3",
+          aspectRatio: { xs: "1/1", sm: "4/3", md: "4/3" }, // square on mobile, wider on larger
           bgcolor: "#f5f3f0",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          p: 2,
+          p: { xs: 1.5, sm: 2, md: 2 }, // less padding on mobile
           borderBottom: "1px solid rgba(88, 62, 147, 0.08)",
         }}
       >
@@ -64,21 +64,19 @@ export default function CertificateFrame({
             fill
             style={{ objectFit: "contain" }}
             sizes="(max-width: 768px) 100vw, 50vw"
-            // Optional fallback placeholder:
-            // onError={(e) => { e.currentTarget.src = "/images/placeholder-cert.jpg"; }}
           />
         </Box>
       </Box>
 
-      {/* Text content */}
-      <Box sx={{ p: { xs: 3, md: 4 } }}>
+      {/* Text content with responsive padding */}
+      <Box sx={{ p: { xs: 2, sm: 3, md: 3, lg: 4 } }}>
         <Typography
           variant="h6"
           sx={{
             fontWeight: 600,
             color: "text.secondary",
-            fontSize: { xs: "1.15rem", md: "1.3rem" },
-            mb: 1,
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem", lg: "1.3rem" },
+            mb: 0.5,
             textAlign: isRtl ? "right" : "left",
             fontFamily: isRtl ? '"Noto Naskh Arabic", sans-serif' : "inherit",
           }}
@@ -89,8 +87,13 @@ export default function CertificateFrame({
           variant="body1"
           sx={{
             color: "text.secondary",
-            fontSize: { xs: "0.98rem", md: "1.08rem" },
-            lineHeight: { xs: 1.7, md: 1.9 },
+            fontSize: {
+              xs: "0.9rem",
+              sm: "0.95rem",
+              md: "1rem",
+              lg: "1.08rem",
+            },
+            lineHeight: { xs: 1.6, sm: 1.7, md: 1.8, lg: 1.9 },
             textAlign: isRtl ? "justify" : "left",
             fontFamily: isRtl
               ? '"Noto Naskh Arabic", sans-serif'
