@@ -12,13 +12,14 @@ import faTranslations from "../../../messages/fa.json";
 import { useLanguage } from "@/context/LanguageContext";
 
 const MotionBox = motion.create(Box);
+const MotionStack = motion.create(Stack);
 
 export default function HypnotherapyPage() {
   const { lang } = useLanguage();
   const isRtl = lang === "fa";
   const t = isRtl ? faTranslations : enTranslations;
+  const page = t.hypnotherapyPage;
 
-  // Staggered entrance animation variants for layout fluidity
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
@@ -32,11 +33,6 @@ export default function HypnotherapyPage() {
       transition: { duration: 0.6, ease: [0.25, 0.8, 0.25, 1] },
     },
   };
-
-  // Splits descriptions by either double escaped '\\n\\n' or normal literal newline tokens safely
-  const paragraphs = t.hypnotherapyPage.description.includes("\\n\\n")
-    ? t.hypnotherapyPage.description.split("\\n\\n")
-    : t.hypnotherapyPage.description.split("\n\n");
 
   return (
     <Box
@@ -61,13 +57,11 @@ export default function HypnotherapyPage() {
             px: { xs: 2.5, md: 4 },
             display: "flex",
             flexDirection: "column",
-
             gap: { xs: 4, md: 5 },
           }}
         >
-          {/* Decorative Top Accent Icon Wrapper */}
-          <Box
-            component={motion.div}
+          {/* Decorative top accent */}
+          <MotionBox
             variants={itemVariants}
             sx={{
               display: "flex",
@@ -77,42 +71,40 @@ export default function HypnotherapyPage() {
               mb: -2,
             }}
           >
-            {/* <SpaIcon
-              sx={{
-                fontSize: "2.5rem",
-                filter: "drop-shadow(0px 0px 8px rgba(201,151,69,0.3))",
-              }}
-            /> */}
-          </Box>
+            {/* optional SpaIcon */}
+          </MotionBox>
 
-          {/* Section Dynamic Heading Block */}
-          <Stack
+          {/* Heading */}
+          <MotionStack
             spacing={2}
-            alignItems="center"
-            sx={{ maxWidth: 800 }}
-            component={motion.div}
             variants={itemVariants}
+            sx={{
+              alignItems: "center", // ← moved into sx (fixes the warning)
+              maxWidth: 800,
+              mx: "auto",
+            }}
           >
             <Typography
               variant="h2"
               sx={{
                 fontWeight: 500,
                 letterSpacing: isRtl ? "0" : "0.12em",
-                color: "primary.main", // Clean deep dark purple font choice
+                color: "primary.main",
                 fontSize: { xs: "2.2rem", md: "3.2rem" },
+                textAlign: "center",
               }}
             >
-              {t.hypnotherapyPage.title}
+              {page.title}
             </Typography>
 
-            {/* Custom Aesthetic Multi-dot Geometric Horizontal Rule Separator */}
+            {/* Geometric separator */}
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
-                maxWidth: "160px",
+                maxWidth: 160,
                 pt: 0.5,
               }}
             >
@@ -171,101 +163,221 @@ export default function HypnotherapyPage() {
                 }}
               />
             </Box>
-          </Stack>
+          </MotionStack>
 
-          {/* Clean Transparent Text Layout Block Container without Background Masks */}
-          <Box
-            component={motion.div}
+          {/* Main content */}
+          <MotionBox
             variants={itemVariants}
             sx={{
               width: "100%",
-              maxWidth: "960px",
+              maxWidth: 960,
+              mx: "auto",
               display: "flex",
               flexDirection: "column",
-              gap: 3.5, // Even spacing layout gap between generated paragraphs
+              gap: 3.5,
             }}
           >
-            {/* Dynamic string loops generating distinct spacing rows layout outputs */}
-            {paragraphs.map((paragraph, idx) => {
-              // Filters fallback edge conditions for accidental extra whitespace lines entries
-              if (!paragraph.trim()) return null;
-
+            {/* Paragraphs */}
+            {page.paragraphs?.map((paragraph, idx) => {
+              if (!paragraph?.trim()) return null;
               return (
-                <>
+                <Typography
+                  key={idx}
+                  variant="body1"
+                  sx={{
+                    color: "text.primary",
+                    fontSize: { xs: "1.05rem", md: "1.2rem" },
+                    lineHeight: { xs: 1.9, md: 2.1 },
+                    fontWeight: 400,
+                    textAlign: isRtl ? "justify" : "left",
+                    fontFamily: isRtl
+                      ? '"Noto Naskh Arabic", sans-serif'
+                      : "Georgia, serif",
+                  }}
+                >
+                  {paragraph.trim()}
+                </Typography>
+              );
+            })}
+
+            {/* Subtitle */}
+            {page.subtitle && (
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  color: "text.primary",
+                  fontSize: { xs: "1.05rem", md: "1.2rem" },
+                  lineHeight: { xs: 1.9, md: 2.1 },
+                  fontWeight: 700,
+                  textAlign: isRtl ? "justify" : "left",
+                  fontFamily: isRtl
+                    ? '"Noto Naskh Arabic", sans-serif'
+                    : "Georgia, serif",
+                  mt: 1,
+                }}
+              >
+                {page.subtitle}
+              </Typography>
+            )}
+
+            {/* Myths / Common beliefs */}
+            {(page.commonBeliefsTitle || page.whatIsNotTitle) && (
+              <Box sx={{ mt: { xs: 4, md: 6 } }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 600,
+                    color: "primary.main",
+                    fontSize: { xs: "1.6rem", md: "2rem" },
+                    mb: 2,
+                    textAlign: isRtl ? "right" : "left",
+                    fontFamily: isRtl
+                      ? '"Noto Naskh Arabic", sans-serif'
+                      : "inherit",
+                  }}
+                >
+                  {page.commonBeliefsTitle || page.whatIsNotTitle}
+                </Typography>
+
+                {page.commonBeliefsIntro && (
                   <Typography
-                    key={idx}
                     variant="body1"
                     sx={{
-                      color: "text.primary", // Elegant deep purple font tone
-                      fontSize: { xs: "1.05rem", md: "1.2rem" },
-                      lineHeight: { xs: 1.9, md: 2.1 },
-                      fontWeight: 400,
+                      color: "text.primary",
+                      fontSize: { xs: "1.05rem", md: "1.15rem" },
+                      lineHeight: { xs: 1.9, md: 2.05 },
+                      mb: 4,
                       textAlign: isRtl ? "justify" : "left",
                       fontFamily: isRtl
                         ? '"Noto Naskh Arabic", sans-serif'
                         : "Georgia, serif",
                     }}
                   >
-                    {paragraph.trim()}
+                    {page.commonBeliefsIntro}
                   </Typography>
-                </>
-              );
-            })}
-            <Typography
-              variant="subtitle1"
-              sx={{
-                color: "text.primary", // Elegant deep purple font tone
-                fontSize: { xs: "1.05rem", md: "1.2rem" },
-                lineHeight: { xs: 1.9, md: 2.1 },
-                fontWeight: 700,
-                textAlign: isRtl ? "justify" : "left",
-                fontFamily: isRtl
-                  ? '"Noto Naskh Arabic", sans-serif'
-                  : "Georgia, serif",
-              }}
-            >
-              {t.hypnotherapyPage.subtitle}
-            </Typography>
+                )}
 
-            {/* Interactive Call to Action Layout Integration Footer */}
-            {/* <Box
-              sx={{
-                mt: { xs: 4, md: 5 },
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
-              <Button
-                variant="contained"
-                endIcon={<AutoAwesomeIcon />}
-                href="/booking"
+                <Stack spacing={3.5}>
+                  {page.myths?.map((myth, idx) => (
+                    <Box key={idx}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          color: "primary.main",
+                          fontSize: { xs: "1.1rem", md: "1.25rem" },
+                          mb: 1,
+                          textAlign: isRtl ? "right" : "left",
+                          fontFamily: isRtl
+                            ? '"Noto Naskh Arabic", sans-serif'
+                            : "inherit",
+                        }}
+                      >
+                        {myth.title}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "text.primary",
+                          fontSize: { xs: "1.02rem", md: "1.12rem" },
+                          lineHeight: { xs: 1.85, md: 2 },
+                          textAlign: isRtl ? "justify" : "left",
+                          fontFamily: isRtl
+                            ? '"Noto Naskh Arabic", sans-serif'
+                            : "Georgia, serif",
+                        }}
+                      >
+                        {myth.text}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
+            )}
+
+            {/* Conclusion */}
+            {page.conclusionTitle && (
+              <Box sx={{ mt: { xs: 4, md: 6 } }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 600,
+                    color: "primary.main",
+                    fontSize: { xs: "1.6rem", md: "2rem" },
+                    mb: 2,
+                    textAlign: isRtl ? "right" : "left",
+                    fontFamily: isRtl
+                      ? '"Noto Naskh Arabic", sans-serif'
+                      : "inherit",
+                  }}
+                >
+                  {page.conclusionTitle}
+                </Typography>
+                {page.conclusion && (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "text.primary",
+                      fontSize: { xs: "1.05rem", md: "1.15rem" },
+                      lineHeight: { xs: 1.9, md: 2.05 },
+                      textAlign: isRtl ? "justify" : "left",
+                      fontFamily: isRtl
+                        ? '"Noto Naskh Arabic", sans-serif'
+                        : "Georgia, serif",
+                    }}
+                  >
+                    {page.conclusion}
+                  </Typography>
+                )}
+              </Box>
+            )}
+
+            {/* Shafa belief */}
+            {page.shafaBeliefTitle && (
+              <Box
                 sx={{
-                  px: { xs: 5, md: 7 },
-                  py: 1.8,
-                  borderRadius: "14px",
-                  backgroundColor: "#583E93", // theme primary.main
-                  color: "#FFFFFF",
-                  fontWeight: 600,
-                  fontSize: "1.05rem",
-                  letterSpacing: isRtl ? "0" : "0.05em",
-                  gap: 1.2,
-                  boxShadow: "0px 5px 25px rgba(88, 62, 147, 0.25)",
-                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
-                  fontFamily: isRtl
-                    ? '"Noto Naskh Arabic", sans-serif'
-                    : "inherit",
-                  "&:hover": {
-                    backgroundColor: "#9D6BD9", // theme primary.light
-                    transform: "translateY(-3px)",
-                    boxShadow: "0px 8px 30px rgba(157, 107, 217, 0.45)",
-                  },
+                  mt: { xs: 4, md: 5 },
+                  p: { xs: 3, md: 4 },
+                  borderRadius: 3,
+                  bgcolor: "rgba(88, 62, 147, 0.06)",
+                  border: "1px solid rgba(88, 62, 147, 0.12)",
                 }}
               >
-                {t.banner.bannerBtn || "Book a Session"}
-              </Button>
-            </Box> */}
-          </Box>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 600,
+                    color: "primary.main",
+                    fontSize: { xs: "1.25rem", md: "1.45rem" },
+                    mb: 1.5,
+                    textAlign: isRtl ? "right" : "left",
+                    fontFamily: isRtl
+                      ? '"Noto Naskh Arabic", sans-serif'
+                      : "inherit",
+                  }}
+                >
+                  {page.shafaBeliefTitle}
+                </Typography>
+                {page.shafaBelief && (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "text.primary",
+                      fontSize: { xs: "1.05rem", md: "1.15rem" },
+                      lineHeight: { xs: 1.9, md: 2.05 },
+                      fontWeight: 500,
+                      textAlign: isRtl ? "justify" : "left",
+                      fontFamily: isRtl
+                        ? '"Noto Naskh Arabic", sans-serif'
+                        : "Georgia, serif",
+                    }}
+                  >
+                    {page.shafaBelief}
+                  </Typography>
+                )}
+              </Box>
+            )}
+          </MotionBox>
         </Container>
       </LayoutWrapper>
     </Box>

@@ -92,7 +92,53 @@
   },
   "hypnotherapyPage": {
     "title": "What is Hypnotherapy?",
-    "subtitle": "Change begins when the mind becomes ready to see, re-evaluate, and create new patterns.",
-    "description": "Hypnotherapy is a guided approach that works with deep patterns of the mind, including thoughts, beliefs, emotions, and unconscious habits. During the process, the individual remains fully aware and in control while entering a state of deep relaxation and inner focus—one that can make it easier to access underlying mental and emotional patterns.\\n\\nIn this state, the mind enters the alpha level and potentially deeper states, where receptivity and responsiveness to therapeutic suggestions may be enhanced. This state can make it easier to access and work with unconscious patterns, allowing for meaningful therapeutic change.\\n\\nA significant part of our beliefs and behavioral patterns develops during the early years of life, when the mind is highly receptive and more open to suggestion. Childhood experiences, family dynamics, environment, and life events can all play a role in shaping our beliefs and behavioral patterns. Some of these patterns may remain active into adulthood, even when they are no longer beneficial or appropriate for our current lives.\\n\\nIn hypnotherapy, rather than trying to “erase” the past, individuals are guided to identify, re-evaluate, and replace unhelpful patterns with more constructive ones. Through relaxation, focused attention, and targeted therapeutic suggestions, hypnotherapy can support changes in attitudes, habits, emotional responses, and behaviors in alignment with the individual’s goals.\\n\\nHypnotherapy may be used to support a wide range of areas, including stress and anxiety management, depression, self-confidence, self-esteem, fears and phobias, habit change, overcoming dependencies such as smoking, alcohol, and substance use, sleep and relaxation, personal growth, improving romantic and interpersonal relationships, self-hypnosis, and inner-child work—which can be an important component of the therapeutic process."
+    "subtitle": "And change begins when the mind is ready to see, reconsider, and build new patterns.",
+    "paragraphs": [
+      "Hypnotherapy is a guided method for working with deep patterns of the mind, thoughts, beliefs, emotions, and subconscious habits. In this process, while fully aware and in control, the individual enters a state of deep relaxation and inner focus—a state that can make it easier to access mental and emotional patterns. In this state, the mind enters the alpha level and even deeper, a level where one can experience greater focus and relaxation, making it easier to work with certain mental patterns.",
+      "A significant portion of our beliefs and behavioral patterns are formed in the early years of life. Childhood experiences, family, environment, and life events can all play a role in shaping beliefs and behavioral patterns. Some of these patterns remain active into adulthood, even when they no longer serve our current life.",
+      "In hypnotherapy, rather than trying to 'erase' the past, the individual is helped to identify, review, and replace dysfunctional patterns with more constructive ones. Through relaxation, focus, and targeted suggestions, one can work on changing attitudes, habits, emotional responses, and behaviors related to the individual's goals.",
+      "Hypnotherapy can be used in areas such as stress and anxiety management, depression, self-confidence, self-esteem, fears and phobias, habit change, quitting addictions like smoking, alcohol, and drugs, sleep and relaxation, personal growth, improving emotional and interpersonal relationships, self-hypnosis, and inner child work."
+    ],
+    "whatIsNotTitle": "What Is Hypnotherapy Not?",
+    "commonBeliefsTitle": "Common Myths and Misconceptions About Hypnosis",
+    "commonBeliefsIntro": "For many people, hypnosis is still associated with images from movies, television, or popular culture—such as losing control, falling into a deep sleep, being controlled by someone else, or being forced to do things against their will. In reality, hypnotherapy is very different from these common portrayals. Let's take a closer look at some of the most common misconceptions about hypnosis.",
+    "myths": [
+      {
+        "title": "1. “I might go so deep into hypnosis that I will never wake up.”",
+        "text": "This is a misconception. Hypnosis is not the same as ordinary sleep. During hypnosis, a person is generally in a state of focused attention and can remain aware of sounds and aspects of their surroundings. A hypnotherapy session is designed to come to a natural end, with the individual returning to their normal state of awareness. There is no state of hypnosis in which a person can become permanently “stuck.”"
+      },
+      {
+        "title": "2. “When I am hypnotized, I will completely lose my free will.”",
+        "text": "Not true. Hypnosis does not mean losing your will or control over your mind. A person can hear, think, respond, and choose to end the process if they wish. Hypnotherapy is not a completely passive experience. The individual plays an active role, and people also differ in their responsiveness to hypnosis."
+      },
+      {
+        "title": "3. “A hypnotherapist can hypnotize anyone without their permission.”",
+        "text": "This is another misconception. Hypnotherapy is a collaborative process. The individual participates willingly and engages with the process. A hypnotherapist does not have the ability to take control of another person's mind. Instead, the practitioner guides the individual through relaxation, focused attention, verbal suggestions, and other techniques. People also vary in their responsiveness to hypnosis."
+      },
+      {
+        "title": "4. “While hypnotized, I might be forced to do something against my values or wishes.”",
+        "text": "Hypnosis is not the same as surrendering your will. Hypnosis is not mind control or brainwashing. The individual retains their ability to make choices and exercise judgment. The process is based on participation and cooperation rather than domination or control."
+      },
+      {
+        "title": "5. “Hypnosis simply means falling asleep.”",
+        "text": "Not exactly. A person may experience a sense of heaviness, deep relaxation, or even drowsiness during hypnosis, but hypnosis should not simply be equated with sleep. Hypnosis is more accurately described as a state involving focused attention, deep relaxation, and increased responsiveness to suggestions."
+      },
+      {
+        "title": "6. “Hypnosis can make me remember everything from my past exactly as it happened.”",
+        "text": "Hypnosis should not be considered a guaranteed memory-recovery tool. Human memory is not always an exact recording of past events. Memories can change over time, and using hypnosis to recover memories may increase the risk of inaccurate or false recollections. For this reason, hypnosis should not be presented as a method for proving exactly what happened in the past."
+      },
+      {
+        "title": "7. “Only weak-minded or easily influenced people can be hypnotized.”",
+        "text": "Not true. People differ in their responsiveness to hypnosis, and hypnotizability is not a measure of intelligence, strength of character, or weakness of will. Being responsive to hypnosis does not mean that someone is gullible or lacking in personal strength."
+      },
+      {
+        "title": "8. “Hypnotherapy can cure every physical or psychological problem.”",
+        "text": "Hypnotherapy is not a magical solution for every problem. Research on hypnosis and hypnotherapy varies depending on the condition and the specific application. There is promising evidence for certain uses, while evidence for other applications remains limited or inconclusive. For example, hypnosis has been studied as a supportive approach for certain types of pain and symptoms associated with irritable bowel syndrome, while research continues in many other areas. Hypnotherapy should therefore be used appropriately according to an individual's circumstances and goals. When medical or psychological care is needed, hypnotherapy should not be presented as a replacement for necessary medical treatment or prescribed care."
+      }
+    ],
+    "conclusionTitle": "So, What Is Hypnotherapy Really?",
+    "conclusion": "Hypnotherapy is a guided, collaborative, and goal-oriented process that uses hypnosis to work with thoughts, perceptions, emotions, habits, and behavioral patterns. Throughout the process, you remain yourself, aware, and capable of making choices. The purpose of hypnotherapy is not to take control of your mind. Rather, it can create a supportive state in which you can explore mental and behavioral patterns with greater focus and work toward constructive changes that align with your own goals.",
+    "shafaBeliefTitle": "At SHAFA, we believe:",
+    "shafaBelief": "No one can change your mind for you. But we can help you begin the journey of change from within."
   }
 }
