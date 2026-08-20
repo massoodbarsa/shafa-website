@@ -166,14 +166,13 @@ export default function ContactPage() {
             variants={itemVariants}
           >
             <Typography
-              variant="h3"
+              variant="h2"
               sx={{
-                fontWeight: 400,
-                letterSpacing: isRtl ? "0" : "0.15em",
-                color: "text.primary",
-                fontSize: { xs: "2rem", md: "2.6rem" },
-                mb: 2,
-                textShadow: "0px 4px 12px rgba(0,0,0,0.5)",
+                fontWeight: 500,
+                letterSpacing: isRtl ? "0" : "0.12em",
+                color: "primary.main",
+                fontSize: { xs: "2.2rem", md: "3.2rem" },
+                textAlign: "center",
               }}
             >
               {t.contactPage.title}

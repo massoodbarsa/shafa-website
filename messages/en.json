@@ -141,24 +141,47 @@
     "shafaBeliefTitle": "At SHAFA, we believe:",
     "shafaBelief": "No one can change your mind for you. But we can help you begin the journey of change from within."
   },
-  "certificatesPage": {
-    "title": "Certificates & Credentials",
-    "subtitle": "Professional training and qualifications",
-    "intro": "I am committed to maintaining the highest standards of professional practice. Below are two of my key certifications that form the foundation of my work.",
-    "certificates": [
-      {
-        "title": "Clinical Hypnotherapy Certification",
-        "description": "Comprehensive training in clinical hypnotherapy, covering advanced techniques, client assessment, and ethical practice.",
-        "image": "/certificates/cer.1.jpeg",
-        "alt": "Certificate of Clinical Hypnotherapy"
-      },
-      {
-        "title": "Advanced Inner Child Therapy",
-        "description": "Specialized training in inner child work, trauma-informed approaches, and parts therapy to facilitate deep emotional healing.",
-        "image": "/certificates/cer.2.jpeg",
-        "alt": "Certificate of Advanced Inner Child Therapy"
-      }
-    ],
-    "conclusion": "These credentials reflect my dedication to evidence-based practice and continuous professional development."
+  "aboutmePage": {
+    "title": "About Me",
+    "name": "Shabnam Faraji Amiri",
+    "professionalTitle": "Certified Consulting Hypnotist | Founder of SHAFA Hypnotherapy & Wellness",
+
+    "introduction": "My name is Shabnam Faraji Amiri, a Certified Consulting Hypnotist and the founder of SHAFA Hypnotherapy & Wellness in Toronto. For many years, I have studied and worked in the areas of the mind, behavior, beliefs, personal growth, and self-awareness.",
+
+    "background": "My academic background in psychology and educational psychology, combined with specialized training in hypnosis, has given me the opportunity to develop a deeper understanding of human thought patterns and behaviors.",
+
+    "belief": {
+      "title": "A Belief That Guides My Work",
+      "text": "Throughout this journey, I have come to recognize one important truth: Many of the most meaningful changes in life begin from within."
+    },
+
+    "mindAndBehavior": "Our minds are shaped throughout our lives by our experiences, relationships, environment, beliefs, and the events we encounter. Some of these patterns help us grow, while others may no longer serve us in adulthood—yet continue to influence our emotions, decisions, habits, and responses.",
+
+    "work": {
+      "title": "How I Work",
+      "text": "At SHAFA, I use hypnotherapy and mind-focused approaches to help individuals better understand their mental and behavioral patterns, explore limiting beliefs, and move toward meaningful and constructive change."
+    },
+
+    "programs": {
+      "title": "Beyond Individual Sessions",
+      "text": "Alongside individual sessions, SHAFA will also offer programs and workshops focused on meditation, self-hypnosis, inner child work, and personal growth."
+    },
+
+    "approach": {
+      "title": "My Approach",
+      "text": "I believe that every individual is unique and that there is no single path to change that works for everyone. For this reason, sessions are personalized according to each person’s needs, goals, and circumstances.",
+      "goal": "My goal is not to tell you who you should become. Instead, I aim to create a supportive space where you can understand yourself more deeply, recognize your patterns, and consciously choose the direction of change you want to create in your life."
+    },
+
+    "shafaMeaning": {
+      "title": "The Meaning Behind SHAFA",
+      "text": "SHAFA is more than just a name to me. It is inspired by the initial letters of my name, while also carrying the beautiful meaning of healing—a concept that deeply reflects my core belief.",
+      "quote": "Healing Begins Within"
+    }
+  },
+
+  "certificates": {
+    "title": "Certifications & Training",
+    "items": []
   }
 }
